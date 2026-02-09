@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+
+:root {
+  --font-size-base: 12px;
+}
+
+@theme inline {
+
+  --color-blue-primary: #0F49BD;
+  --color-blue-secondary: #E7EDF8;
+  --color-black-primary: #111318;
+  --color-black-secondary: #616F89;
+  --color-white-primary: #fff;
+  --color-light-blue-primary: #2563EB;
+  --color-light-blue-secondary: #EFF6FF;
+  --color-purple-primary: #9333EA;
+  --color-purple-secondary: #eedcff;
+  --color-green-primary: #16A34A;
+  --color-green-secondary: #F0FDF4;
+  --color-orange-primary: #EA580C;
+  --color-orange-secondary: #FFEDD5;
+  --color-red-primary: #f51b1b;
+  --color-red-secondary: #FEE2E2;
+  --color-yellow-primary: #D97706;
+  --color-yellow-secondary: #FEF3C7;
+  --color-gray: #F6F6F8;
+
+  --spacing-width-sidebar: 288px;
+  --spacing-width-header: calc(100vw - var(--spacing-width-sidebar));
+  --spacing-height-header: 80px;
+  --spacing-width-main: calc(100vw - var(--spacing-width-sidebar));
+  --spacing-height-main: calc(100vh - var(--spacing-height-header));
+  --spacing-max-width: 1440px;
+
+
+  --radius-primary: 8px;
+  --radius-secondary: 4px;
+
+  --leading-primary: 1.8;
+  --leading-secondary: 1.5;
+  --leading-tertiary: 1;
+
+}
+
+html {
+  font-size: var(--font-size-base);
+}
+
+body {
+  background: var(--color-gray);
+  color: var(--color-black-primary);
+  font-family: sans-serif;
+}
