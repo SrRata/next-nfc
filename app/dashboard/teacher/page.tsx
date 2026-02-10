@@ -1,6 +1,8 @@
 import { CourseCard } from "@/components/course-card";
 import { InfoCard, InfoCardSmall } from "@/components/info-card";
 import { LinkCard } from "@/components/link-card";
+import { Notification, NotificationContain, NotificationHeader } from "@/components/notification";
+import { Table, TableBody, TableFooter, TableHeader, TableTitle, Td, Th, Thead, Tr } from "@/components/table";
 import { Users, Book, ChartBar, UserMinus } from "lucide-react";
 
 export default function HomeTeacher() {
@@ -15,6 +17,35 @@ export default function HomeTeacher() {
       <LinkCard href="/" link="Ver listados" title="Gestion de mis alumnos" description="Ver reportes generales/individuales y tags NFC asignados a estudiantes"/>
       <CourseCard active course="1ro de bachillerato informatica - vespertina" subjects="Programacion / Diseño web" students="24 estudiantes registrados"/>
       <CourseCard course="3ro de bachillerato informatica - matutina" subjects="Programacion / Diseño web / Sistemas Operativos" students="35 estudiantes registrados"/>
+      <NotificationContain>
+        <NotificationHeader/>
+        <Notification/>
+      </NotificationContain>
+
+      <Table>
+
+        <TableHeader>
+          <TableTitle>Registros encontrados</TableTitle>
+        </TableHeader>
+
+        <TableBody>
+          <Thead>
+            <Th>0</Th>
+            <Th>0</Th>
+            <Th>0</Th>
+            <Th>0</Th>
+          </Thead>
+          <Tr>
+            <Td>000</Td>
+            <Td>000</Td>
+            <Td>000</Td>
+            <Td>000</Td>
+          </Tr>
+        </TableBody>
+
+        <TableFooter allpages={120} page={1}/>
+
+      </Table>
     </>
   );
 }
