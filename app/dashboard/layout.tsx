@@ -28,7 +28,7 @@ export default function DashboardLayout({children,}: Readonly<{children: React.R
                 <PageTitle text="Bienvenido, Lic. Cristian Cornejo" title="Panel del docente"/>
                 <div className="flex items-center gap-15">
                     <Headerclock />
-                    <UserInfo userName="Lic. Cristian Cornejo" role="Docente"/>
+                    <UserInfo name="cristian cornejo" userName="Lic. Cristian Cornejo" role="Docente"/>
                 </div>
             </Header>
 

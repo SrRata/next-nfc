@@ -2,8 +2,13 @@ import { CourseCard } from "@/components/course-card";
 import { InfoCard, InfoCardSmall } from "@/components/info-card";
 import { LinkCard } from "@/components/link-card";
 import { Notification, NotificationContain, NotificationHeader } from "@/components/notification";
-import { Table, TableBody, TableFooter, TableHeader, TableTitle, Td, Th, Thead, Tr } from "@/components/table";
-import { Users, Book, ChartBar, UserMinus } from "lucide-react";
+import { Observation } from "@/components/observation";
+import { Table, TableBody, TableFooter, TableHeader, TableTitle, Tbody, Td, Th, Thead, Tr } from "@/components/table";
+import { Avatar } from "@/components/ui/avatar";
+import { Badge, BadgeCircle } from "@/components/ui/badge";
+import { Bar } from "@/components/ui/bar";
+import { InternalLink } from "@/components/ui/link";
+import { Users, Book, ChartBar, UserMinus, ChevronRight, ExternalLink } from "lucide-react";
 
 export default function HomeTeacher() {
   return (
@@ -30,22 +35,43 @@ export default function HomeTeacher() {
 
         <TableBody>
           <Thead>
-            <Th>0</Th>
-            <Th>0</Th>
-            <Th>0</Th>
-            <Th>0</Th>
+            <Th>Foto</Th>
+            <Th>Nombre completo</Th>
+            <Th>Matricula/ID</Th>
+            <Th>Asistencia hoy</Th>
+            <Th className="text-right">Acciones</Th>
           </Thead>
-          <Tr>
-            <Td>000</Td>
-            <Td>000</Td>
-            <Td>000</Td>
-            <Td>000</Td>
-          </Tr>
+          <Tbody>
+            <Tr>
+              <Td>
+                <Avatar name="Luis Matailo"/>
+              </Td>
+              <Td name>Luis Matailo</Td>
+              <Td><Badge>0150072668</Badge></Td>
+              <Td><Badge color="green"><BadgeCircle/>Presente</Badge></Td>
+              <Td><InternalLink href="/" className="flex justify-end">
+                Ver historial
+                <ExternalLink size={15} strokeWidth={2.5}/>
+              </InternalLink></Td>
+            </Tr>
+            <Tr>
+              <Td>
+              </Td>
+              <Td><Badge color="green">22</Badge></Td>
+              <Td absences>0</Td>
+              <Td absences>15</Td>
+              <Td>
+                <Bar percentage={75}/>
+              </Td>
+            </Tr>
+          </Tbody>
         </TableBody>
 
         <TableFooter allpages={120} page={1}/>
 
       </Table>
+
+      <Observation/>
     </>
   );
 }

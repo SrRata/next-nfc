@@ -18,7 +18,7 @@ function addColor(color?:string): string {
         case "orange":
             return "bg-orange-secondary text-orange-primary"
         default:
-            return "bg-gray text-black-primary"
+            return "bg-gray text-black-secondary"
     }
 };
 
