@@ -1,4 +1,4 @@
-import { Check } from "lucide-react"
+import { Check, LucideIcon } from "lucide-react"
 import { IconShape } from "./ui/icon-shape"
 import { InternalLink } from "./ui/link"
 
@@ -22,7 +22,7 @@ interface NotificationHeaderProps {
 }
 
 
-export function NotificationHeader({title = "title", description = "description"}: NotificationHeaderProps) {
+export function NotificationHeader({title, description}: NotificationHeaderProps) {
     return (
         <div className="flex items-center justify-between gap-10">
             <div>
@@ -40,13 +40,14 @@ interface NotificationProps {
     time?: string;
     course?: string;
     color?: string;
-}
+    icon: LucideIcon;
+} 
 
-export function Notification({name = "name", notification = "notification", time = "00:00 AM/PM", course = "course", color = ""}: NotificationProps) {
+export function Notification({icon: Icon, name = "name", notification = "notification", time = "00:00 AM/PM", course = "course", color = ""}: NotificationProps) {
     return (
         <div className="flex items-center justify-between px-5 py-2.5 rounded-primary hover:bg-gray transition-all duration-300 ease-in-out">
             <div className="flex items-center gap-5">
-                <IconShape circle icon={Check} color={color} />
+                <IconShape circle icon={Icon} color={color} />
                 <div>
                     <p className="text-black-primary font-medium"><span className="font-bold">{name}</span> {notification}</p>
                     <p className="text-black-secondary text-sm font-medium">Hace 3 minutos - {course}</p>

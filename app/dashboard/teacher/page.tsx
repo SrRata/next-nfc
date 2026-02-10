@@ -3,12 +3,13 @@ import { InfoCard, InfoCardSmall } from "@/components/info-card";
 import { LinkCard } from "@/components/link-card";
 import { Notification, NotificationContain, NotificationHeader } from "@/components/notification";
 import { Observation } from "@/components/observation";
-import { Table, TableBody, TableFooter, TableHeader, TableTitle, Tbody, Td, Th, Thead, Tr } from "@/components/table";
+import { Table, TableBody, TableHeader, TableTitle, Tbody, Td, Th, Thead, Tr } from "@/components/table";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge, BadgeCircle } from "@/components/ui/badge";
 import { Bar } from "@/components/ui/bar";
 import { InternalLink } from "@/components/ui/link";
-import { Users, Book, ChartBar, UserMinus, ChevronRight, ExternalLink } from "lucide-react";
+import { Pagination } from "@/components/ui/pagination";
+import { Users, Book, ChartBar, UserMinus, ChevronRight, ExternalLink, Check } from "lucide-react";
 
 export default function HomeTeacher() {
   return (
@@ -24,7 +25,7 @@ export default function HomeTeacher() {
       <CourseCard course="3ro de bachillerato informatica - matutina" subjects="Programacion / Diseño web / Sistemas Operativos" students="35 estudiantes registrados"/>
       <NotificationContain>
         <NotificationHeader/>
-        <Notification/>
+        <Notification icon={Check}/>
       </NotificationContain>
 
       <Table>
@@ -67,7 +68,8 @@ export default function HomeTeacher() {
           </Tbody>
         </TableBody>
 
-        <TableFooter allpages={120} page={1}/>
+        <Pagination allpages={20} page={1}/>
+        
 
       </Table>
 

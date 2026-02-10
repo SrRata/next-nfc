@@ -39,18 +39,6 @@ export function TableBody({children, className}: TableProps) {
     )
 }
 
-interface TableFooterProps {
-    allpages?: number;
-    page?: number;
-}
-
-export function TableFooter({allpages, page}: TableFooterProps) {
-    return (
-        <Pagination allpages={allpages} page={page}/>
-    )
-}
-
-
 export function Thead({children, className}: TableProps){
     return (
         <thead>
@@ -69,7 +57,7 @@ export function Tbody({children, className}: TableProps) {
 
 export function Th({children, className}: TableProps) {
     return (
-        <th className={cn("text-black-secondary font-bold p-5 text-left w-fit", className)}>
+        <th className={cn("text-black-secondary font-bold p-5 text-left", className)}>
             {children}
         </th>
     )
@@ -103,7 +91,7 @@ function addColorAbsences(value: React.ReactNode) {
 
 export function Td({ children, className, name, absences }: TdProps) {
     return (
-        <td className={cn("p-5 font-semibold", className, { "font-bold": name }, absences && addColorAbsences(children))}>
+        <td className={cn("p-5 font-medium text-black-primary", className, { "font-bold": name }, absences && addColorAbsences(children))}>
             {children}
         </td>
     );

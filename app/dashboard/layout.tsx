@@ -22,6 +22,8 @@ export default function DashboardLayout({children,}: Readonly<{children: React.R
                     <SidebarLink href="/dashboard/observations" icon={ClipboardEdit} text="Observaciones"/>
                     <SidebarLink href="/dashboard/profile" icon={User} text="Mi perfil"/>
                     <SidebarLink href="/dashboard/help" icon={HelpCircle} text="Ayuda"/>
+                    <SidebarLink href="/dashboard/help" icon={HelpCircle} text="Gestión de estudiantes"/>
+                    <SidebarLink href="/dashboard/help" icon={HelpCircle} text="Gestión de usuarios"/>
                 </SidebarNav>
             </Sidebar>
             <Header>

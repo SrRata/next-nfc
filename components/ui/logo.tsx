@@ -14,7 +14,7 @@ export function Logo({title}: LogoProps) {
                 <Nfc/>
             </span>
             <div className="h-full">
-                <h2 className="text-blue-primary font-bold text-2xl leading-tertiary">SiaeNFC</h2>
+                <h2 className="text-blue-primary font-bold text-2xl leading-tertiary">siaeNFC</h2>
                 <p className="text-black-secondary font-medium text-sm">Portal {title ?? ""}</p>
             </div>
         </div>

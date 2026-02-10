@@ -37,6 +37,6 @@ interface BadgeCircleProps {
 
 export function BadgeCircle({pulse}: BadgeCircleProps) {
     return (
-        <span className={`size-2.5 rounded-full bg-current ${pulse ? "animate-pulse" : ""}`}></span>
+        <span className={`size-2 rounded-full bg-current ${pulse ? "animate-pulse" : ""}`}></span>
     )
 }
