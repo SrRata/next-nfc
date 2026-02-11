@@ -1,3 +1,4 @@
+import { DataUser } from "@/components/data-user";
 import { Table, TableBody, TableHeader, TableTitle, Tbody, Td, Th, Thead, Tr } from "@/components/table";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge, BadgeCircle } from "@/components/ui/badge";
@@ -23,14 +24,8 @@ export default function UsersAdmin() {
                 </Thead>
                 <Tbody>
                     <Tr>
-                        <Td name>
-                            <div className="flex items-center gap-5">
-                                <Avatar name="Cristian Cornejo"/>
-                                <div>
-                                    <p>Cristian Cornejo</p>
-                                    <span className="font-medium text-black-secondary text-sm">ID: 0107072608</span>
-                                </div>
-                            </div>
+                        <Td>
+                            <DataUser name="Cristian cornejo"/>
                         </Td>
                         <Td>cristian.cornejo@uemfebrescordero.com</Td>
                         <Td><Badge color="purple">Docente</Badge></Td>
@@ -45,7 +40,7 @@ export default function UsersAdmin() {
                 </Tbody>
             </TableBody>
 
-            <Pagination allpages={10} page={1}/>
+            <Pagination allpages={1} page={1}/>
 
         </Table>
         </>
