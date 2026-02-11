@@ -5,14 +5,14 @@ import { Badge, BadgeCircle } from "@/components/ui/badge";
 import { Pagination } from "@/components/ui/pagination";
 import { Pen, Trash } from "lucide-react";
 
-export default function StudentsAdmin() {
+export default function studentsPage() {
     return (
         <>
         
         <Table>
 
             <TableHeader>
-                <TableTitle>Registros de estudiantes</TableTitle>
+                <TableTitle>Gestión de estudiantes</TableTitle>
             </TableHeader>
 
             <TableBody>
@@ -26,7 +26,7 @@ export default function StudentsAdmin() {
                 <Tbody>
                     <Tr>
                         <Td>
-                            <DataUser name="Justin Alvarez"/>
+                            <DataUser name="Justin Alvarez" id="0150072668"/>
                         </Td>
                         <Td>3ro de Bachillerato Informática</Td>
                         <Td>A</Td>

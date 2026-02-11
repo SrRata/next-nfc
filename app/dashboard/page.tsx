@@ -12,7 +12,7 @@ import { InternalLink } from "@/components/ui/link";
 import { Pagination } from "@/components/ui/pagination";
 import { Users, Book, ChartBar, UserMinus, ChevronRight, ExternalLink, Check } from "lucide-react";
 
-export default function HomeTeacher() {
+export default function homePage() {
   return (
     <>
       <InfoCard icon={Book} color="blue" title="Mis cursos" value="6 cursos"/>

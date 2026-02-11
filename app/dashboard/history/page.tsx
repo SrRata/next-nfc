@@ -3,7 +3,7 @@ import { Table, TableBody, TableTitle, Tbody, Td, Th, Thead, Tr } from "@/compon
 import { Badge } from "@/components/ui/badge";
 import { Pagination } from "@/components/ui/pagination";
 
-export default function HistoryAdmin() {
+export default function historyPage() {
     return (
         <Table>
             <TableTitle>Historial de registros</TableTitle>
@@ -19,7 +19,7 @@ export default function HistoryAdmin() {
                 <Tbody>
                     <Tr>
                         <Td>
-                            <DataUser name="Luis Matailo" id="0150072668"/>
+                            <DataUser name="Luis Matailo"/>
                         </Td>
                         <Td>3ro de bachillerato - Informática</Td>
                         <Td>12 Febrero 2026</Td> 

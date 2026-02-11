@@ -90,7 +90,7 @@ function addColorAbsences(value: React.ReactNode) {
 
 export function Td({ children, className, absences }: TdProps) {
     return (
-        <td className={cn("p-5 font-medium text-black-primary", className, absences && addColorAbsences(children))}>
+        <td className={cn("p-5 font-semibold text-black-primary", className, absences && addColorAbsences(children))}>
             {children}
         </td>
     );

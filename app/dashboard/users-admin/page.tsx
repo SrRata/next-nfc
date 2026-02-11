@@ -5,13 +5,13 @@ import { Badge, BadgeCircle } from "@/components/ui/badge";
 import { Pagination } from "@/components/ui/pagination";
 import { Pen, Trash } from "lucide-react";
 
-export default function UsersAdmin() {
+export default function UserPage() {
     return (
         <>
         <Table>
 
             <TableHeader>
-                <TableTitle>Registros de estudiantes</TableTitle>
+                <TableTitle>Gestión de usuarios</TableTitle>
             </TableHeader>
 
             <TableBody>
@@ -25,7 +25,7 @@ export default function UsersAdmin() {
                 <Tbody>
                     <Tr>
                         <Td>
-                            <DataUser name="Cristian cornejo"/>
+                            <DataUser name="Cristian cornejo" id="0150072668"/>
                         </Td>
                         <Td>cristian.cornejo@uemfebrescordero.com</Td>
                         <Td><Badge color="purple">Docente</Badge></Td>
