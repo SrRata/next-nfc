@@ -26,7 +26,7 @@ export function TableHeader({children, className}: TableProps){
 
 export function TableTitle({children, className}: TableProps) {
     return (
-        <h3 className="text-black-primary text-2xl font-bold">{children}</h3>
+        <h3 className="text-black-primary text-xl font-bold">{children}</h3>
     )
 }
 
@@ -74,7 +74,6 @@ export function Tr({children, className}: TableProps) {
 interface TdProps {
     children?: React.ReactNode;
     className?: string;
-    name?: boolean;
     absences?: boolean;
 }
 
@@ -89,9 +88,9 @@ function addColorAbsences(value: React.ReactNode) {
 }
 
 
-export function Td({ children, className, name, absences }: TdProps) {
+export function Td({ children, className, absences }: TdProps) {
     return (
-        <td className={cn("p-5 font-medium text-black-primary", className, { "font-bold": name }, absences && addColorAbsences(children))}>
+        <td className={cn("p-5 font-medium text-black-primary", className, absences && addColorAbsences(children))}>
             {children}
         </td>
     );

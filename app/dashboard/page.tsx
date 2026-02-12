@@ -1,4 +1,5 @@
 import { CourseCard } from "@/components/course-card";
+import { DataUser } from "@/components/data-user";
 import { InfoCard, InfoCardSmall } from "@/components/info-card";
 import { LinkCard } from "@/components/link-card";
 import { Notification, NotificationContain, NotificationHeader } from "@/components/notification";
@@ -45,9 +46,9 @@ export default function HomeTeacher() {
           <Tbody>
             <Tr>
               <Td>
-                <Avatar name="Luis Matailo"/>
+                <DataUser name="Luis matailo"/>
               </Td>
-              <Td name>Luis Matailo</Td>
+              <Td>Luis Matailo</Td>
               <Td><Badge>0150072668</Badge></Td>
               <Td><Badge color="green"><BadgeCircle/>Presente</Badge></Td>
               <Td><InternalLink href="/" className="flex justify-end">
