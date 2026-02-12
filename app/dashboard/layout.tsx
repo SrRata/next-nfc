@@ -1,8 +1,13 @@
+"use client"
+
 import { Header, Headerclock, PageTitle } from "@/components/header"
 import { Sidebar, SidebarFooter, SidebarHeader, SidebarNav, SidebarLink } from "@/components/sidebar"
 import { Logo } from "@/components/ui/logo"
 import { UserInfo } from "@/components/user";
-import { Users, GraduationCap, LayoutDashboard, History, Clipboard, ClipboardEdit, User, HelpCircle } from "lucide-react"
+import { teacherNav } from "@/lib/navigation";
+
+
+
 
 
 
@@ -14,16 +19,12 @@ export default function DashboardLayout({children,}: Readonly<{children: React.R
                     <Logo title="Docente" />
                 </SidebarHeader>
                 <SidebarNav>
-                    <SidebarLink href="/dashboard/teacher" icon={LayoutDashboard} text="Dashboard"/>
-                    <SidebarLink href="/dashboard/courses" icon={GraduationCap} text="Mis cursos"/>
-                    <SidebarLink href="/dashboard/students" icon={Users} text="Mis alumnos"/>
-                    <SidebarLink href="/dashboard/history" icon={History} text="Historial"/>
-                    <SidebarLink href="/dashboard/reports" icon={Clipboard} text="Reportes de cursos"/>
-                    <SidebarLink href="/dashboard/observations" icon={ClipboardEdit} text="Observaciones"/>
-                    <SidebarLink href="/dashboard/profile" icon={User} text="Mi perfil"/>
-                    <SidebarLink href="/dashboard/help" icon={HelpCircle} text="Ayuda"/>
-                    <SidebarLink href="/dashboard/help" icon={HelpCircle} text="Gestión de estudiantes"/>
-                    <SidebarLink href="/dashboard/help" icon={HelpCircle} text="Gestión de usuarios"/>
+
+                    {teacherNav.map((item) => (
+                        <SidebarLink href={item.href} icon={item.icon} text={item.text}/>
+                    )) }
+
+
                 </SidebarNav>
             </Sidebar>
             <Header>

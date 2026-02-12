@@ -1,3 +1,7 @@
+"use client"
+
+
+import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -40,6 +44,10 @@ export function SidebarNav({children, className}: SidebarProps) {
     )
 }
 
+
+
+import { usePathname } from "next/navigation";
+
 interface SidebarLinkProps {
     href: string;
     className?: string;
@@ -49,11 +57,19 @@ interface SidebarLinkProps {
 
 
 export function SidebarLink({icon: Icon, text, className, href}: SidebarLinkProps) {
+
+    const pathname = usePathname();
+
+    const isActive = pathname === href;
+    // const isActive = pathname === href || pathname.startsWith(href + "/");
+
     return (
-        <Link href={href} className={`text-black-primary font-medium rounded-primary px-4 py-3 flex items-center gap-2.5 cursor-pointer hover:bg-blue-secondary transition-all duration-300 ease-in-out  ${className}`}>
-            <Icon size={24} strokeWidth={1.5} className=""/>
-            {text}
-        </Link>
+        <li>
+            <Link href={href} className={cn("text-black-primary font-medium rounded-primary px-4 py-3 flex items-center gap-2.5 cursor-pointer hover:bg-blue-secondary transition-all duration-300 ease-in-out", className, isActive && "bg-blue-secondary text-blue-primary font-semibold")}>
+                <Icon size={24} strokeWidth={1.5} className=""/>
+                {text}
+            </Link>
+        </li>
     )
 }
 
