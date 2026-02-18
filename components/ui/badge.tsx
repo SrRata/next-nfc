@@ -1,42 +1,116 @@
+import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
+
+type BadgeColor =
+  | "green"
+  | "red"
+  | "yellow"
+  | "blue"
+  | "gray"
+  | "orange"
+  | "sky"
+  | "purple"
+
+type BadgeVariant = "solid" | "soft" | "outline"
+
 interface BadgeProps {
-    children: React.ReactNode;
-    color?: "red" | "green" | "yellow" | "blue" | "purple" | "orange" | string;
+  children: ReactNode
+  color?: BadgeColor
+  variant?: BadgeVariant
+  className?: string
 }
 
-function addColor(color?:string): string {
-    switch (color) {
-        case "red": 
-            return "bg-red-secondary text-red-primary"
-        case "green":
-            return "bg-green-secondary text-green-primary"
-        case "yellow":
-            return "bg-yellow-secondary text-yellow-primary"
-        case "blue":
-            return "bg-blue-secondary text-blue-primary"
-        case "purple":
-            return "bg-purple-secondary text-purple-primary"
-        case "orange":
-            return "bg-orange-secondary text-orange-primary"
-        default:
-            return "bg-gray text-black-secondary"
-    }
-};
+const badgeStyles: Record<
+  BadgeColor,
+  Record<BadgeVariant, string>
+> = {
+  green: {
+    solid: "bg-green-primary text-white",
+    soft: "bg-green-secondary text-green-primary",
+    outline: "border border-green-primary text-green-primary bg-transparent",
+  },
+  red: {
+    solid: "bg-red-primary text-white",
+    soft: "bg-red-secondary text-red-primary",
+    outline: "border border-red-primary text-red-primary bg-transparent",
+  },
+  yellow: {
+    solid: "bg-yellow-primary text-white",
+    soft: "bg-yellow-secondary text-yellow-primary",
+    outline: "border border-yellow-primary text-yellow-primary bg-transparent",
+  },
+  blue: {
+    solid: "bg-blue-primary text-white",
+    soft: "bg-blue-secondary text-blue-primary",
+    outline: "border border-blue-primary text-blue-primary bg-transparent",
+  },
+  gray: {
+    solid: "bg-black-secondary text-white",
+    soft: "bg-gray text-black-secondary",
+    outline: "border border-gray text-black-secondary bg-transparent",
+  },
+  orange: {
+    solid: "bg-orange-primary text-white",
+    soft: "bg-orange-secondary text-orange-primary",
+    outline: "border border-orange-primary text-orange-primary bg-transparent",
+  },
+  sky: {
+    solid: "bg-sky-primary text-white",
+    soft: "bg-sky-secondary text-sky-primary",
+    outline: "border border-sky-primary text-sky-primary bg-transparent",
+  },
+  purple: {
+    solid: "bg-purple-primary text-white",
+    soft: "bg-purple-secondary text-purple-primary",
+    outline: "border border-purple-primary text-purple-primary bg-transparent",
+  }
+}
 
-
-export function Badge({children, color}: BadgeProps) {
-    return (
-        <span className={`py-1 px-4 rounded-full font-semibold w-fit flex items-center gap-2.5 capitalize ${addColor(color)}`}>
-            {children}
-        </span>
-    )
+export function Badge({
+  children,
+  color = "gray",
+  variant = "soft",
+  className,
+}: BadgeProps) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full px-4 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
+        badgeStyles[color][variant],
+        className
+      )}
+    >
+      {children}
+    </span>
+  )
 }
 
 interface BadgeCircleProps {
-    pulse?: boolean;
+  pulse?: boolean
+  size?: "sm" | "md"
+  className?: string
 }
 
-export function BadgeCircle({pulse}: BadgeCircleProps) {
-    return (
-        <span className={`size-2 rounded-full bg-current ${pulse ? "animate-pulse" : ""}`}></span>
-    )
+const circleSizes = {
+  sm: "size-2",
+  md: "size-3",
 }
+
+export function BadgeCircle({
+  pulse = false,
+  size = "sm",
+  className,
+}: BadgeCircleProps) {
+  return (
+    <span
+      className={cn(
+        circleSizes[size],
+        "rounded-full bg-current",
+        pulse && "animate-pulse",
+        className
+      )}
+    />
+  )
+}
+
+//Componente mejorado, posiblemente final

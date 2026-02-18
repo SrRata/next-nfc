@@ -1,102 +1,202 @@
+"use client";
+
+import React from "react";
 import { cn } from "@/lib/utils";
-import { Pagination } from "./ui/pagination"
+import { Pagination } from "./ui/pagination";
 
-interface TableProps {
-    children?: React.ReactNode;
-    className?: string; 
+
+/* ============================================================
+   Base Types
+============================================================ */
+
+interface BaseProps {
+  children?: React.ReactNode;
+  className?: string;
 }
 
-export function Table({children, className}: TableProps) {
-    return (
-        <div className={cn("bg-white-primary rounded-primary p-7 col-span-full flex flex-col gap-5", className)}>
-            {children}
-        </div>
-    )
+/* ============================================================
+   Root
+============================================================ */
+
+function Root({ children, className }: BaseProps) {
+  return (
+    <div
+      className={cn(
+        "bg-white-primary rounded-primary p-6 flex flex-col gap-6 col-span-full",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
+/* ============================================================
+   Header
+============================================================ */
 
-export function TableHeader({children, className}: TableProps){
-    return (
-        <div className={cn("flex items-center justify-between", className)}>
-            {children}
-        </div>
-    )
+function Header({ children, className }: BaseProps) {
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
 }
 
-
-export function TableTitle({children, className}: TableProps) {
-    return (
-        <h3 className="text-black-primary text-xl font-bold">{children}</h3>
-    )
+function Title({ children, className }: BaseProps) {
+  return (
+    <h3
+      className={cn(
+        "text-xl font-bold text-black-primary",
+        className
+      )}
+    >
+      {children}
+    </h3>
+  );
 }
 
+/* ============================================================
+   Table Structure
+============================================================ */
 
-export function TableBody({children, className}: TableProps) {
-    return (
-        <table>
-            {children}
-        </table>
-    )
+function Content({ children, className }: BaseProps) {
+  return (
+    <div className="overflow-x-auto">
+      <table
+        className={cn(
+          "w-full border-collapse",
+          className
+        )}
+      >
+        {children}
+      </table>
+    </div>
+  );
 }
 
-export function Thead({children, className}: TableProps){
-    return (
-        <thead>
-            {children}
-        </thead>
-    )
+function Thead({ children, className }: BaseProps) {
+  return (
+    <thead
+      className={cn(
+        "border-b border-gray-200",
+        className
+      )}
+    >
+      {children}
+    </thead>
+  );
 }
 
-export function Tbody({children, className}: TableProps) {
-    return (
-        <tbody>
-            {children}
-        </tbody>
-    )
+function Tbody({ children, className }: BaseProps) {
+  return (
+    <tbody
+      className={cn(
+        "divide-y divide-gray-100",
+        className
+      )}
+    >
+      {children}
+    </tbody>
+  );
 }
 
-export function Th({children, className}: TableProps) {
-    return (
-        <th className={cn("text-black-secondary font-bold p-5 text-left", className)}>
-            {children}
-        </th>
-    )
+function Tr({ children, className }: BaseProps) {
+  return (
+    <tr
+      className={cn(
+        "hover:bg-gray-50 transition-colors",
+        className
+      )}
+    >
+      {children}
+    </tr>
+  );
 }
 
-export function Tr({children, className}: TableProps) {
-    return (
-        <tr className={cn(className)}>
-            {children}
-        </tr>
-    )
+function Th({ children, className }: BaseProps) {
+  return (
+    <th
+      className={cn(
+        "text-left p-4 font-bold text-black-secondary",
+        className
+      )}
+    >
+      {children}
+    </th>
+  );
 }
 
-interface TdProps {
-    children?: React.ReactNode;
-    className?: string;
-    absences?: boolean;
+function Td({ children, className }: BaseProps) {
+  return (
+    <td
+      className={cn(
+        "p-4 font-medium text-black-primary",
+        className
+      )}
+    >
+      {children}
+    </td>
+  );
 }
 
-function addColorAbsences(value: React.ReactNode) {
-    const num = Number(value);
+/* ============================================================
+   Empty State
+============================================================ */
 
-    if (isNaN(num)) return "text-black-primary";
-
-    return num >= 5 
-        ? "text-red-primary"
-        : "text-black-primary";
+function Empty({
+  colSpan,
+  message = "No hay resultados",
+}: {
+  colSpan: number;
+  message?: string;
+}) {
+  return (
+    <tr>
+      <td
+        colSpan={colSpan}
+        className="text-center p-6 text-gray-400"
+      >
+        {message}
+      </td>
+    </tr>
+  );
 }
 
+/* ============================================================
+   Pagination Wrapper
+============================================================ */
 
-export function Td({ children, className, absences }: TdProps) {
-    return (
-        <td className={cn("p-5 font-semibold text-black-primary", className, absences && addColorAbsences(children))}>
-            {children}
-        </td>
-    );
+interface TablePaginationProps {
+  page: number;
+  totalPages: number;
+  limit: number;
+  limitOptions?: number[];
+  onPageChange: (page: number) => void
 }
- 
 
+function TablePagination(props: TablePaginationProps) {
+  return <Pagination {...props} />;
+}
 
+/* ============================================================
+   Export Compound Component
+============================================================ */
 
-
+export const Table = Object.assign(Root, {
+  Header,
+  Title,
+  Content,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Empty,
+  Pagination: TablePagination,
+});

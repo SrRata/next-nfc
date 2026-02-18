@@ -1,80 +1,74 @@
 import { LucideIcon } from "lucide-react";
-import { IconShape } from "./ui/icon-shape";
+import { cn } from "@/lib/utils";
+import { IconColor, IconShape } from "./ui/icon-shape";
+
+type AlertColor = "red" | "green" | "neutral";
+type InfoCardVariant = "default" | "compact";
 
 interface InfoCardProps {
-    children?: React.ReactNode;
-    className?: string;
-    color?: string;
-    icon?: LucideIcon;
-    title?: string;
-    value?: string;
-    alert?: string;
-    alertColor?: string | "red" | "green";
+  variant?: InfoCardVariant;
+  className?: string;
+  colorIcon?: IconColor;
+  icon?: LucideIcon;
+  title: string;
+  value: string | number;
+  alert?: string;
+  alertColor?: AlertColor;
 }
 
-export function InfoCard({children, className, color, icon: Icon, title = 'title', value = 'value'}: InfoCardProps) {
-    return (
-        <div className={`bg-white-primary p-7 rounded-primary flex flex-col gap-4 ${className}`}>
-            {Icon && <IconShape color={color} icon={Icon} />}
-            <div className="flex flex-col gap-2">
-                <InfoCardTitle>{title}</InfoCardTitle>
-                <InfoCardValue>{value}</InfoCardValue>
-            </div>
-        </div>
-    )
+function getAlertColor(color?: AlertColor): string {
+  switch (color) {
+    case "red":
+      return "text-red-primary";
+    case "green":
+      return "text-green-primary";
+    default:
+      return "text-black-secondary";
+  }
 }
 
-export function InfoCardSmall({children, className, color, icon: Icon, title = 'title', value = 'value', alert = 'alert', alertColor}: InfoCardProps) {
-    return (
-        <div className={`bg-white-primary p-7 rounded-primary flex gap-4 items-center ${className}`}>
-            {Icon && <IconShape iconSize={32} color={color} icon={Icon} circle className="h-20 w-20"/>}
-            <div className="flex flex-col gap-1">
-                <InfoCardTitle>{title}</InfoCardTitle>
-                <InfoCardValue>{value}</InfoCardValue>
-                <InfoCardAlert color={alertColor}>{alert}</InfoCardAlert>
-            </div>
-        </div>
-    )
+export function InfoCard({
+  variant = "default",
+  className,
+  colorIcon,
+  icon: Icon,
+  title,
+  value,
+  alert,
+  alertColor = "neutral",
+}: InfoCardProps) {
+  const isCompact = variant === "compact";
+
+  return (
+    <div
+      className={cn(
+        "bg-white-primary rounded-primary p-6 gap-4",
+        isCompact
+          ? "flex items-center"
+          : "flex flex-col",
+        className
+      )}
+    >
+      {Icon && <IconShape size="lg" color={colorIcon} icon={Icon} />}
+
+      <div className={cn("flex flex-col gap-2")}>
+        <h3 className="text-black-secondary font-semibold">
+          {title}
+        </h3>
+
+        <p className="text-black-primary font-bold text-3xl capitalize">
+          {value}
+        </p>
+
+        {isCompact && alert && (
+          <p className={cn("font-semibold", getAlertColor(alertColor))}>
+            {alert}
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }
 
-interface InfoCardTitle {
-    children: React.ReactNode;
-}
 
-export function InfoCardTitle({children}: InfoCardTitle) {
-    return (
-        <h3 className="text-black-secondary font-semibold ">{children}</h3>
-    )
-}
-
-interface InfoCardValue {
-    children: React.ReactNode;
-}
-
-function InfoCardValue({children}: InfoCardValue) {
-    return (
-        <p className="text-black-primary font-bold text-3xl capitalize">{children}</p>
-    )
-}
-
-interface InfoCardAlert {
-    children: React.ReactNode;
-    color?: string;
-}
-
-function addColor(color?:string): string {
-    switch (color) {
-        case "red": 
-            return "text-red-primary"
-        case "green":
-            return "text-green-primary"
-        default:
-            return "text-black-secondary"
-    }
-}
-
-function InfoCardAlert({children, color}: InfoCardAlert) {
-    return (
-        <p className={`font-semibold ${addColor(color)}`} >{children}</p>
-    )
-}
+//posible version final
