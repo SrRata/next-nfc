@@ -1,6 +1,6 @@
 import { Alert } from "@/components/alert";
 import { CourseCard } from "@/components/course-card";
-import { Pagination } from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/table-pagination";
 import { TabsList, Tabs, TabsTrigger } from "@/components/ui/tabs";
 import { ListTodo, Sunrise, Sunset } from "lucide-react";
 

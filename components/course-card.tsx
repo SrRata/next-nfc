@@ -77,7 +77,7 @@ export function CourseCard({
       <div className="flex items-start justify-between">
         <IconShape size="lg" color="blue" icon={GraduationCap} />
 
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap justify-end">
           <Badge color={LEVEL_CONFIG[level].color}>
             {LEVEL_CONFIG[level].label}
           </Badge>

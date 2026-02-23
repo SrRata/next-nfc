@@ -5,6 +5,7 @@ import { InternalLink } from "./ui/link"
 import { AlertCircle, AlertTriangle, CheckCircle, LucideIcon, XCircle } from "lucide-react"
 import { IconColor, IconShape } from "./ui/icon-shape"
 import { getRelativeTime } from "@/lib/relative-time"
+import { formatTime } from "@/lib/format-time";
 
 interface NotificationContainerProps {
   children: React.ReactNode
@@ -71,7 +72,7 @@ export function NotificationHeader({
 interface NotificationItemProps {
   name: string
   message: string
-  createdAt: Date
+  createdAt: Date | string
   course: string
   variant: NotificationVariant
   className?: string
@@ -131,7 +132,7 @@ export function NotificationItem({
                 </div>
             </div>
             <span className="text-black-primary font-semibold">
-                {createdAt.toLocaleTimeString("en-Us", { hour: "2-digit", minute: "2-digit", hour12: true,})}
+                {formatTime(createdAt)}
             </span>
         </div>
     )

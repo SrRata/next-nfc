@@ -1,93 +1,136 @@
-"use client"
+"use client";
 
-import { useMemo, useState } from "react"
-import { InfoCard } from "@/components/info-card"
-import { Table } from "@/components/table"
-import { Percent, UserMinus, Users } from "lucide-react"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableContainerHeader,
+  TableContainerHeaderLegend,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+} from "@/components/table";
 
-export interface Student {
-  id: string
-  name: string
-  email: string
-  absences: number
-  level: "basica_elemental" | "basica_media" | "basica_superior" | "bachillerato"
-  shift: "morning" | "afternoon"
-}
+import { useState } from "react";
 
-export const students: Student[] = [
-  { id: "1", name: "Juan Pérez", email: "juan.perez@school.edu", absences: 2, level: "basica_media", shift: "morning" },
-  { id: "2", name: "María González", email: "maria.gonzalez@school.edu", absences: 6, level: "bachillerato", shift: "afternoon" },
-  { id: "3", name: "Carlos Rodríguez", email: "carlos.rodriguez@school.edu", absences: 1, level: "basica_superior", shift: "morning" },
-  { id: "4", name: "Ana Torres", email: "ana.torres@school.edu", absences: 8, level: "basica_elemental", shift: "morning" },
-  { id: "5", name: "Luis Herrera", email: "luis.herrera@school.edu", absences: 0, level: "bachillerato", shift: "afternoon" },
-  { id: "6", name: "Valentina Cruz", email: "valentina.cruz@school.edu", absences: 3, level: "basica_media", shift: "morning" },
-  { id: "7", name: "Diego Morales", email: "diego.morales@school.edu", absences: 5, level: "basica_superior", shift: "afternoon" },
-  { id: "8", name: "Sofía Ramos", email: "sofia.ramos@school.edu", absences: 4, level: "basica_elemental", shift: "morning" },
-  { id: "9", name: "Mateo Sánchez", email: "mateo.sanchez@school.edu", absences: 7, level: "bachillerato", shift: "afternoon" },
-  { id: "10", name: "Camila López", email: "camila.lopez@school.edu", absences: 2, level: "basica_media", shift: "morning" },
-  { id: "11", name: "Andrés Castillo", email: "andres.castillo@school.edu", absences: 9, level: "basica_superior", shift: "afternoon" },
-  { id: "12", name: "Isabella Mendoza", email: "isabella.mendoza@school.edu", absences: 1, level: "bachillerato", shift: "morning" },
-]
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { DataUser } from "@/components/data-user";
+import { ProgressBar } from "@/components/ui/bar";
 
-export default function ReportsTable() {
-  const [page, setPage] = useState(1)
-  const limit = 5
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+} from "@tanstack/react-table";
 
-  const totalItems = students.length
-  const totalPages = Math.ceil(totalItems / limit)
+import data from "./data.json";
+import { TablePagination } from "@/components/ui/table-pagination";
 
-  // Simulación backend (skip + limit)
-  const paginatedStudents = useMemo(() => {
-    const start = (page - 1) * limit
-    return students.slice(start, start + limit)
-  }, [page])
+export type Report = {
+  id: string;
+  name: string;
+  course: string;
+  section: string;
+  assists: number;
+  absences: number;
+};
+
+export function ReportTable() {
+
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const columns: ColumnDef<Report>[] = [
+    {
+      accessorKey: "name",
+      header: "Estudiante",
+      cell: ({ row }) => (
+        <DataUser name={row.original.name} id={row.original.id} />
+      ),
+    },
+    {
+      accessorKey: "course",
+      header: "Curso",
+    },
+    {
+      accessorKey: "assists",
+      header: "Asistencias",
+      cell: ({ row }) => <Badge color="green">{row.original.assists}</Badge>,
+    },
+    {
+      accessorKey: "absences",
+      header: "Faltas",
+      cell: ({ row }) => <Badge color="red">{row.original.absences}</Badge>,
+    },
+    {
+      header: "% de asistencias",
+      cell: ({ row }) => {
+        const total = row.original.assists + row.original.absences;
+
+        const percentage =
+          total > 0 ? ((row.original.assists / total) * 100).toFixed(0) : 0;
+        return (
+          <ProgressBar
+            value={percentage}
+            showLabel={true}
+            className="max-w-[150px]"
+          />
+        );
+      },
+    },
+  ];
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
 
   return (
-
-
+    <TableContainer>
+      <TableContainerHeader>
+        <TableContainerHeaderLegend title="Resumen por estudiante" />
+        <Button>Exportar PDF</Button>
+      </TableContainerHeader>
       <Table>
-        <Table.Header>
-          <Table.Title>Estudiantes</Table.Title>
-        </Table.Header>
-
-        <Table.Content>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Nombre</Table.Th>
-              <Table.Th>Email</Table.Th>
-              <Table.Th>Faltas</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-
-          <Table.Tbody>
-            {paginatedStudents.length === 0 ? (
-              <Table.Empty colSpan={3} />
-            ) : (
-              paginatedStudents.map((student) => (
-                <Table.Tr key={student.id}>
-                  <Table.Td>{student.name}</Table.Td>
-                  <Table.Td>{student.email}</Table.Td>
-                  <Table.Td
-                    className={
-                      student.absences >= 5
-                        ? "text-red-500 font-semibold"
-                        : ""
-                    }
-                  >
-                    {student.absences}
-                  </Table.Td>
-                </Table.Tr>
-              ))
-            )}
-          </Table.Tbody>
-        </Table.Content>
-
-        <Table.Pagination
-          page={page}
-          totalPages={totalPages}
-          limit={limit}
-          onPageChange={setPage}
-        />
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHeaderCell key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
+                </TableHeaderCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
-  )
+      <TablePagination table={table}/>
+    </TableContainer>
+  );
 }

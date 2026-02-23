@@ -27,7 +27,7 @@ export function LinkCard({
     return (
         <div className={cn("bg-white-primary p-6 rounded-primary flex flex-col gap-5 justify-between", className)}>
             <div className="flex flex-col gap-7">
-            <IconShape icon={Icon} color={iconColor}/>
+            <IconShape icon={Icon} color={iconColor} size="lg"/>
             <div className="flex flex-col gap-2">
                 <h4 className="text-black-primary font-bold text-2xl">{title}</h4>
                 <p className="text-black-secondary leading-primary font-medium">{description}</p>

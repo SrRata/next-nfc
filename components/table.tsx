@@ -1,202 +1,145 @@
-"use client";
-
-import React from "react";
 import { cn } from "@/lib/utils";
-import { Pagination } from "./ui/pagination";
 
+interface TableContainerProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
 
-/* ============================================================
-   Base Types
-============================================================ */
-
-interface BaseProps {
-  children?: React.ReactNode;
-  className?: string;
-}
-
-/* ============================================================
-   Root
-============================================================ */
-
-function Root({ children, className }: BaseProps) {
+export function TableContainer({
+  className,
+  ...props
+}: TableContainerProps) {
   return (
     <div
+      {...props}
       className={cn(
-        "bg-white-primary rounded-primary p-6 flex flex-col gap-6 col-span-full",
+        "bg-white-primary rounded-primary col-span-full p-6",
         className
       )}
-    >
-      {children}
+    />
+  );
+}
+
+interface TableContainerHeaderProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function TableContainerHeader({
+  className,
+  ...props
+}: TableContainerHeaderProps) {
+  return (
+    <div
+      {...props}
+      className={cn("flex items-center justify-between pb-6", className)}
+    />
+  );
+}
+
+interface TableContainerHeaderLegendProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  title: string;
+  description?: string;
+}
+
+export function TableContainerHeaderLegend({
+  title,
+  description,
+  className,
+  ...props
+}: TableContainerHeaderLegendProps) {
+  return (
+    <div {...props} className={cn(className)}>
+      <h3 className="text-black-primary font-bold text-xl">{title}</h3>
+      {description && (
+        <p className="text-black-secondary font-medium">
+          {description}
+        </p>
+      )}
     </div>
   );
 }
 
-/* ============================================================
-   Header
-============================================================ */
+interface TableProps
+  extends React.TableHTMLAttributes<HTMLTableElement> {}
 
-function Header({ children, className }: BaseProps) {
+export function Table({ className, ...props }: TableProps) {
   return (
-    <div
-      className={cn(
-        "flex items-center justify-between",
-        className
-      )}
-    >
-      {children}
-    </div>
+    <table
+      {...props}
+      className={cn("w-full border-collapse", className)}
+    />
   );
 }
 
-function Title({ children, className }: BaseProps) {
-  return (
-    <h3
-      className={cn(
-        "text-xl font-bold text-black-primary",
-        className
-      )}
-    >
-      {children}
-    </h3>
-  );
+interface TableHeaderProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {}
+
+export function TableHeader({
+  className,
+  ...props
+}: TableHeaderProps) {
+  return <thead {...props} className={cn(className)} />;
 }
 
-/* ============================================================
-   Table Structure
-============================================================ */
+interface TableBodyProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {}
 
-function Content({ children, className }: BaseProps) {
+export function TableBody({
+  className,
+  ...props
+}: TableBodyProps) {
+  return <tbody {...props} className={cn(className)} />;
+}
+
+interface TableRowProps
+  extends React.HTMLAttributes<HTMLTableRowElement> {}
+
+export function TableRow({
+  className,
+  ...props
+}: TableRowProps) {
+  return <tr {...props} className={cn(className)} />;
+}
+
+
+interface TableHeaderCellProps
+  extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> {}
+
+export function TableHeaderCell({
+  className,
+  children,
+  ...props
+}: TableHeaderCellProps) {
   return (
-    <div className="overflow-x-auto">
-      <table
+    <th scope="col" {...props}>
+      <div
         className={cn(
-          "w-full border-collapse",
+          "flex items-center justify-start text-black-secondary font-semibold p-6 text-left",
           className
         )}
       >
         {children}
-      </table>
-    </div>
-  );
-}
-
-function Thead({ children, className }: BaseProps) {
-  return (
-    <thead
-      className={cn(
-        "border-b border-gray-200",
-        className
-      )}
-    >
-      {children}
-    </thead>
-  );
-}
-
-function Tbody({ children, className }: BaseProps) {
-  return (
-    <tbody
-      className={cn(
-        "divide-y divide-gray-100",
-        className
-      )}
-    >
-      {children}
-    </tbody>
-  );
-}
-
-function Tr({ children, className }: BaseProps) {
-  return (
-    <tr
-      className={cn(
-        "hover:bg-gray-50 transition-colors",
-        className
-      )}
-    >
-      {children}
-    </tr>
-  );
-}
-
-function Th({ children, className }: BaseProps) {
-  return (
-    <th
-      className={cn(
-        "text-left p-4 font-bold text-black-secondary",
-        className
-      )}
-    >
-      {children}
+      </div>
     </th>
   );
 }
 
-function Td({ children, className }: BaseProps) {
+interface TableCellProps
+  extends React.TdHTMLAttributes<HTMLTableCellElement> {}
+
+export function TableCell({
+  className,
+  children,
+  ...props
+}: TableCellProps) {
   return (
-    <td
-      className={cn(
-        "p-4 font-medium text-black-primary",
-        className
-      )}
-    >
-      {children}
+    <td {...props}>
+      <div
+        className={cn(
+          "flex items-center justify-start text-black-primary font-medium p-6",
+          className
+        )}
+      >
+        {children}
+      </div>
     </td>
   );
 }
-
-/* ============================================================
-   Empty State
-============================================================ */
-
-function Empty({
-  colSpan,
-  message = "No hay resultados",
-}: {
-  colSpan: number;
-  message?: string;
-}) {
-  return (
-    <tr>
-      <td
-        colSpan={colSpan}
-        className="text-center p-6 text-gray-400"
-      >
-        {message}
-      </td>
-    </tr>
-  );
-}
-
-/* ============================================================
-   Pagination Wrapper
-============================================================ */
-
-interface TablePaginationProps {
-  page: number;
-  totalPages: number;
-  limit: number;
-  limitOptions?: number[];
-  onPageChange: (page: number) => void
-}
-
-function TablePagination(props: TablePaginationProps) {
-  return <Pagination {...props} />;
-}
-
-/* ============================================================
-   Export Compound Component
-============================================================ */
-
-export const Table = Object.assign(Root, {
-  Header,
-  Title,
-  Content,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Empty,
-  Pagination: TablePagination,
-});

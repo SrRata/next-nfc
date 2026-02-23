@@ -75,7 +75,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full px-4 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
+        "inline-flex items-center gap-2 rounded-full px-5 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
         badgeStyles[color][variant],
         className
       )}

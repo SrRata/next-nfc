@@ -4,7 +4,7 @@ import { ProgressBar } from "@/components/ui/bar";
 import { Button } from "@/components/ui/button";
 import { IconShape } from "@/components/ui/icon-shape";
 import { Logo } from "@/components/ui/logo";
-import { Pagination } from "@/components/ui/pagination";
+import { Pagination } from "@/components/ui/table-pagination";
 import { ChevronRight, ExternalLinkIcon, Link, User } from "lucide-react";
 
 

@@ -47,7 +47,7 @@ export function Alert({ description, variant }: AlertProps) {
   return (
     <div
       className={cn(
-        "p-6 rounded-primary flex items-start gap-4 col-span-full bg-white-primary",
+        "p-6 rounded-primary flex items-center gap-4 col-span-full bg-white-primary",
       )}
     >
       <IconShape icon={Icon} shape="circle" size="lg" color={color} />

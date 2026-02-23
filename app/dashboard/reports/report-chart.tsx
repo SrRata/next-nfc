@@ -1,54 +1,78 @@
-"use client"
+"use client";
 
-import { ChartContainer, type ChartConfig } from "@/components/ui/chart"
-import { Area, Bar, BarChart, CartesianGrid, XAxis } from "recharts"
-import { ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts"
 
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-  
+const data = [
+  { name: "Ene", ventas: 100 },
+  { name: "Feb", ventas: 200 },
+  { name: "Mar", ventas: 100 },
+  { name: "Ene", ventas: 100 },
+  { name: "Feb", ventas: 200 },
+  { name: "Mar", ventas: 100 },
+  { name: "Mar", ventas: 0 },
+  { name: "Ene", ventas: 100 },
+  { name: "Feb", ventas: 200 },
+  { name: "Mar", ventas: 100 },
+  { name: "Mar", ventas: 0 },
+  { name: "Ene", ventas: 100 },
+  { name: "Feb", ventas: 200 },
+  { name: "Mar", ventas: 100 },
+  { name: "Mar", ventas: 0 },
 ]
 
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#2563eb",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig
 export function ReportChart() {
   return (
-
-    <div className="bg-white-primary col-span-full p-6 rounded-primary">
-    <ChartContainer config={chartConfig} className="h-[200px] w-full">
-  <BarChart accessibilityLayer data={chartData}>
-    <CartesianGrid vertical={false} />
-    <XAxis
-      dataKey="month"
-      tickLine={false}
-      tickMargin={10}
-      axisLine={false}
-    />
-    <ChartTooltip content={<ChartTooltipContent />} />
-    <Area dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-    <Area dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-  </BarChart>
-</ChartContainer>
-</div>
-  )
+    // <div className="col-span-full bg-white-primary rounded-primary">
+    //   <ResponsiveContainer width="100%" height="100%">
+    //     <AreaChart data={data}>
+    //       <CartesianGrid strokeDasharray="3 3" />
+    //       <YAxis />
+    //       <XAxis dataKey="name" />
+    //       <Tooltip />
+    //       <Area
+    //         type="monotone"
+    //         dataKey="ventas"
+    //         stroke="#2563eb"
+    //         fill="#3b82f6"
+    //       />
+    //     </AreaChart>
+    //   </ResponsiveContainer>
+    // </div>
+    <div className="bg-white-primary rounded-primary p-8 col-span-full w-full h-150 max-h-150 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-black-primary text-2xl font-bold">Tendencia de asistencia</p>
+          <p className="text-black-secondary font-medium">Porcentaje de asistencia por semana</p>
+        </div>
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="size-5 rounded-full bg-blue-primary"></div>
+            <p className="text-black-secondary font-medium">Asistencia %</p>
+          </div>
+        </div>
+      </div>
+      <div className="size-full">
+        <ResponsiveContainer>
+          <AreaChart data={data}>
+            <XAxis dataKey="name" />
+            <Tooltip />
+            <Area
+              type="natural"
+              dataKey="ventas"
+              stroke="#0F49BD"
+              fill="#E7EDF8"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
 }

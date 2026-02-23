@@ -52,7 +52,7 @@ export function ProgressBar({
       aria-valuemax={100}
     >
       {showLabel && (
-        <span className="text-sm font-semibold">
+        <span className="font-semibold justify-center flex">
           {safeValue}%
         </span>
       )}
