@@ -1,24 +1,155 @@
 import { Alert } from "@/components/alert";
-import { CourseCard } from "@/components/course-card";
-import { Pagination } from "@/components/ui/table-pagination";
-import { TabsList, Tabs, TabsTrigger } from "@/components/ui/tabs";
-import { ListTodo, Sunrise, Sunset } from "lucide-react";
+import {
+  CourseCard,
+  EducationLevel,
+  Shift,
+  Subject,
+} from "@/components/course-card";
+
+import rawData from "./data.json";
+import { Input } from "@/components/ui/input";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Filter, Search, X } from "lucide-react";
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Label } from "@/components/ui/label";
+
+type CourseData = {
+  id: number;
+  course: string;
+  shift: Shift; // matutina - vespertina
+  level: EducationLevel; // preparatoria - elemental - media - superior - bachillerato
+  subjects: Subject[];
+  studentCount: number;
+  isActive: boolean;
+};
+
+const data: CourseData[] = rawData as CourseData[];
 
 export default function CoursesPage() {
-    return (
-        <>
+  return (
+    <>
+      {/* <div className="col-span-full flex items-center justify-end">
+        <Drawer direction="right">
+          <DrawerTrigger asChild>
+            <Button className="capitalize">
+              <Filter />
+              Filtros
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Filtros</DrawerTitle>
+              <DrawerDescription>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
+                natus
+              </DrawerDescription>
+            </DrawerHeader>
 
-        <CourseCard id="3roinfo" name="Inicial 1A" shift="morning" level="preschool" subjects={[{id: "desarollo", name: "Desarollo temprano"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="Inicial 1A" shift="afternoon" level="preschool" subjects={[{id: "desarollo", name: "Desarollo temprano"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="Tercero A" shift="morning" level="elementary" subjects={[{id: "lengua", name: "Lengua y Literatura"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="Tercero A" shift="afternoon" level="elementary" subjects={[{id: "lengua", name: "Lengua y Literatura"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="Quinto A" shift="morning" level="upper_middle" subjects={[{id: "sociales", name: "Estudios Sociales"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="Quinto A" shift="afternoon" level="upper_middle" subjects={[{id: "sociales", name: "Estudios Sociales"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="3ro Informática" shift="afternoon" level="high_school" subjects={[{id: "mate", name: "Matemáticas"}]} studentCount={24} isActive={true}/>
-        <CourseCard id="3roinfo" name="3ro Informática" shift="morning" level="high_school" subjects={[{id: "mate", name: "Matemáticas"}]} studentCount={24} isActive={true}/>
-        
-        <Alert variant="info" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor aspernatur, odio aliquid voluptates aliquam placeat debitis rerum doloribus qui, dolorem ullam nam! Non porro molestiae asperiores, fugiat voluptatem voluptates incidunt?"/>
-        </>
-        
-    )
+            <div className="flex flex-col items-end gap-6 mt-10">
+              <div className="w-full flex flex-col gap-4">
+                <Label htmlFor="search">Buscar curso</Label>
+                <Input id="search" placeholder="Buscar un curso..." />
+              </div>
+              <div className="w-full flex flex-col gap-4">
+                <Label htmlFor="nivel">Nivel educativo</Label>
+                <Select defaultValue="Todos">
+                  <SelectTrigger id="nivel">
+                    <SelectValue placeholder="Seleccione un nivel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="Todos">Todos</SelectItem>
+                      <SelectItem value="preparatoria">Preparatoria</SelectItem>
+                      <SelectItem value="elemental">
+                        Básica Elemental
+                      </SelectItem>
+                      <SelectItem value="media">Básica Media</SelectItem>
+                      <SelectItem value="superior">Básica Superior</SelectItem>
+                      <SelectItem value="bachillerato">Bachillerato</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full flex flex-col gap-4">
+                <Label htmlFor="seccion">Sección</Label>
+                <Select defaultValue="Todos">
+                  <SelectTrigger id="seccion">
+                    <SelectValue placeholder="Seleccione una sección" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="Todos">Todos</SelectItem>
+                      <SelectItem value="matutina">Sección Matutina</SelectItem>
+                      <SelectItem value="vespertina">
+                        Sección Vespertina
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="w-full flex flex-col gap-4">
+                <Label htmlFor="estado">Estado</Label>
+                <Select defaultValue="Todos">
+                  <SelectTrigger id="estado">
+                    <SelectValue placeholder="Seleccione un estado" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="Todos">Todos</SelectItem>
+                      <SelectItem value="activo">Activo</SelectItem>
+                      <SelectItem value="inactivo">Inactivo</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <DrawerFooter>
+              <Button>Aplicar</Button>
+              <DrawerClose asChild>
+                <Button variant="outline">Cancelar</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div> */}
+
+      {data.map((course) => (
+        <CourseCard
+          key={course.id}
+          id={course.id}
+          course={course.course}
+          shift={course.shift}
+          level={course.level}
+          subjects={course.subjects}
+          studentCount={course.studentCount}
+          isActive={course.isActive}
+        />
+      ))}
+
+      <Alert
+        variant="info"
+        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor aspernatur, odio aliquid voluptates aliquam placeat debitis rerum doloribus qui, dolorem ullam nam! Non porro molestiae asperiores, fugiat voluptatem voluptates incidunt?"
+      />
+    </>
+  );
 }

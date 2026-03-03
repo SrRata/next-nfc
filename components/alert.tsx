@@ -1,12 +1,7 @@
-import {
-  AlertCircle,
-  CheckCircle,
-  AlertTriangle,
-  XCircle,
-} from "lucide-react";
+import { AlertCircle, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 import { IconShape } from "./ui/icon-shape";
-import type { IconColor } from "./ui/icon-shape"; 
+import type { IconColor } from "./ui/icon-shape";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -59,5 +54,5 @@ export function Alert({ description, variant }: AlertProps) {
   );
 }
 
-
-//posible vision final
+//Componente mejorado, version final
+//01-03-2026

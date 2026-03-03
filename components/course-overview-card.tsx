@@ -1,34 +1,33 @@
-import { GraduationCap } from "lucide-react"
-import { Badge, BadgeCircle } from "./ui/badge"
-import { ProgressBar } from "./ui/bar"
-import { cn } from "@/lib/utils"
+import { GraduationCap } from "lucide-react";
+import { Badge, BadgeCircle } from "./ui/badge";
+import { ProgressBar } from "./ui/bar";
+import { cn } from "@/lib/utils";
 
 interface CourseOverviewCardProps {
-  children: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  className?: string;
 }
 
 interface CourseOverviewHeaderProps {
-  courseName: string
-  schedule: string
-  description?: string
+  courseName: string;
+  schedule: string;
+  description?: string;
 }
 
 interface CourseOverviewStatsProps {
-  children: React.ReactNode
-  isActive: boolean
+  children: React.ReactNode;
+  isActive: boolean;
 }
 
 interface AttendanceStatCardProps {
-  present: number
-  total: number
+  present: number;
+  total: number;
 }
 
 interface AbsenceStatCardProps {
-  absences: number
-  late: number
+  absences: number;
+  late: number;
 }
-
 
 export function CourseOverviewCard({
   children,
@@ -38,14 +37,13 @@ export function CourseOverviewCard({
     <section
       className={cn(
         "bg-white-primary rounded-primary overflow-hidden col-span-2 row-span-2",
-        className
+        className,
       )}
     >
       {children}
     </section>
-  )
+  );
 }
-
 
 export function CourseOverviewHeader({
   courseName,
@@ -68,7 +66,7 @@ export function CourseOverviewHeader({
         aria-hidden
       />
     </header>
-  )
+  );
 }
 
 export function CourseOverviewStats({
@@ -78,9 +76,7 @@ export function CourseOverviewStats({
   return (
     <div className="p-10 flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h3 className="font-bold text-2xl">
-          Estado de asistencia
-        </h3>
+        <h3 className="font-bold text-2xl">Estado de asistencia</h3>
 
         <Badge color={isActive ? "green" : "red"}>
           <BadgeCircle pulse={isActive} size="sm" />
@@ -88,45 +84,34 @@ export function CourseOverviewStats({
         </Badge>
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        {children}
-      </div>
+      <div className="grid grid-cols-2 gap-6">{children}</div>
     </div>
-  )
+  );
 }
 
-function StatContainer({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+function StatContainer({ children }: { children: React.ReactNode }) {
   return (
     <article className="bg-gray rounded-primary px-5 py-7 flex flex-col gap-4">
       {children}
     </article>
-  )
+  );
 }
 
 export function AttendanceStatCard({
   present,
   total,
 }: AttendanceStatCardProps) {
-  const safeTotal = total > 0 ? total : 0
-  const rawPercentage =
-    safeTotal > 0 ? (present / safeTotal) * 100 : 0
+  const safeTotal = total > 0 ? total : 0;
+  const rawPercentage = safeTotal > 0 ? (present / safeTotal) * 100 : 0;
 
-  const percentage = Math.min(Math.max(rawPercentage, 0), 100)
+  const percentage = Math.min(Math.max(rawPercentage, 0), 100);
 
   return (
     <StatContainer>
-      <p className="text-sm text-black-secondary font-bold">
-        Presentes
-      </p>
+      <p className="text-sm text-black-secondary font-bold">Presentes</p>
 
       <div>
-        <span className="text-4xl font-bold text-blue-primary">
-          {present}
-        </span>
+        <span className="text-4xl font-bold text-blue-primary">{present}</span>
 
         <span className="text-black-secondary font-semibold text-xl">
           {" "}
@@ -141,15 +126,12 @@ export function AttendanceStatCard({
         size="lg"
       />
     </StatContainer>
-  )
+  );
 }
 
-export function AbsenceStatCard({
-  absences,
-  late,
-}: AbsenceStatCardProps) {
-  const safeAbsences = Math.max(absences, 0)
-  const safeLate = Math.max(late, 0)
+export function AbsenceStatCard({ absences, late }: AbsenceStatCardProps) {
+  const safeAbsences = Math.max(absences, 0);
+  const safeLate = Math.max(late, 0);
 
   return (
     <StatContainer>
@@ -162,20 +144,19 @@ export function AbsenceStatCard({
           <span className="text-4xl font-bold text-orange-primary">
             {safeLate}
           </span>
-          <p className="text-black-secondary font-semibold">
-            Atrasos
-          </p>
+          <p className="text-black-secondary font-semibold">Atrasos</p>
         </div>
 
         <div>
           <span className="text-4xl font-bold text-red-primary">
             {safeAbsences}
           </span>
-          <p className="text-black-secondary font-semibold">
-            Ausentes
-          </p>
+          <p className="text-black-secondary font-semibold">Ausentes</p>
         </div>
       </div>
     </StatContainer>
-  )
+  );
 }
+
+//Componente mejorado, version final
+//01-03-2026

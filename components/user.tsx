@@ -55,3 +55,8 @@ export function UserInfo({
         </div>
     );
 }
+
+
+
+//Componente mejorado, version con posibles cambios a futuro.
+//01-03-2026

@@ -43,18 +43,14 @@ export function InfoCard({
     <div
       className={cn(
         "bg-white-primary rounded-primary p-6 gap-4",
-        isCompact
-          ? "flex items-center"
-          : "flex flex-col",
-        className
+        isCompact ? "flex items-center" : "flex flex-col",
+        className,
       )}
     >
       {Icon && <IconShape size="lg" color={colorIcon} icon={Icon} />}
 
       <div className={cn("flex flex-col gap-2")}>
-        <h3 className="text-black-secondary font-semibold">
-          {title}
-        </h3>
+        <h3 className="text-black-secondary font-semibold">{title}</h3>
 
         <p className="text-black-primary font-bold text-3xl capitalize">
           {value}
@@ -70,5 +66,5 @@ export function InfoCard({
   );
 }
 
-
-//posible version final
+//Componente mejorado, version final
+//01-03-2026

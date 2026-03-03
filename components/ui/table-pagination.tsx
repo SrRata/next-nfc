@@ -25,10 +25,7 @@ export function TablePagination<TData>({
 
   return (
     <div
-      className={cn(
-        "flex items-center justify-between pt-5 pb-2",
-        className,
-      )}
+      className={cn("flex items-center justify-between pt-5 pb-2", className)}
     >
       <p className="text-black-secondary font-semibold">
         Mostrando {totalRows === 0 ? 0 : start} a {end} de {totalRows} registros
@@ -62,3 +59,6 @@ export function TablePagination<TData>({
     </div>
   );
 }
+
+//Componente mejorado, version final
+//01-03-2026

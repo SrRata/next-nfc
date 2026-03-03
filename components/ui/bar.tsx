@@ -1,34 +1,34 @@
-import { cn } from "@/lib/utils"
-
-interface ProgressBarProps {
-  value: number
-  showLabel?: boolean
-  size?: "sm" | "md" | "lg"
-  intent?: "auto" | "success" | "error" | "warning" | "info"
-  className?: string
-}
-
-function clamp(value: number, min = 0, max = 100) {
-  return Math.min(Math.max(value, min), max)
-}
-
-function getIntentFromValue(value: number) {
-  if (value <= 40) return "error"
-  if (value <= 75) return "warning"
-  return "success"
-}
+import { cn } from "@/lib/utils";
 
 const sizeClasses = {
   sm: "h-1",
   md: "h-2",
   lg: "h-3",
-}
+};
 
 const intentClasses = {
   success: "bg-green-primary",
   error: "bg-red-primary",
   warning: "bg-yellow-primary",
   info: "bg-blue-primary",
+};
+
+function clamp(value: number, min = 0, max = 100) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function getIntentFromValue(value: number) {
+  if (value <= 40) return "error";
+  if (value <= 75) return "warning";
+  return "success";
+}
+
+interface ProgressBarProps {
+  value: number;
+  showLabel?: boolean;
+  size?: "sm" | "md" | "lg";
+  intent?: "auto" | "success" | "error" | "warning" | "info";
+  className?: string;
 }
 
 export function ProgressBar({
@@ -38,10 +38,10 @@ export function ProgressBar({
   intent = "auto",
   className,
 }: ProgressBarProps) {
-  const safeValue = value
+  const safeValue = value;
 
   const resolvedIntent =
-    intent === "auto" ? getIntentFromValue(safeValue) : intent
+    intent === "auto" ? getIntentFromValue(safeValue) : intent;
 
   return (
     <div
@@ -52,22 +52,26 @@ export function ProgressBar({
       aria-valuemax={100}
     >
       {showLabel && (
-        <span className="font-semibold justify-center flex">
-          {safeValue}%
-        </span>
+        <span className="font-semibold justify-center flex">{safeValue}%</span>
       )}
 
-      <div className={cn("w-full rounded-full bg-gray-200 overflow-hidden", sizeClasses[size])}>
+      <div
+        className={cn(
+          "w-full rounded-full bg-gray-200 overflow-hidden",
+          sizeClasses[size],
+        )}
+      >
         <div
           className={cn(
             "h-full rounded-full transition-all duration-300",
-            intentClasses[resolvedIntent]
+            intentClasses[resolvedIntent],
           )}
           style={{ width: `${safeValue}%` }}
         />
       </div>
     </div>
-  )
+  );
 }
 
-//Componente mejorado, posiblemente final
+//Componente mejorado, version final
+//01-03-2026

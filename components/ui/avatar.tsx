@@ -1,35 +1,4 @@
-import { cn } from "@/lib/utils"
-
-interface AvatarProps {
-  name?: string
-  size?: "sm" | "md" | "lg"
-  className?: string
-  variant?: "auto" | number
-}
-
-function getInitials(text?: string): string {
-  if (!text || !text.trim()) return "U"
-
-  const words = text.trim().split(/\s+/)
-
-  if (words.length === 1) {
-    return words[0].slice(0, 2).toUpperCase()
-  }
-
-  return words
-    .slice(0, 2)
-    .map(word => word.charAt(0))
-    .join("")
-    .toUpperCase()
-}
-
-function stringToHash(str: string): number {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash)
-  }
-  return Math.abs(hash)
-}
+import { cn } from "@/lib/utils";
 
 const avatarVariants = [
   {
@@ -48,19 +17,50 @@ const avatarVariants = [
     bg: "bg-orange-secondary",
     text: "text-orange-primary",
   },
-]
+];
+
+function getInitials(text?: string): string {
+  if (!text || !text.trim()) return "U";
+
+  const words = text.trim().split(/\s+/);
+
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+
+  return words
+    .slice(0, 2)
+    .map((word) => word.charAt(0))
+    .join("")
+    .toUpperCase();
+}
+
+function stringToHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash);
+}
 
 function getVariantFromName(name: string) {
-  const hash = stringToHash(name)
-  const index = hash % avatarVariants.length
-  return avatarVariants[index]
+  const hash = stringToHash(name);
+  const index = hash % avatarVariants.length;
+  return avatarVariants[index];
+}
+
+interface AvatarProps {
+  name?: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+  variant?: "auto" | number;
 }
 
 const sizeClasses = {
   sm: "size-8 text-sm",
   md: "size-12 text-lg",
   lg: "size-16 text-2xl",
-}
+};
 
 export function Avatar({
   name = "User",
@@ -69,9 +69,7 @@ export function Avatar({
   variant = "auto",
 }: AvatarProps) {
   const selectedVariant =
-    variant === "auto"
-      ? getVariantFromName(name)
-      : avatarVariants[variant]
+    variant === "auto" ? getVariantFromName(name) : avatarVariants[variant];
 
   return (
     <div
@@ -80,13 +78,13 @@ export function Avatar({
         sizeClasses[size],
         selectedVariant.bg,
         selectedVariant.text,
-        className
+        className,
       )}
     >
       {getInitials(name)}
     </div>
-  )
+  );
 }
 
-
-//Componente mejorado, posiblemente final
+//Componente mejorado, version final
+// 01-03-2026

@@ -14,7 +14,6 @@ export function Logo({ className, title }: LogoProps) {
         icon={Nfc}
         color="blue"
         shape="rounded"
-        iconSize={22}
         className="w-11 h-11"
       />
 
@@ -32,4 +31,5 @@ export function Logo({ className, title }: LogoProps) {
   );
 }
 
-//Componente mejorado, posiblemente final
+//Componente mejorado, version final
+//01-03-2026

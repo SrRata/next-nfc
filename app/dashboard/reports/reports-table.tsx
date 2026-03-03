@@ -1,36 +1,17 @@
-"use client";
+"use client"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableContainerHeader,
-  TableContainerHeaderLegend,
-  TableHeader,
-  TableHeaderCell,
-  TableRow,
-} from "@/components/table";
-
-import { useState } from "react";
-
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DataUser } from "@/components/data-user";
 import { ProgressBar } from "@/components/ui/bar";
 
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import data from "./data.json";
-import { TablePagination } from "@/components/ui/table-pagination";
+import { DataTable } from "@/components/data-table";
 
-export type Report = {
+type Data = {
   id: string;
   name: string;
   course: string;
@@ -41,12 +22,7 @@ export type Report = {
 
 export function ReportTable() {
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-
-  const columns: ColumnDef<Report>[] = [
+  const columns: ColumnDef<Data>[] = [
     {
       accessorKey: "name",
       header: "Estudiante",
@@ -86,51 +62,7 @@ export function ReportTable() {
     },
   ];
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      pagination,
-    },
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
-
   return (
-    <TableContainer>
-      <TableContainerHeader>
-        <TableContainerHeaderLegend title="Resumen por estudiante" />
-        <Button>Exportar PDF</Button>
-      </TableContainerHeader>
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHeaderCell key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </TableHeaderCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <TablePagination table={table}/>
-    </TableContainer>
+    <DataTable legend="Datae por cada estudiante" button="Exportar PDf" data={data} columns={columns}/>
   );
 }

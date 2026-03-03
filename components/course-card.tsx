@@ -3,23 +3,22 @@ import { IconShape } from "./ui/icon-shape";
 import { Badge } from "./ui/badge";
 import { InternalLink } from "./ui/link";
 
-type Shift = "morning" | "afternoon";
+export type Shift = "matutina" | "vespertina";
 
-type EducationLevel =
-  | "preschool"
-  | "elementary"
-  | "middle"
-  | "upper_middle"
-  | "high_school";
+export type EducationLevel =
+  | "preparatoria"
+  | "elemental"
+  | "media"
+  | "superior"
+  | "bachillerato";
 
-interface Subject {
-  id: string;
+export interface Subject {
   name: string;
 }
 
 interface CourseCardProps {
-  id: string;
-  name: string;
+  id: number;
+  course: string;
   shift: Shift;
   level: EducationLevel;
   subjects: Subject[];
@@ -28,31 +27,31 @@ interface CourseCardProps {
 }
 
 const SHIFT_LABEL: Record<Shift, string> = {
-  morning: "Matutina",
-  afternoon: "Vespertina",
+  matutina: "Matutina",
+  vespertina: "Vespertina",
 };
 
 const LEVEL_CONFIG: Record<
   EducationLevel,
   { label: string; color: "green" | "blue" | "yellow" | "purple" | "orange" }
 > = {
-  preschool: {
+  preparatoria: {
     label: "Preparatoria",
     color: "blue",
   },
-  elementary: {
+  elemental: {
     label: "Básica elemental",
     color: "orange",
   },
-  middle: {
+  media: {
     label: "Básica media",
     color: "yellow",
   },
-  upper_middle: {
+  superior: {
     label: "Básica superior",
     color: "green",
   },
-  high_school: {
+  bachillerato: {
     label: "Bachillerato",
     color: "purple",
   },
@@ -60,17 +59,13 @@ const LEVEL_CONFIG: Record<
 
 export function CourseCard({
   id,
-  name,
+  course,
   shift,
   level,
   subjects,
   studentCount,
   isActive,
 }: CourseCardProps) {
-
-  const MAX_VISIBLE = 3;
-  const visibleSubjects = subjects.slice(0, MAX_VISIBLE);
-  const remaining = subjects.length - MAX_VISIBLE;
 
   return (
     <div className="bg-white-primary rounded-primary p-7 flex flex-col justify-between gap-10">
@@ -82,7 +77,7 @@ export function CourseCard({
             {LEVEL_CONFIG[level].label}
           </Badge>
 
-          <Badge color={shift === "morning" ? "blue" : "yellow"}>
+          <Badge color={shift === "matutina" ? "blue" : "yellow"}>
             {SHIFT_LABEL[shift]}
           </Badge>
 
@@ -93,16 +88,12 @@ export function CourseCard({
       </div>
 
       <div className="flex flex-col gap-2">
-        <h3 className="text-black-primary text-2xl font-bold">
-          {name}
-        </h3>
+        <h3 className="text-black-primary text-2xl font-bold">{course}</h3>
 
         <p className="text-blue-primary font-bold">
-          {visibleSubjects.map(s => s.name).join(" | ")}
-          {remaining > 0 && ` +${remaining} más`}
+          {subjects.map((s) => s.name).join(" | ")}
         </p>
-
-        <div className="flex items-center gap-2.5 text-black-secondary font-semibold mt-6">
+        <div className="flex items-center gap-2.5 text-black-secondary font-semibold mt-6 leading-primary">
           <Users size={18} strokeWidth={2.5} />
           {studentCount} estudiantes
         </div>

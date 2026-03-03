@@ -1,0 +1,44 @@
+[
+  {
+    "id": "0150072668",
+    "name": "Luis Miguel Matailo Zuñiga",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "state": "presente"
+  },
+  {
+    "id": "0150072668",
+    "name": "Braulio Guamabaña",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "state": "ausente"
+  },
+  {
+    "id": "0150072668",
+    "name": "Justin Alvarez",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "state": "atrasado"
+  },
+  {
+    "id": "0150072668",
+    "name": "Baryam Illescas",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "state": "presente"
+  },
+  {
+    "id": "0150072668",
+    "name": "Sebastian Flores",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "state": "presente"
+  },
+  {
+    "id": "0150072668",
+    "name": "Juan Montesdeoca ",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "state": "presente"
+  }
+]

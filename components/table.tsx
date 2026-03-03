@@ -109,7 +109,7 @@ export function TableHeaderCell({
   ...props
 }: TableHeaderCellProps) {
   return (
-    <th scope="col" {...props}>
+    <th scope="col" {...props} className="last:[&>div]:justify-end">
       <div
         className={cn(
           "flex items-center justify-start text-black-secondary font-semibold p-6 text-left",
@@ -131,7 +131,7 @@ export function TableCell({
   ...props
 }: TableCellProps) {
   return (
-    <td {...props}>
+    <td {...props} className="last:[&>div]:justify-end">
       <div
         className={cn(
           "flex items-center justify-start text-black-primary font-medium p-6",

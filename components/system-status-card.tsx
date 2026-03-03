@@ -23,19 +23,14 @@ export function SystemStatusCard({
             Estado del sistema
           </p>
 
-          <Badge
-            color={isOnline ? "green" : "red"}
-            variant="solid"
-          >
-            <BadgeCircle pulse={isOnline}/>
+          <Badge color={isOnline ? "green" : "red"} variant="solid">
+            <BadgeCircle pulse={isOnline} />
             {isOnline ? "En línea" : "Fuera de línea"}
           </Badge>
         </div>
 
         <div>
-          <p className="font-bold text-4xl text-white-primary">
-            {attendance}%
-          </p>
+          <p className="font-bold text-4xl text-white-primary">{attendance}%</p>
           <p className="text-xl font-medium text-white-primary/80">
             Asistencia hoy
           </p>
@@ -53,3 +48,6 @@ export function SystemStatusCard({
     </div>
   );
 }
+
+//Componente mejorado, version final
+//01-03-2026

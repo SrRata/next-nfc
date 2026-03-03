@@ -1,0 +1,106 @@
+[
+  {
+    "date": "2026-01-05",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 3,
+    "assists": 27
+  },
+  {
+    "date": "2026-01-05",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 5,
+    "assists": 25
+  },
+
+  {
+    "date": "2026-01-12",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 4,
+    "assists": 26
+  },
+  {
+    "date": "2026-01-12",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 6,
+    "assists": 24
+  },
+
+  {
+    "date": "2026-01-19",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 2,
+    "assists": 28
+  },
+  {
+    "date": "2026-01-19",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 4,
+    "assists": 26
+  },
+
+  {
+    "date": "2026-02-02",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 5,
+    "assists": 25
+  },
+  {
+    "date": "2026-02-02",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 7,
+    "assists": 23
+  },
+
+  {
+    "date": "2026-02-16",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 3,
+    "assists": 27
+  },
+  {
+    "date": "2026-02-16",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 6,
+    "assists": 24
+  },
+
+  {
+    "date": "2026-03-03",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 4,
+    "assists": 26
+  },
+  {
+    "date": "2026-03-03",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 5,
+    "assists": 25
+  },
+
+  {
+    "date": "2026-03-17",
+    "course": "3ro Informática",
+    "section": "Matutina",
+    "absences": 2,
+    "assists": 28
+  },
+  {
+    "date": "2026-03-17",
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "absences": 3,
+    "assists": 27
+  }
+]

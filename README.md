@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## 01-03-2026
+
+El componente button, select, observation, table no han sido aprobados totalmente, posiblemente tengan cambios.
+
+El componente table tooltip debe ser revisado
+
+en un futuro podria el componete user tener un menu desplegable conmas opciones sobre el usuario
+
+ui de layout de dashboard esta finalizada (si el tiempo alcanza se debe agregar el bot asistente)
+ui de pagina principal de dashboard esta finalizada
+ui de pagina cursos de dashboard esta finalizada

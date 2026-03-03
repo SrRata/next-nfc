@@ -1,11 +1,9 @@
-import { DataUser } from "@/components/data-user";
-import { Table, TableBody, TableTitle, Tbody, Td, Th, Thead, Tr } from "@/components/table";
-import { Badge } from "@/components/ui/badge";
-import { Pagination } from "@/components/ui/table-pagination";
+import { HistoryTable } from "./history-table";
 
-export default function historyPage() {
+export default function HistoryPage() {
     return (
         <>
+        <HistoryTable/>
         </>
     )
 }

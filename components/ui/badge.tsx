@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
-import type { ReactNode } from "react"
+import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
 
 type BadgeColor =
   | "green"
@@ -9,21 +9,11 @@ type BadgeColor =
   | "gray"
   | "orange"
   | "sky"
-  | "purple"
+  | "purple";
 
-type BadgeVariant = "solid" | "soft" | "outline"
+type BadgeVariant = "solid" | "soft" | "outline";
 
-interface BadgeProps {
-  children: ReactNode
-  color?: BadgeColor
-  variant?: BadgeVariant
-  className?: string
-}
-
-const badgeStyles: Record<
-  BadgeColor,
-  Record<BadgeVariant, string>
-> = {
+const badgeStyles: Record<BadgeColor, Record<BadgeVariant, string>> = {
   green: {
     solid: "bg-green-primary text-white",
     soft: "bg-green-secondary text-green-primary",
@@ -63,7 +53,14 @@ const badgeStyles: Record<
     solid: "bg-purple-primary text-white",
     soft: "bg-purple-secondary text-purple-primary",
     outline: "border border-purple-primary text-purple-primary bg-transparent",
-  }
+  },
+};
+
+interface BadgeProps {
+  children: ReactNode;
+  color?: BadgeColor;
+  variant?: BadgeVariant;
+  className?: string;
 }
 
 export function Badge({
@@ -77,24 +74,24 @@ export function Badge({
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-5 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
         badgeStyles[color][variant],
-        className
+        className,
       )}
     >
       {children}
     </span>
-  )
+  );
 }
 
 interface BadgeCircleProps {
-  pulse?: boolean
-  size?: "sm" | "md"
-  className?: string
+  pulse?: boolean;
+  size?: "sm" | "md";
+  className?: string;
 }
 
 const circleSizes = {
   sm: "size-2",
   md: "size-3",
-}
+};
 
 export function BadgeCircle({
   pulse = false,
@@ -107,10 +104,11 @@ export function BadgeCircle({
         circleSizes[size],
         "rounded-full bg-current",
         pulse && "animate-pulse",
-        className
+        className,
       )}
     />
-  )
+  );
 }
 
-//Componente mejorado, posiblemente final
+//Componente mejorado, version final
+//01-03/2026
