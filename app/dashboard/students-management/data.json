@@ -1,0 +1,18 @@
+[
+    {
+        "id": "0150072668",
+        "name": "Luis Miguel Matailo Zuñiga",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "state": "activo",
+        "nfc": "0150072668"
+    },
+    {
+        "id": "0150072668",
+        "name": "Pablo Sebastian Flores Peralta",
+        "course": "3ro Informática",
+        "section": "vespertina",
+        "state": "inactivo",
+        "nfc": "0150072668"
+    }
+]

@@ -50,12 +50,12 @@ export function ReportTable() {
         const total = row.original.assists + row.original.absences;
 
         const percentage =
-          total > 0 ? ((row.original.assists / total) * 100).toFixed(0) : 0;
+          total > 0 ? Number(((row.original.assists / total) * 100).toFixed(0)) : 0;
         return (
           <ProgressBar
             value={percentage}
             showLabel={true}
-            className="max-w-[150px]"
+            className="max-w-60"
           />
         );
       },

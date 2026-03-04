@@ -1,4 +1,4 @@
-import { ClipboardEdit, GraduationCap, HelpCircle, LayoutDashboard, LucideIcon, User, Users, History, Clipboard} from "lucide-react";
+import { ClipboardEdit, GraduationCap, HelpCircle, LayoutDashboard, LucideIcon, User, Users, History, Clipboard, Contact, UserPen} from "lucide-react";
 
 interface NavItem {
   href: string;
@@ -15,7 +15,7 @@ export const teacherNav: NavItem[] = [
   { href: "/dashboard/reports", icon: Clipboard, text: "Reportes de cursos" },
   { href: "/dashboard/observations", icon: ClipboardEdit, text: "Observaciones" },
   { href: "/dashboard/profile", icon: User, text: "Mi perfil" },
-  { href: "/dashboard/help", icon: HelpCircle, text: "Ayuda" },
-  { href: "/dashboard/students-management", icon: HelpCircle, text: "Gestión de estudiantes" },
-  { href: "/dashboard/users-management", icon: HelpCircle, text: "Gestión de usuarios" },
+  // { href: "/dashboard/help", icon: HelpCircle, text: "Ayuda" },
+  { href: "/dashboard/students-management", icon: UserPen, text: "Gestión de estudiantes" },
+  { href: "/dashboard/users-management", icon: Contact, text: "Gestión de usuarios" },
 ];

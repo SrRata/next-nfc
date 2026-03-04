@@ -1,0 +1,23 @@
+[
+    {
+        "id": "0150072668",
+        "name": "Cristian cornejo",
+        "role": "profesor",
+        "email": "cristian.cornejo@uemfebrescordero.com",
+        "state": "activo"
+    },
+    {
+        "id": "0150072668",
+        "name": "Juan Segarra",
+        "role": "profesor",
+        "email": "juan.segarra@uemfebrescordero.com",
+        "state": "inactivo"
+    },
+    {
+        "id": "0150072668",
+        "name": "Luis Matailo",
+        "role": "administrador",
+        "email": "luis.matailo@uemfebrescordero.com",
+        "state": "activo"
+    }
+]

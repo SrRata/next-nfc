@@ -4,9 +4,10 @@ interface DataUserProps {
   name: string;
   id?: string;
   section?: string;
+  course?: string;
 }
 
-export function DataUser({ name, id, section }: DataUserProps) {
+export function DataUser({ name, id, section, course }: DataUserProps) {
   return (
     <div className="flex items-center gap-3 min-w-0">
       <Avatar name={name} />
@@ -17,7 +18,9 @@ export function DataUser({ name, id, section }: DataUserProps) {
         {(id || section) && (
           <span className="text-sm font-medium text-black-secondary truncate">
             {id && `ID: ${id}`}
-            {id && section && " • "}
+            {id && course && " • "}
+            {course}
+            {course && section && " • "}
             {section}
           </span>
         )}
