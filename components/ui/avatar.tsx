@@ -51,7 +51,7 @@ function getVariantFromName(name: string) {
 
 interface AvatarProps {
   name?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   className?: string;
   variant?: "auto" | number;
 }
@@ -60,6 +60,7 @@ const sizeClasses = {
   sm: "size-8 text-sm",
   md: "size-12 text-lg",
   lg: "size-16 text-2xl",
+  xl: "size-20 text-3xl",
 };
 
 export function Avatar({

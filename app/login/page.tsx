@@ -47,11 +47,11 @@ export default function LoginPage() {
           <div className="flex flex-col w-full gap-5">
             <div className="flex flex-col gap-4">
               <Label htmlFor="user">Usuario o Correo</Label>
-              <Input id="user" type="text"/>
+              <Input id="user" type="text" placeholder="Ej: usuario@uemfebrescordero.com"/>
             </div>
             <div className="flex flex-col gap-4">
               <Label htmlFor="password">Contraseña</Label>
-              <Input id="password" type="password"/>
+              <Input id="password" type="password" placeholder="Inserte su contraseña"/>
             </div>
           </div>
           <div className="flex flex-col w-full gap-5 items-center">

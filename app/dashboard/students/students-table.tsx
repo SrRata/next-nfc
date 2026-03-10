@@ -13,11 +13,13 @@ type Data = {
   name: string;
   course: string;
   section: string;
-  state: "presente" | "ausente" | "atrasado";
+  state: state;
 };
 
 import data from "./data.json";
 import { DataTable } from "@/components/data-table";
+import { state } from "@/lib/data-type";
+import { stateBadgeColor } from "@/lib/get-badge-color";
 
 export function StudentsTable() {
   const columns: ColumnDef<Data>[] = [
@@ -38,15 +40,10 @@ export function StudentsTable() {
       cell: ({ row }) => {
         const state = row.original.state;
 
-        const colorMap: Record<Data["state"], "green" | "red" | "yellow"> = {
-          presente: "green",
-          ausente: "red",
-          atrasado: "yellow",
-        };
         return (
-          <Badge color={colorMap[state]}>
+          <Badge color={stateBadgeColor[state].color}>
             <BadgeCircle />
-            {row.original.state}
+            {stateBadgeColor[state].label}
           </Badge>
         );
       },

@@ -1,48 +1,22 @@
 import { Alert } from "@/components/alert";
-import {
-  CourseCard,
-  EducationLevel,
-  Shift,
-  Subject,
-} from "@/components/course-card";
+import { CourseCard, Subject } from "@/components/course-card";
 
 import rawData from "./data.json";
-import { Input } from "@/components/ui/input";
 
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Filter, Search, X } from "lucide-react";
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Label } from "@/components/ui/label";
+import { educationLevel, section, status } from "@/lib/data-type";
 
 type CourseData = {
   id: number;
   course: string;
-  shift: Shift; // matutina - vespertina
-  level: EducationLevel; // preparatoria - elemental - media - superior - bachillerato
+  section: section; // matutina - vespertina
+  level: educationLevel; // preparatoria - elemental - media - superior - bachillerato
   subjects: Subject[];
   studentCount: number;
-  isActive: boolean;
+  status: status; // activo - inactivo
 };
 
-const data: CourseData[] = rawData as CourseData[];
+  const data: CourseData[] = rawData as CourseData[];
+
 
 export default function CoursesPage() {
   return (
@@ -138,11 +112,11 @@ export default function CoursesPage() {
           key={course.id}
           id={course.id}
           course={course.course}
-          shift={course.shift}
+          section={course.section}
           level={course.level}
           subjects={course.subjects}
           studentCount={course.studentCount}
-          isActive={course.isActive}
+          status={course.status} 
         />
       ))}
 

@@ -1,18 +1,110 @@
 [
     {
         "id": "0150072668",
-        "name": "Luis Miguel Matailo Zuñiga",
+        "firstName": "Luis Miguel",
+        "lastName": "Matailo Zuñiga",
         "course": "3ro Informática",
         "section": "matutina",
-        "state": "activo",
-        "nfc": "0150072668"
+        "isActive": true,
+        "nfc": "NFC-00001"
     },
     {
         "id": "0150072668",
-        "name": "Pablo Sebastian Flores Peralta",
+        "firstName": "Pablo Sebastian",
+        "lastName": "Flores Peralta",
         "course": "3ro Informática",
         "section": "vespertina",
-        "state": "inactivo",
-        "nfc": "0150072668"
+        "isActive": true,
+        "nfc": "NFC-00002"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Justin Ariel",
+        "lastName": "Alvarez Aucay",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00003"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Braulio Alexander",
+        "lastName": "Guambaña Guanoquisa",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": false,
+        "nfc": "NFC-00004"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Bryam David",
+        "lastName": "Illescas Illescas",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00005"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Juan Alejandro",
+        "lastName": "Montesdeoca Bueno",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00006"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Luis Miguel",
+        "lastName": "Matailo Zuñiga",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00001"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Pablo Sebastian",
+        "lastName": "Flores Peralta",
+        "course": "3ro Informática",
+        "section": "vespertina",
+        "isActive": true,
+        "nfc": "NFC-00002"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Justin Ariel",
+        "lastName": "Alvarez Aucay",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00003"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Braulio Alexander",
+        "lastName": "Guambaña Guanoquisa",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": false,
+        "nfc": "NFC-00004"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Bryam David",
+        "lastName": "Illescas Illescas",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00005"
+    },
+    {
+        "id": "0150072668",
+        "firstName": "Juan Alejandro",
+        "lastName": "Montesdeoca Bueno",
+        "course": "3ro Informática",
+        "section": "matutina",
+        "isActive": true,
+        "nfc": "NFC-00006"
     }
 ]

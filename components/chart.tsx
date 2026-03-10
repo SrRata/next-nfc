@@ -34,9 +34,8 @@ export function Chart({
   areas,
 }: ReportChartProps) {
   return (
-    <div className="bg-white-primary rounded-primary p-8 col-span-full w-full h-150 max-h-150 flex flex-col gap-4">
+    <div className="bg-white-primary rounded-primary p-8 col-span-full w-full h-160 max-h-150 flex flex-col gap-4">
       
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <p className="text-black-primary text-2xl font-bold">
@@ -49,7 +48,6 @@ export function Chart({
           )}
         </div>
 
-        {/* Leyenda manual dinámica */}
         <div className="flex items-center gap-4">
           {areas.map((area) => (
             <div key={area.dataKey} className="flex items-center gap-2">
@@ -65,9 +63,8 @@ export function Chart({
         </div>
       </div>
 
-      {/* Chart */}
       <div className="size-full">
-        <ResponsiveContainer>
+        <ResponsiveContainer className="size-full">
           <AreaChart data={data}>
             <XAxis
               dataKey="date"

@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
-type BadgeColor =
+export type BadgeColor =
   | "green"
   | "red"
   | "yellow"
@@ -9,9 +9,10 @@ type BadgeColor =
   | "gray"
   | "orange"
   | "sky"
-  | "purple";
+  | "purple"
+  | string;
 
-type BadgeVariant = "solid" | "soft" | "outline";
+export type BadgeVariant = "solid" | "soft" | "outline";
 
 const badgeStyles: Record<BadgeColor, Record<BadgeVariant, string>> = {
   green: {
@@ -74,7 +75,7 @@ export function Badge({
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-5 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
         badgeStyles[color][variant],
-        className,
+        className,  
       )}
     >
       {children}

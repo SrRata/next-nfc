@@ -2,15 +2,12 @@ import { ChevronRight, GraduationCap, Users } from "lucide-react";
 import { IconShape } from "./ui/icon-shape";
 import { Badge } from "./ui/badge";
 import { InternalLink } from "./ui/link";
-
-export type Shift = "matutina" | "vespertina";
-
-export type EducationLevel =
-  | "preparatoria"
-  | "elemental"
-  | "media"
-  | "superior"
-  | "bachillerato";
+import { educationLevel, isActive, section} from "@/lib/data-type";
+import {
+  isActiveBadgeColor,
+  levelBadgeColor,
+  sectionBadgeColor,
+} from "@/lib/get-badge-color";
 
 export interface Subject {
   name: string;
@@ -19,53 +16,24 @@ export interface Subject {
 interface CourseCardProps {
   id: number;
   course: string;
-  shift: Shift;
-  level: EducationLevel;
+  section: section;
+  level: educationLevel;
   subjects: Subject[];
   studentCount: number;
-  isActive: boolean;
+  isActive: isActive;
 }
-
-const SHIFT_LABEL: Record<Shift, string> = {
-  matutina: "Matutina",
-  vespertina: "Vespertina",
-};
-
-const LEVEL_CONFIG: Record<
-  EducationLevel,
-  { label: string; color: "green" | "blue" | "yellow" | "purple" | "orange" }
-> = {
-  preparatoria: {
-    label: "Preparatoria",
-    color: "blue",
-  },
-  elemental: {
-    label: "Básica elemental",
-    color: "orange",
-  },
-  media: {
-    label: "Básica media",
-    color: "yellow",
-  },
-  superior: {
-    label: "Básica superior",
-    color: "green",
-  },
-  bachillerato: {
-    label: "Bachillerato",
-    color: "purple",
-  },
-};
 
 export function CourseCard({
   id,
   course,
-  shift,
+  section,
   level,
   subjects,
   studentCount,
   isActive,
 }: CourseCardProps) {
+
+  const status = isActiveBadgeColor(isActive)
 
   return (
     <div className="bg-white-primary rounded-primary p-7 flex flex-col justify-between gap-10">
@@ -73,17 +41,17 @@ export function CourseCard({
         <IconShape size="lg" color="blue" icon={GraduationCap} />
 
         <div className="flex items-center gap-3 flex-wrap justify-end">
-          <Badge color={LEVEL_CONFIG[level].color}>
-            {LEVEL_CONFIG[level].label}
+          <Badge color={levelBadgeColor[level].color}>
+            {levelBadgeColor[level].label}
           </Badge>
 
-          <Badge color={shift === "matutina" ? "blue" : "yellow"}>
-            {SHIFT_LABEL[shift]}
+          <Badge color={sectionBadgeColor[section].color}>
+            {sectionBadgeColor[section].label}
           </Badge>
 
-          <Badge color={isActive ? "green" : "red"}>
-            {isActive ? "Activo" : "Inactivo"}
-          </Badge>
+          <Badge color={status.color}>
+            {status.label}
+          </Badge> 
         </div>
       </div>
 

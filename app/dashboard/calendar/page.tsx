@@ -8,14 +8,15 @@ import { Badge, BadgeCircle } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   AlertCircle,
+  Calendar,
   GraduationCap,
   IdCard,
   Pen,
   Save,
   Trash,
 } from "lucide-react";
-import { isActive, ModalType, section } from "@/lib/data-type";
-import { isActiveBadgeColor, sectionBadgeColor } from "@/lib/get-badge-color";
+import { educationLevel, isActive, ModalType, section } from "@/lib/data-type";
+import { isActiveBadgeColor, levelBadgeColor, sectionBadgeColor } from "@/lib/get-badge-color";
 
 import {
   Dialog,
@@ -31,19 +32,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatFullName } from "@/lib/format-full-name";
 import { Separator } from "@/components/ui/separator";
+import { formatTime12h } from "@/lib/format-time";
 
 type Data = {
-  id: string;
-  nfc: string;
-  firstName: string;
-  lastName: string;
-  course: string;
+  date: string;
+  entry: string;
+  exit: string;
   section: section;
-  isActive: isActive;
+  level: educationLevel;
+  reason: string;
 };
 
 
-export default function StudentsPage() {
+export default function CoursesManagementPage() {
   const [modalType, setModalType] = useState<ModalType >(null);
   const [selected, setSelected] = useState<Data | null>(null);
 
@@ -59,22 +60,35 @@ export default function StudentsPage() {
 
   const columns: ColumnDef<Data>[] = [
     {
-      accessorKey: "name",
-      header: "Estudiante",
-      cell: ({ row }) => (
-        <DataUser
-          name={formatFullName(row.original.firstName, row.original.lastName)}
-          id={row.original.id}
-        />
-      ),
+      header: "Fecha",
+      accessorKey: "date"
     },
     {
-      accessorKey: "nfc",
-      header: "Código NFC",
+      header: "Motivo",
+      accessorKey: "reason"
+
     },
     {
-      accessorKey: "course",
-      header: "Curso",
+      header: "Hora entrada",
+      accessorKey: "entry",
+      cell: ({ row }) => (formatTime12h(row.original.entry))
+    },
+    {
+      header: "Hora salida",
+      accessorKey: "exit",
+      cell: ({ row }) => (formatTime12h(row.original.exit))
+    },
+    {
+      header: "Nivel educativo",
+      accessorKey: "level",
+      cell: ({ row }) => {
+        const level = row.original.level;
+        return (
+          <Badge color={levelBadgeColor[level].color}>
+            {levelBadgeColor[level].label}
+          </Badge>
+        );
+      }
     },
     {
       accessorKey: "section",
@@ -84,20 +98,6 @@ export default function StudentsPage() {
         return (
           <Badge color={sectionBadgeColor[section].color}>
             {sectionBadgeColor[section].label}
-          </Badge>
-        );
-      },
-    },
-    {
-      accessorKey: "state",
-      header: "Estado",
-      cell: ({ row }) => {
-        const state = row.original.isActive;
-
-        return (
-          <Badge color={isActiveBadgeColor(state).color}>
-            <BadgeCircle />
-            {isActiveBadgeColor(state).label}
           </Badge>
         );
       },
@@ -123,7 +123,8 @@ export default function StudentsPage() {
           </Button>
         </div>
       ),
-    },
+    }
+
   ];
 
   return (
@@ -141,78 +142,59 @@ export default function StudentsPage() {
         >
           <div className="grid grid-cols-2 gap-5">
             <p className="flex items-center gap-4 col-span-2 font-bold text-xl text-blue-primary">
-              <IdCard />
-              Información personal
+              <Calendar />
+              Editar evento
             </p>
 
             <Separator />
 
-            <div>
-              <Label htmlFor="name">Nombres</Label>
+            <div className="col-span-2">
+              <Label htmlFor="name">Evento | Motivo</Label>
               <Input
                 id="name"
+                // defaultValue={selected?.name}
                 className="capitalize"
-                defaultValue={selected?.firstName}
-                placeholder="Ej. Juan Alberto"
+                placeholder="Ej. Carnaval"
               />
             </div>
+
             <div>
-              <Label htmlFor="lastname">Apellidos</Label>
+              <Label>Fecha del evento</Label>
+              <Input type="date" />
+            </div>
+
+            <div>
+              <Label>Aplica para la sección:</Label>
+              <Input/>
+            </div>
+
+            <div>
+              <Label>Aplica para el nivel educativo:</Label>
+              <Input/>
+            </div>
+
+            <div>
+              <Label>Tipo de evento</Label>
+              <Input placeholder="modificacion de horario o  dia no laborable"/>
+            </div>
+
+            <div>
+              <Label htmlFor="entry">Hora de entrada</Label>
               <Input
-                id="lastname"
-                className="capitalize"
-                defaultValue={selected?.lastName}
-                placeholder="Ej. Perez Garcia"
+                type="time"
+                id="entry"
+                defaultValue={selected?.entry}
+                className="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </div>
-            <div className="col-span-2">
-              <Label id="id">Identificación (ID)</Label>
-              <Input id="id" defaultValue={selected?.id} />
-            </div>
-
-            <p className="flex items-center gap-4 col-span-full font-bold text-xl text-blue-primary">
-              <GraduationCap />
-              Información academica
-            </p>
-
-            <Separator />
-
             <div>
-              <Label>Curso</Label>
-              <Input defaultValue={selected?.course} />
-            </div>
-
-            <div>
-              <Label>Paralelo</Label>
-              <Input defaultValue={selected?.course} />
-            </div>
-
-            <div>
-              <Label>Sección</Label>
-              <Input defaultValue={selected?.course} />
-            </div>
-
-            <div>
-              <Label>Estado</Label>
-              <Input defaultValue={selected?.course} />
-            </div>
-
-            <div className="col-span-full border-2 border-blue-primary/15 bg-blue-secondary rounded-primary p-6">
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-xl text-blue-primary font-bold">
-                  Hardware & Acceso
-                </p>
-                <Badge color="blue" variant="solid">
-                  Esperando tag
-                </Badge>
-              </div>
-              <Label>Código NFC</Label>
-              <Input defaultValue={selected?.nfc} />
-              <p className="text-sm text-black-secondary font-semibold mt-3 flex items-center gap-2">
-                <AlertCircle className="size-4" />
-                Acerce el tag NFC al lector para capturar el código
-                automáticamente.
-              </p>
+              <Label htmlFor="exit">Hora de salida</Label>
+              <Input
+                type="time"
+                id="exit"
+                defaultValue={selected?.exit}
+                className="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+              />
             </div>
           </div>
 
@@ -238,11 +220,11 @@ export default function StudentsPage() {
 
           {selected && (
             <p className="font-medium text-black-primary">
-              ¿Seguro que deseas eliminar al estudiante{" "}
+              ¿Seguro que deseas eliminar el evento {" "}
               <span className="font-semibold">
-                {formatFullName(selected.firstName, selected.lastName)}
+                {selected.reason}
               </span>{" "}
-              del registro?
+              del calendario?
             </p>
           )}
 

@@ -1,5 +1,5 @@
-import { Chart } from "@/components/chart";
 
+import { Chart } from "@/components/chart";
 import data from "./data-chart.json"
 
 export function ReportChart() {

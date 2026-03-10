@@ -1,23 +1,26 @@
 [
     {
         "id": "0150072668",
-        "name": "Cristian cornejo",
+        "firstName": "Cristian",
+        "lastName": "Cornejo",
         "role": "profesor",
         "email": "cristian.cornejo@uemfebrescordero.com",
-        "state": "activo"
+        "isActive": false
     },
     {
         "id": "0150072668",
-        "name": "Juan Segarra",
+        "firstName": "Juan",
+        "lastName": "Segarra",
         "role": "profesor",
         "email": "juan.segarra@uemfebrescordero.com",
-        "state": "inactivo"
+        "isActive": false
     },
     {
         "id": "0150072668",
-        "name": "Luis Matailo",
-        "role": "administrador",
+        "firstName": "Luis Miguel",
+        "lastName": "Matailo Zuñiga",
+        "role": "admin",
         "email": "luis.matailo@uemfebrescordero.com",
-        "state": "activo"
+        "isActive": true
     }
 ]

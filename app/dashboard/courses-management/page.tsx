@@ -14,8 +14,12 @@ import {
   Save,
   Trash,
 } from "lucide-react";
-import { isActive, ModalType, section } from "@/lib/data-type";
-import { isActiveBadgeColor, sectionBadgeColor } from "@/lib/get-badge-color";
+import { educationLevel, isActive, ModalType, section } from "@/lib/data-type";
+import {
+  isActiveBadgeColor,
+  levelBadgeColor,
+  sectionBadgeColor,
+} from "@/lib/get-badge-color";
 
 import {
   Dialog,
@@ -34,17 +38,15 @@ import { Separator } from "@/components/ui/separator";
 
 type Data = {
   id: string;
-  nfc: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   course: string;
   section: section;
   isActive: isActive;
+  level: educationLevel;
 };
 
-
-export default function StudentsPage() {
-  const [modalType, setModalType] = useState<ModalType >(null);
+export default function CoursesManagementPage() {
+  const [modalType, setModalType] = useState<ModalType>(null);
   const [selected, setSelected] = useState<Data | null>(null);
 
   const openModal = (type: ModalType, student?: Data) => {
@@ -60,17 +62,10 @@ export default function StudentsPage() {
   const columns: ColumnDef<Data>[] = [
     {
       accessorKey: "name",
-      header: "Estudiante",
+      header: "Tutor docente",
       cell: ({ row }) => (
-        <DataUser
-          name={formatFullName(row.original.firstName, row.original.lastName)}
-          id={row.original.id}
-        />
+        <DataUser name={row.original.name} id={row.original.id} />
       ),
-    },
-    {
-      accessorKey: "nfc",
-      header: "Código NFC",
     },
     {
       accessorKey: "course",
@@ -84,6 +79,18 @@ export default function StudentsPage() {
         return (
           <Badge color={sectionBadgeColor[section].color}>
             {sectionBadgeColor[section].label}
+          </Badge>
+        );
+      },
+    },
+    {
+      header: "Nivel educativo",
+      accessorKey: "level",
+      cell: ({ row }) => {
+        const level = row.original.level;
+        return (
+          <Badge color={levelBadgeColor[level].color}>
+            {levelBadgeColor[level].label}
           </Badge>
         );
       },
@@ -141,41 +148,21 @@ export default function StudentsPage() {
         >
           <div className="grid grid-cols-2 gap-5">
             <p className="flex items-center gap-4 col-span-2 font-bold text-xl text-blue-primary">
-              <IdCard />
-              Información personal
+              <GraduationCap />
+              Información de {selected?.course}
             </p>
 
             <Separator />
 
-            <div>
+            <div className="col-span-2">
               <Label htmlFor="name">Nombres</Label>
               <Input
                 id="name"
+                defaultValue={selected?.name}
                 className="capitalize"
-                defaultValue={selected?.firstName}
                 placeholder="Ej. Juan Alberto"
               />
             </div>
-            <div>
-              <Label htmlFor="lastname">Apellidos</Label>
-              <Input
-                id="lastname"
-                className="capitalize"
-                defaultValue={selected?.lastName}
-                placeholder="Ej. Perez Garcia"
-              />
-            </div>
-            <div className="col-span-2">
-              <Label id="id">Identificación (ID)</Label>
-              <Input id="id" defaultValue={selected?.id} />
-            </div>
-
-            <p className="flex items-center gap-4 col-span-full font-bold text-xl text-blue-primary">
-              <GraduationCap />
-              Información academica
-            </p>
-
-            <Separator />
 
             <div>
               <Label>Curso</Label>
@@ -195,24 +182,6 @@ export default function StudentsPage() {
             <div>
               <Label>Estado</Label>
               <Input defaultValue={selected?.course} />
-            </div>
-
-            <div className="col-span-full border-2 border-blue-primary/15 bg-blue-secondary rounded-primary p-6">
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-xl text-blue-primary font-bold">
-                  Hardware & Acceso
-                </p>
-                <Badge color="blue" variant="solid">
-                  Esperando tag
-                </Badge>
-              </div>
-              <Label>Código NFC</Label>
-              <Input defaultValue={selected?.nfc} />
-              <p className="text-sm text-black-secondary font-semibold mt-3 flex items-center gap-2">
-                <AlertCircle className="size-4" />
-                Acerce el tag NFC al lector para capturar el código
-                automáticamente.
-              </p>
             </div>
           </div>
 
@@ -238,11 +207,9 @@ export default function StudentsPage() {
 
           {selected && (
             <p className="font-medium text-black-primary">
-              ¿Seguro que deseas eliminar al estudiante{" "}
-              <span className="font-semibold">
-                {formatFullName(selected.firstName, selected.lastName)}
-              </span>{" "}
-              del registro?
+              ¿Seguro que deseas eliminar al curso{" "}
+              <span className="font-semibold">{selected.course}</span> del
+              registro?
             </p>
           )}
 

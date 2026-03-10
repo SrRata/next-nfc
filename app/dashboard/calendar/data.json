@@ -1,0 +1,18 @@
+[
+        {
+        "date": "07/10/2025",
+        "entry": "13:00",
+        "exit": "16:00",
+        "level": "bachillerato",
+        "section": "matutina",
+        "reason": "Dia del maestro"
+    },
+    {
+        "date": "07/10/2025",
+        "entry": "",
+        "exit": "",
+        "level": "todos",
+        "section": "todos",
+        "reason": "Carnaval"
+    }
+]

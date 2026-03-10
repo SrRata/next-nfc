@@ -2,58 +2,58 @@
   {
     "id": 1,
     "course": "Inicial 1",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "preparatoria",
     "subjects": [
       { "name": "Expresion Artistica" },
       { "name": "Psicomotricidad" }
     ],
     "studentCount": 18,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 2,
     "course": "Inicial 2",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "preparatoria",
     "subjects": [{ "name": "Desarrollo Cognitivo" }],
     "studentCount": 20,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 3,
     "course": "3ro EGB",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "elemental",
     "subjects": [{ "name": "Matematicas" }, { "name": "Lengua y Literatura" }],
     "studentCount": 28,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 4,
     "course": "5to EGB",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "elemental",
     "subjects": [
       { "name": "Ciencias Naturales" },
       { "name": "Estudios Sociales" }
     ],
     "studentCount": 30,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 5,
     "course": "7mo EGB",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "media",
     "subjects": [{ "name": "Ingles" }, { "name": "Matematicas Avanzadas" }],
     "studentCount": 27,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 6,
     "course": "9no EGB",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "media",
     "subjects": [{ "name": "Fisica Basica" }, { "name": "Quimica Basica" }],
     "studentCount": 26,
@@ -62,58 +62,58 @@
   {
     "id": 7,
     "course": "1ro Bachillerato Ciencias",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "bachillerato",
     "subjects": [{ "name": "Biologia" }, { "name": "Fisica" }],
     "studentCount": 32,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 8,
     "course": "2do Bachillerato Ciencias",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "bachillerato",
     "subjects": [{ "name": "Quimica" }, { "name": "Calculo" }],
     "studentCount": 29,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 9,
     "course": "3ro Bachillerato Ciencias",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "bachillerato",
     "subjects": [{ "name": "Proyecto de Investigacion" }],
     "studentCount": 25,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 10,
     "course": "1ro Sistemas",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "superior",
     "subjects": [
       { "name": "Programacion I" },
       { "name": "Arquitectura de Computadores" }
     ],
     "studentCount": 22,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 11,
     "course": "2do Sistemas",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "superior",
     "subjects": [
       { "name": "Estructura de Datos" },
       { "name": "Base de Datos" }
     ],
     "studentCount": 24,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 12,
     "course": "3ro Sistemas",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "superior",
     "subjects": [{ "name": "Desarrollo Web" }, { "name": "Redes" }],
     "studentCount": 21,
@@ -122,31 +122,31 @@
   {
     "id": 13,
     "course": "1ro Comercio",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "bachillerato",
     "subjects": [{ "name": "Contabilidad General" }],
     "studentCount": 23,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 14,
     "course": "2do Comercio",
-    "shift": "vespertina",
+    "section": "vespertina",
     "level": "bachillerato",
     "subjects": [
       { "name": "Tributacion" },
       { "name": "Matematica Financiera" }
     ],
     "studentCount": 20,
-    "isActive": true
+    "isActive": false
   },
   {
     "id": 15,
     "course": "3ro Comercio",
-    "shift": "matutina",
+    "section": "matutina",
     "level": "bachillerato",
     "subjects": [{ "name": "Auditoria Basica" }],
     "studentCount": 19,
-    "isActive": true
+    "isActive": false
   }
 ]

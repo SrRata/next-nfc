@@ -2,9 +2,7 @@
 
 import { DataUser } from "@/components/data-user";
 
-import {
-  ColumnDef,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 type Data = {
   date: string;
@@ -13,12 +11,14 @@ type Data = {
   section: string;
   entry: string;
   exit: string;
-  observation: string; //"presente" | "ausente" | "atrasado"
+  observation: state; //"presente" | "ausente" | "atrasado"
 };
 
 import data from "./data.json";
 import { DataTable } from "@/components/data-table";
 import { Badge, BadgeCircle } from "@/components/ui/badge";
+import { state } from "@/lib/data-type";
+import { stateBadgeColor } from "@/lib/get-badge-color";
 
 export function HistoryTable() {
   const columns: ColumnDef<Data>[] = [
@@ -30,8 +30,8 @@ export function HistoryTable() {
       accessorKey: "student",
       header: "Estudiante",
       cell: ({ row }) => (
-        <DataUser name={row.original.student} section={row.original.section}/>
-      ),  
+        <DataUser name={row.original.student} section={row.original.section} />
+      ),
     },
     {
       accessorKey: "course",
@@ -48,24 +48,17 @@ export function HistoryTable() {
     {
       accessorKey: "observation",
       header: "Observación",
-            cell: ({ row }) => {
-              const state = row.original.observation;
-      
-              const colorMap: Record<Data["observation"], "green" | "red" | "yellow"> = {
-                presente: "green",
-                ausente: "red",
-                atrasado: "yellow",
-              };
-              return (
-                <Badge color={colorMap[state]}>
-                  <BadgeCircle />
-                  {row.original.observation}
-                </Badge>
-              );
-            },
-      
-    },
+      cell: ({ row }) => {
+        const state = row.original.observation;
 
+        return (
+          <Badge color={stateBadgeColor[state].color}>
+            <BadgeCircle />
+            {stateBadgeColor[state].label}
+          </Badge>
+        );
+      },
+    },
   ];
 
   return (

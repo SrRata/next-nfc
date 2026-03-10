@@ -28,6 +28,9 @@ interface DataTableProps {
   buttonAction?: () => void;
   data: any[];
   columns: any[];
+  className?: string
+  noPagination?: boolean
+  pageSize?: number
 }
 
 export function DataTable({
@@ -36,10 +39,13 @@ export function DataTable({
   buttonAction,
   data,
   columns,
+  className,
+  noPagination = false,
+  pageSize = 10,
 }: DataTableProps) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: pageSize,
   });
 
   const table = useReactTable({
@@ -54,7 +60,7 @@ export function DataTable({
   });
 
   return (
-    <TableContainer>
+    <TableContainer className={className}>
       <TableContainerHeader>
         <TableContainerHeaderLegend title={legend} />
         {button ? <Button onClick={buttonAction}>{button}</Button> : null}
@@ -86,7 +92,7 @@ export function DataTable({
           ))}
         </TableBody>
       </Table>
-      <TablePagination table={table} />
+          {noPagination ? null : <TablePagination table={table} />}
     </TableContainer>
   );
 }
