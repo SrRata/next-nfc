@@ -1,0 +1,27 @@
+import { ClipboardEdit, GraduationCap, HelpCircle, LayoutDashboard, LucideIcon, User, Users, History, Clipboard, Contact, UserPen, Settings, Calendar1, CalendarDays, Presentation} from "lucide-react";
+
+interface NavItem {
+  href: string;
+  icon: LucideIcon;
+  text: string;
+}
+
+
+export const teacherNav: NavItem[] = [
+  { href: "/dashboard", icon: LayoutDashboard, text: "Dashboard" },
+    { href: "/dashboard/students-management", icon: UserPen, text: "Gestión de estudiantes" },
+  { href: "/dashboard/users-management", icon: Contact, text: "Gestión de usuarios" },
+  { href: "/dashboard/courses-management", icon: Presentation, text: "Gestión de cursos" },
+  { href: "/dashboard/calendar", icon: CalendarDays, text: "Calendario" },
+  { href: "/dashboard/courses", icon: GraduationCap, text: "Mis cursos" },
+  { href: "/dashboard/students", icon: Users, text: "Mis alumnos" },
+  { href: "/dashboard/history", icon: History, text: "Historial" },
+  { href: "/dashboard/reports", icon: Clipboard, text: "Reportes de cursos" },
+  // { href: "/dashboard/observations", icon: ClipboardEdit, text: "Observaciones" },
+
+  // { href: "/dashboard/help", icon: HelpCircle, text: "Ayuda" },
+
+
+    { href: "/dashboard/profile", icon: User, text: "Mi perfil" },
+  { href: "/dashboard/settings", icon: Settings, text: "Configuración" },
+];

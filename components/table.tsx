@@ -1,102 +1,145 @@
 import { cn } from "@/lib/utils";
-import { Pagination } from "./ui/pagination"
 
-interface TableProps {
-    children?: React.ReactNode;
-    className?: string; 
+interface TableContainerProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function TableContainer({
+  className,
+  ...props
+}: TableContainerProps) {
+  return (
+    <div
+      {...props}
+      className={cn(
+        "bg-white-primary rounded-primary col-span-full p-6",
+        className
+      )}
+    />
+  );
 }
 
-export function Table({children, className}: TableProps) {
-    return (
-        <div className={cn("bg-white-primary rounded-primary p-7 col-span-full flex flex-col gap-5", className)}>
-            {children}
-        </div>
-    )
+interface TableContainerHeaderProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function TableContainerHeader({
+  className,
+  ...props
+}: TableContainerHeaderProps) {
+  return (
+    <div
+      {...props}
+      className={cn("flex items-center justify-between pb-6", className)}
+    />
+  );
+}
+
+interface TableContainerHeaderLegendProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  title: string;
+  description?: string;
+}
+
+export function TableContainerHeaderLegend({
+  title,
+  description,
+  className,
+  ...props
+}: TableContainerHeaderLegendProps) {
+  return (
+    <div {...props} className={cn(className)}>
+      <h3 className="text-black-primary font-bold text-xl">{title}</h3>
+      {description && (
+        <p className="text-black-secondary font-medium">
+          {description}
+        </p>
+      )}
+    </div>
+  );
+}
+
+interface TableProps
+  extends React.TableHTMLAttributes<HTMLTableElement> {}
+
+export function Table({ className, ...props }: TableProps) {
+  return (
+    <table
+      {...props}
+      className={cn("w-full border-collapse", className)}
+    />
+  );
+}
+
+interface TableHeaderProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {}
+
+export function TableHeader({
+  className,
+  ...props
+}: TableHeaderProps) {
+  return <thead {...props} className={cn(className)} />;
+}
+
+interface TableBodyProps
+  extends React.HTMLAttributes<HTMLTableSectionElement> {}
+
+export function TableBody({
+  className,
+  ...props
+}: TableBodyProps) {
+  return <tbody {...props} className={cn(className)} />;
+}
+
+interface TableRowProps
+  extends React.HTMLAttributes<HTMLTableRowElement> {}
+
+export function TableRow({
+  className,
+  ...props
+}: TableRowProps) {
+  return <tr {...props} className={cn(className)} />;
 }
 
 
-export function TableHeader({children, className}: TableProps){
-    return (
-        <div className={cn("flex items-center justify-between", className)}>
-            {children}
-        </div>
-    )
+interface TableHeaderCellProps
+  extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> {}
+
+export function TableHeaderCell({
+  className,
+  children,
+  ...props
+}: TableHeaderCellProps) {
+  return (
+    <th scope="col" {...props} className="last:[&>div]:justify-end">
+      <div
+        className={cn(
+          "flex items-center justify-start text-black-secondary font-semibold p-6 text-left",
+          className
+        )}
+      >
+        {children}
+      </div>
+    </th>
+  );
 }
 
+interface TableCellProps
+  extends React.TdHTMLAttributes<HTMLTableCellElement> {}
 
-export function TableTitle({children, className}: TableProps) {
-    return (
-        <h3 className="text-black-primary text-xl font-bold">{children}</h3>
-    )
+export function TableCell({
+  className,
+  children,
+  ...props
+}: TableCellProps) {
+  return (
+    <td {...props} className="last:[&>div]:justify-end">
+      <div
+        className={cn(
+          "flex items-center justify-start text-black-primary font-medium p-6",
+          className
+        )}
+      >
+        {children}
+      </div>
+    </td>
+  );
 }
-
-
-export function TableBody({children, className}: TableProps) {
-    return (
-        <table>
-            {children}
-        </table>
-    )
-}
-
-export function Thead({children, className}: TableProps){
-    return (
-        <thead>
-            {children}
-        </thead>
-    )
-}
-
-export function Tbody({children, className}: TableProps) {
-    return (
-        <tbody>
-            {children}
-        </tbody>
-    )
-}
-
-export function Th({children, className}: TableProps) {
-    return (
-        <th className={cn("text-black-secondary font-bold p-5 text-left", className)}>
-            {children}
-        </th>
-    )
-}
-
-export function Tr({children, className}: TableProps) {
-    return (
-        <tr className={cn(className)}>
-            {children}
-        </tr>
-    )
-}
-
-interface TdProps {
-    children?: React.ReactNode;
-    className?: string;
-    absences?: boolean;
-}
-
-function addColorAbsences(value: React.ReactNode) {
-    const num = Number(value);
-
-    if (isNaN(num)) return "text-black-primary";
-
-    return num >= 5 
-        ? "text-red-primary"
-        : "text-black-primary";
-}
-
-
-export function Td({ children, className, absences }: TdProps) {
-    return (
-        <td className={cn("p-5 font-semibold text-black-primary", className, absences && addColorAbsences(children))}>
-            {children}
-        </td>
-    );
-}
- 
-
-
-
-

@@ -1,0 +1,39 @@
+[
+  {
+    "date": "19-02-25",
+    "student": "Luis Miguel Matailo", 
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "entry": "12:05",
+    "exit": "18:30",
+    "observation": "presente"
+  },
+  {
+    "date": "19-02-25",
+    "student": "Justin Alvarez Aucay", 
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "entry": "12:05",
+    "exit": "18:30",
+    "observation": "presente"
+  },
+  {
+    "date": "19-02-25",
+    "student": "Braulio Guambaña Guanoquisa", 
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "entry": "--:--",
+    "exit": "--:--",
+    "observation": "ausente"
+  },
+
+  {
+    "date": "19-02-25",
+    "student": "Bryam David Illescas", 
+    "course": "3ro Informática",
+    "section": "Vespertina",
+    "entry": "12:15",
+    "exit": "18:05",
+    "observation": "atrasado"
+  }
+]
