@@ -11,9 +11,10 @@ import {
   LucideIcon,
   XCircle,
 } from "lucide-react";
-import { IconColor, IconShape } from "./ui/icon-shape";
+import { IconShape } from "./ui/icon-shape";
 import { getRelativeTime } from "@/lib/relative-time";
 import { formatTime } from "@/lib/format-time";
+import { color } from "@/lib/constants/data-type";
 
 interface NotificationContainerProps {
   children: React.ReactNode;
@@ -88,7 +89,7 @@ type NotificationVariant = "info" | "success" | "warning" | "danger";
 
 interface NotificationConfig {
   icon: LucideIcon;
-  color: IconColor;
+  color: color;
 }
 
 const notificationConfig: Record<NotificationVariant, NotificationConfig> = {

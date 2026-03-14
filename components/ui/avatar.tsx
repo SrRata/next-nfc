@@ -73,6 +73,7 @@ export function Avatar({
     variant === "auto" ? getVariantFromName(name) : avatarVariants[variant];
 
   return (
+    
     <div
       className={cn(
         "rounded-full font-semibold grid place-content-center uppercase",
@@ -89,3 +90,7 @@ export function Avatar({
 
 //Componente mejorado, version final
 // 01-03-2026
+
+//parametros 
+///name del tipo string 
+//size = sm | md | lg |

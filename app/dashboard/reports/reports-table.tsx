@@ -63,6 +63,6 @@ export function ReportTable() {
   ];
 
   return (
-    <DataTable legend="Datae por cada estudiante" button="Exportar PDf" data={data} columns={columns}/>
+    <DataTable legend="Datae por cada estudiante" buttonCTA="Exportar PDf" data={data} columns={columns}/>
   );
 }

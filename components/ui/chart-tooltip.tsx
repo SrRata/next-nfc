@@ -24,7 +24,7 @@ export function ChartTooltip({
   }
 
   return (
-    <div className="min-w-[180px] rounded-xl bg-white-primary p-4 shadow-md">
+    <div className="min-w-45 rounded-xl bg-white-primary p-4 shadow-md">
       <p className="mb-3 text-sm font-semibold text-black-primary">
         {label}
       </p>

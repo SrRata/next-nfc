@@ -4,79 +4,66 @@ import { ColumnDef } from "@tanstack/react-table";
 import data from "./data.json";
 import { DataTable } from "@/components/data-table";
 import { DataUser } from "@/components/data-user";
-import { Badge, BadgeCircle } from "@/components/ui/badge";
+import { Badge} from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { GraduationCap, Pen, Save, Trash } from "lucide-react";
+import { educationLevel, section } from "@/lib/constants/data-type";
 import {
-  AlertCircle,
-  Calendar,
-  GraduationCap,
-  IdCard,
-  Pen,
-  Save,
-  Trash,
-} from "lucide-react";
-import { educationLevel, isActive, ModalType, section } from "@/lib/data-type";
-import { isActiveBadgeColor, levelBadgeColor, sectionBadgeColor } from "@/lib/get-badge-color";
+  getActiveBadgeColor,
+  levelBadgeColor,
+  sectionBadgeColor,
+} from "@/lib/constants/get-badge-color";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatFullName } from "@/lib/format-full-name";
 import { Separator } from "@/components/ui/separator";
-import { formatTime12h } from "@/lib/format-time";
+import { ModalType, useModal } from "@/lib/hooks/use-modal";
 
 type Data = {
-  date: string;
-  entry: string;
-  exit: string;
+  id: string;
+  name: string;
+  course: string;
   section: section;
+  isActive: boolean;
   level: educationLevel;
-  reason: string;
 };
 
-
-export default function CoursesManagementPage() {
-  const [modalType, setModalType] = useState<ModalType >(null);
-  const [selected, setSelected] = useState<Data | null>(null);
-
-  const openModal = (type: ModalType, student?: Data) => {
-    setSelected(student ?? null);
-    setModalType(type);
-  };
-
-  const closeModal = () => {
-    setModalType(null);
-    // setSelected(null);
-  };
+export function CoursesTable() {
+  
+  const {modal, openModal, closeModal} = useModal<Data>();
+  const modalType = modal.type;
+  const selected = modal.data;
 
   const columns: ColumnDef<Data>[] = [
     {
-      header: "Fecha",
-      accessorKey: "date"
+      accessorKey: "name",
+      header: "Tutor docente",
+      cell: ({ row }) => (
+        <DataUser name={row.original.name} id={row.original.id} />
+      ),
     },
     {
-      header: "Motivo",
-      accessorKey: "reason"
-
+      accessorKey: "course",
+      header: "Curso",
     },
     {
-      header: "Hora entrada",
-      accessorKey: "entry",
-      cell: ({ row }) => (formatTime12h(row.original.entry))
-    },
-    {
-      header: "Hora salida",
-      accessorKey: "exit",
-      cell: ({ row }) => (formatTime12h(row.original.exit))
+      accessorKey: "section",
+      header: "Sección",
+      cell: ({ row }) => {
+        const section = row.original.section;
+        return (
+          <Badge color={sectionBadgeColor[section].color}>
+            {sectionBadgeColor[section].label}
+          </Badge>
+        );
+      },
     },
     {
       header: "Nivel educativo",
@@ -88,16 +75,17 @@ export default function CoursesManagementPage() {
             {levelBadgeColor[level].label}
           </Badge>
         );
-      }
+      },
     },
     {
-      accessorKey: "section",
-      header: "Sección",
+      accessorKey: "state",
+      header: "Estado",
       cell: ({ row }) => {
-        const section = row.original.section;
+
+        const state = getActiveBadgeColor(row.original.isActive);
         return (
-          <Badge color={sectionBadgeColor[section].color}>
-            {sectionBadgeColor[section].label}
+          <Badge color={state.color} circle>
+            {state.label}
           </Badge>
         );
       },
@@ -123,8 +111,7 @@ export default function CoursesManagementPage() {
           </Button>
         </div>
       ),
-    }
-
+    },
   ];
 
   return (
@@ -132,7 +119,7 @@ export default function CoursesManagementPage() {
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
-        data={data}
+        data={data as Data[]}
       />
 
       <Dialog open={modalType === "edit"} onOpenChange={closeModal}>
@@ -142,59 +129,40 @@ export default function CoursesManagementPage() {
         >
           <div className="grid grid-cols-2 gap-5">
             <p className="flex items-center gap-4 col-span-2 font-bold text-xl text-blue-primary">
-              <Calendar />
-              Editar evento
+              <GraduationCap />
+              Información de {selected?.course}
             </p>
 
             <Separator />
 
             <div className="col-span-2">
-              <Label htmlFor="name">Evento | Motivo</Label>
+              <Label htmlFor="name">Nombres</Label>
               <Input
                 id="name"
-                // defaultValue={selected?.name}
+                defaultValue={selected?.name}
                 className="capitalize"
-                placeholder="Ej. Carnaval"
+                placeholder="Ej. Juan Alberto"
               />
             </div>
 
             <div>
-              <Label>Fecha del evento</Label>
-              <Input type="date" />
+              <Label>Curso</Label>
+              <Input defaultValue={selected?.course} />
             </div>
 
             <div>
-              <Label>Aplica para la sección:</Label>
-              <Input/>
+              <Label>Paralelo</Label>
+              <Input defaultValue={selected?.course} />
             </div>
 
             <div>
-              <Label>Aplica para el nivel educativo:</Label>
-              <Input/>
+              <Label>Sección</Label>
+              <Input defaultValue={selected?.course} />
             </div>
 
             <div>
-              <Label>Tipo de evento</Label>
-              <Input placeholder="modificacion de horario o  dia no laborable"/>
-            </div>
-
-            <div>
-              <Label htmlFor="entry">Hora de entrada</Label>
-              <Input
-                type="time"
-                id="entry"
-                defaultValue={selected?.entry}
-                className="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-              />
-            </div>
-            <div>
-              <Label htmlFor="exit">Hora de salida</Label>
-              <Input
-                type="time"
-                id="exit"
-                defaultValue={selected?.exit}
-                className="[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-              />
+              <Label>Estado</Label>
+              <Input defaultValue={selected?.course} />
             </div>
           </div>
 
@@ -220,11 +188,9 @@ export default function CoursesManagementPage() {
 
           {selected && (
             <p className="font-medium text-black-primary">
-              ¿Seguro que deseas eliminar el evento {" "}
-              <span className="font-semibold">
-                {selected.reason}
-              </span>{" "}
-              del calendario?
+              ¿Seguro que deseas eliminar al curso{" "}
+              <span className="font-semibold">{selected.course}</span> del
+              registro?
             </p>
           )}
 

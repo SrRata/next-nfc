@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, BadgeCircle } from "@/components/ui/badge";
+import { Badge} from "@/components/ui/badge";
 import { DataUser } from "@/components/data-user";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -13,13 +13,12 @@ type Data = {
   name: string;
   course: string;
   section: string;
-  state: state;
+  isActive: boolean;
 };
 
 import data from "./data.json";
 import { DataTable } from "@/components/data-table";
-import { state } from "@/lib/data-type";
-import { stateBadgeColor } from "@/lib/get-badge-color";
+import { getActiveBadgeColor, stateBadgeColor } from "@/lib/constants/get-badge-color";
 
 export function StudentsTable() {
   const columns: ColumnDef<Data>[] = [
@@ -38,12 +37,11 @@ export function StudentsTable() {
       accessorKey: "state",
       header: "Asistencia hoy",
       cell: ({ row }) => {
-        const state = row.original.state;
+        const state = row.original.isActive;
 
         return (
-          <Badge color={stateBadgeColor[state].color}>
-            <BadgeCircle />
-            {stateBadgeColor[state].label}
+          <Badge color={getActiveBadgeColor(state).color} circle>
+            {getActiveBadgeColor(state).label}
           </Badge>
         );
       },

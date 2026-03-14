@@ -1,10 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import data from "./data.json";
 import { DataTable } from "@/components/data-table";
 import { DataUser } from "@/components/data-user";
-import { Badge, BadgeCircle } from "@/components/ui/badge";
+import { Badge} from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   AlertCircle,
@@ -14,23 +13,24 @@ import {
   Save,
   Trash,
 } from "lucide-react";
-import { isActive, ModalType, section } from "@/lib/data-type";
-import { isActiveBadgeColor, sectionBadgeColor } from "@/lib/get-badge-color";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { formatFullName } from "@/lib/format-full-name";
 import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useUpdateUrl } from "@/lib/hooks/update-url";
+import { section } from "@/lib/constants/data-type";
+import { getActiveBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
+import { formatFullName } from "@/lib/hooks/format-full-name";
+import { useModal } from "@/lib/hooks/use-modal";
 
 type Data = {
   id: string;
@@ -39,23 +39,37 @@ type Data = {
   lastName: string;
   course: string;
   section: section;
-  isActive: isActive;
+  isActive: boolean;
 };
 
-
 export default function StudentsPage() {
-  const [modalType, setModalType] = useState<ModalType >(null);
-  const [selected, setSelected] = useState<Data | null>(null);
 
-  const openModal = (type: ModalType, student?: Data) => {
-    setSelected(student ?? null);
-    setModalType(type);
-  };
+  const searchParams = useSearchParams();
+  const active = searchParams.get("active");
 
-  const closeModal = () => {
-    setModalType(null);
-    // setSelected(null);
-  };
+//inicializacion de la funcion para actualizar la url
+
+  const updateUrl = useUpdateUrl();
+
+
+// modal
+    const {modal, openModal, closeModal} = useModal<Data>();
+    const modalType = modal.type;
+    const selected = modal.data;
+
+//use state encargado del fetch y actualizar los datos con filtros. inicualemnte vacio carga los datos se vuelve a hacer el fech cuando cambia un filtro
+
+    const [students, setStudents] = useState<Data[]>([]);
+
+  useEffect(() => {
+    async function fetchStudents() {
+      const res = await fetch(`/api/students-management?active=${active}`);
+      const data = await res.json();
+      setStudents(data);
+    }
+
+    fetchStudents();
+  }, [active]);
 
   const columns: ColumnDef<Data>[] = [
     {
@@ -95,9 +109,8 @@ export default function StudentsPage() {
         const state = row.original.isActive;
 
         return (
-          <Badge color={isActiveBadgeColor(state).color}>
-            <BadgeCircle />
-            {isActiveBadgeColor(state).label}
+          <Badge color={getActiveBadgeColor(state).color} circle>
+            {getActiveBadgeColor(state).label}
           </Badge>
         );
       },
@@ -128,10 +141,15 @@ export default function StudentsPage() {
 
   return (
     <>
+      <select onChange={(e) => updateUrl("active", e.target.value)}>
+        <option value="">Todos</option>
+        <option value="true">Activos</option>
+        <option value="false">Inactivos</option>
+      </select>
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
-        data={data}
+        data={students}
       />
 
       <Dialog open={modalType === "edit"} onOpenChange={closeModal}>
@@ -189,12 +207,11 @@ export default function StudentsPage() {
 
             <div>
               <Label>Sección</Label>
-              <Input defaultValue={selected?.course} />
+              <Input defaultValue={selected?.section} />
             </div>
 
             <div>
               <Label>Estado</Label>
-              <Input defaultValue={selected?.course} />
             </div>
 
             <div className="col-span-full border-2 border-blue-primary/15 bg-blue-secondary rounded-primary p-6">

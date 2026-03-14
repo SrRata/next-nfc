@@ -19,7 +19,7 @@ export default function DashboardLayout({
     <>
       <Sidebar>
         <SidebarHeader>
-          <Logo title="Docente" />
+          <Logo variant="Docente" />
         </SidebarHeader>
         <SidebarNav>
           {teacherNav.map((item, index) => (

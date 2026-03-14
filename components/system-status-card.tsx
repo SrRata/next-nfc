@@ -3,7 +3,7 @@ import { RadioIcon } from "lucide-react";
 import { Badge, BadgeCircle } from "./ui/badge";
 
 interface SystemStatusCardProps {
-  lastReading: Date;
+  lastReading: Date | string;
   attendance: number;
   course: string;
   isOnline: boolean;

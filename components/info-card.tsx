@@ -1,6 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { IconColor, IconShape } from "./ui/icon-shape";
+import { IconShape } from "./ui/icon-shape";
+import { color } from "@/lib/constants/data-type";
 
 type AlertColor = "red" | "green" | "neutral";
 type InfoCardVariant = "default" | "compact";
@@ -8,24 +9,14 @@ type InfoCardVariant = "default" | "compact";
 interface InfoCardProps {
   variant?: InfoCardVariant;
   className?: string;
-  colorIcon?: IconColor;
+  colorIcon?: color;
   icon?: LucideIcon;
   title: string;
   value: string | number;
   alert?: string;
-  alertColor?: AlertColor;
+  alertColor?: color;
 }
 
-function getAlertColor(color?: AlertColor): string {
-  switch (color) {
-    case "red":
-      return "text-red-primary";
-    case "green":
-      return "text-green-primary";
-    default:
-      return "text-black-secondary";
-  }
-}
 
 export function InfoCard({
   variant = "default",
@@ -35,7 +26,7 @@ export function InfoCard({
   title,
   value,
   alert,
-  alertColor = "neutral",
+  alertColor = "gray",
 }: InfoCardProps) {
   const isCompact = variant === "compact";
 
@@ -57,7 +48,7 @@ export function InfoCard({
         </p>
 
         {isCompact && alert && (
-          <p className={cn("font-semibold", getAlertColor(alertColor))}>
+          <p className={cn("font-semibold", alertColor === "gray" ? "text-black-secondary" : `text-${alertColor}-primary`)}>
             {alert}
           </p>
         )}

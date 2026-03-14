@@ -1,20 +1,10 @@
+import { color } from "@/lib/constants/data-type";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
-export type BadgeColor =
-  | "green"
-  | "red"
-  | "yellow"
-  | "blue"
-  | "gray"
-  | "orange"
-  | "sky"
-  | "purple"
-  | string;
-
 export type BadgeVariant = "solid" | "soft" | "outline";
 
-const badgeStyles: Record<BadgeColor, Record<BadgeVariant, string>> = {
+const badgeStyles: Record<color, Record<BadgeVariant, string>> = {
   green: {
     solid: "bg-green-primary text-white",
     soft: "bg-green-secondary text-green-primary",
@@ -59,8 +49,11 @@ const badgeStyles: Record<BadgeColor, Record<BadgeVariant, string>> = {
 
 interface BadgeProps {
   children: ReactNode;
-  color?: BadgeColor;
+  color?: color;
   variant?: BadgeVariant;
+  circle?: boolean;
+  circleSize?: "sm" | "md";
+  circlePulse?: boolean;
   className?: string;
 }
 
@@ -68,6 +61,9 @@ export function Badge({
   children,
   color = "gray",
   variant = "soft",
+  circle = false,
+  circleSize = "sm",
+  circlePulse = false,
   className,
 }: BadgeProps) {
   return (
@@ -75,9 +71,10 @@ export function Badge({
       className={cn(
         "inline-flex items-center gap-2 rounded-full px-5 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
         badgeStyles[color][variant],
-        className,  
+        className,
       )}
     >
+      {circle && <BadgeCircle size={circleSize} pulse={circlePulse}/>}
       {children}
     </span>
   );
@@ -94,7 +91,7 @@ const circleSizes = {
   md: "size-3",
 };
 
-export function BadgeCircle({
+function BadgeCircle({
   pulse = false,
   size = "sm",
   className,
@@ -113,3 +110,10 @@ export function BadgeCircle({
 
 //Componente mejorado, version final
 //01-03/2026
+//Version pare despliege
+
+//descripcion: badge es un cpononente que resive como parametro un valores definidos en el tipo de dato BadgeColor ubicado en la carptea lib/constants/badge-colors.ts ademas tambien tiene parametros de variantes disponibles solid-soft-outline fianmlente tambien tiene u parametro de circle que es un indicador circular que tiene animacion de pulse.
+
+
+//parametros 
+//
