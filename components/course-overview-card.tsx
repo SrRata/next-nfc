@@ -1,5 +1,5 @@
 import { GraduationCap } from "lucide-react";
-import { Badge, BadgeCircle } from "./ui/badge";
+import { Badge} from "./ui/badge";
 import { ProgressBar } from "./ui/bar";
 import { cn } from "@/lib/utils";
 
@@ -78,8 +78,7 @@ export function CourseOverviewStats({
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-2xl">Estado de asistencia</h3>
 
-        <Badge color={isActive ? "green" : "red"}>
-          <BadgeCircle pulse={isActive} size="sm" />
+        <Badge color={isActive ? "green" : "red"} circle circlePulse circleSize="sm">
           {isActive ? "Registro activo" : "Registro inactivo"}
         </Badge>
       </div>

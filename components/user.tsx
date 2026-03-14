@@ -23,7 +23,7 @@ export function UserInfo({
                 <p className="font-semibold text-black-primary">
                     {username}
                 </p>
-                <p className="text-black-secondary text-sm font-medium">
+                <p className="text-black-secondary text-sm font-medium capitalize">
                     {role}
                 </p>
             </div>

@@ -52,7 +52,7 @@ export default function HomePageTeacher() {
           <AbsenceStatCard absences={2} late={4} />
         </CourseOverviewStats>
 
-        <LastRegister lastStudent="Luis Matailo" createdAt={new Date()} />
+        <LastRegister lastStudent="Luis Matailo" createdAt={new Date()} href="/" />
       </CourseOverviewCard>
 
       <LinkCard

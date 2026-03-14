@@ -33,9 +33,9 @@ export default function DashboardLayout({
           description="Panel del docente"
         />
         <UserInfo
-          fullName="cristian cornejo"
+          name="cristian cornejo"
           username="Lic. Cristian Cornejo"
-          role="Docente"
+          role="profesor"
         />
       </Header>
 
