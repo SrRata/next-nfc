@@ -95,6 +95,3 @@ export function SidebarLink({
     </li>
   );
 }
-
-//Componente mejorado, version final
-//01-03-2026

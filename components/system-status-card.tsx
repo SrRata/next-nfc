@@ -47,6 +47,3 @@ export function SystemStatusCard({
     </div>
   );
 }
-
-//Componente mejorado, version final
-//01-03-2026

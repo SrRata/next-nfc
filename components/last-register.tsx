@@ -39,8 +39,3 @@ export function LastRegister({
     </section>
   );
 }
-
-
-//Componente mejorado, version final
-//01-03-2026
-

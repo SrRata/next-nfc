@@ -28,6 +28,3 @@ export function DataUser({ name, id, section, course }: DataUserProps) {
     </div>
   );
 }
-
-//Componente mejorado, version final
-//01-03-2026

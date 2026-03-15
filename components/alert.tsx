@@ -1,9 +1,9 @@
 import { AlertCircle, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 import { IconShape } from "./ui/icon-shape";
-import type { IconColor } from "./ui/icon-shape";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import { color } from "@/lib/constants/data-type";
 
 type AlertVariant = "info" | "error" | "success" | "warning";
 
@@ -14,7 +14,7 @@ interface AlertProps {
 
 interface AlertConfig {
   icon: LucideIcon;
-  color: IconColor;
+  color: color;
 }
 
 const alertConfig: Record<AlertVariant, AlertConfig> = {
@@ -53,6 +53,3 @@ export function Alert({ description, variant }: AlertProps) {
     </div>
   );
 }
-
-//Componente mejorado, version final
-//01-03-2026

@@ -72,5 +72,3 @@ export function CourseCard({
     </div>
   );
 }
-
-//posible version final
