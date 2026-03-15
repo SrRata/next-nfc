@@ -2,6 +2,7 @@ import { Alert } from "@/components/alert";
 import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { roleBadgeColor } from "@/lib/constants/get-badge-color";
 import { IdCard, Key, Lock, User, UserLock } from "lucide-react";
 
 export default function ProfilePage() {
@@ -22,7 +23,7 @@ export default function ProfilePage() {
           <p className="font-bold text-black-secondary text-sm mb-2">
             Rango / Rol
           </p>
-          <Badge color="purple">Administrador</Badge>
+          <Badge color={roleBadgeColor["admin"].color}>Administrador</Badge>
         </div>
         <div>
           <p className="font-bold text-black-secondary text-sm mb-2">

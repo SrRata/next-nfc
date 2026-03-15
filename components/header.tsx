@@ -1,18 +1,3 @@
-// export function Headerclock() {
-//     return (
-//         <div>
-//             <div className="flex items-center gap-2.5 mb-1">
-//                 <div className="bg-gray size-11 rounded-primary grid place-content-center font-bold text-xl">12</div>
-//                 <span className="text-black-primary font-semibold text-2xl">:</span>
-//                 <div className="bg-gray size-11 rounded-primary grid place-content-center font-bold text-xl">59</div>
-//                 <span className="text-black-primary font-semibold text-2xl">:</span>
-//                 <div className="bg-gray size-11 rounded-primary grid place-content-center font-bold text-xl">30</div>
-//             </div>
-//             <p className="text-black-secondary font-semibold text-sm text-right">Domingo, 09 de Febrero</p>
-//         </div>
-//     )
-// }
-
 import { cn } from "@/lib/utils";
 
 interface HeaderProps {

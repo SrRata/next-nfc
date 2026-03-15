@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  title?: string;
+  variant?: "Docente" | "Admin"
 }
 
-export function Logo({ className, title }: LogoProps) {
+export function Logo({ className, variant }: LogoProps) {
   return (
     <div className={cn("flex items-center gap-2.5", className)}>
       <IconShape
@@ -21,9 +21,9 @@ export function Logo({ className, title }: LogoProps) {
         <h2 className="text-blue-primary font-bold text-2xl leading-tight">
           siaeNFC
         </h2>
-        {title && (
+        {variant && (
           <p className="text-black-secondary font-medium text-sm">
-            {title}
+            {variant}
           </p>
         )}
       </div>

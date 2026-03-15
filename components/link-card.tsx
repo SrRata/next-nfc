@@ -1,14 +1,15 @@
 import { ChevronRight, LucideIcon, User } from "lucide-react";
-import { IconColor, IconShape } from "./ui/icon-shape";
+import { IconShape } from "./ui/icon-shape";
 import { InternalLink } from "./ui/link";
 import { cn } from "@/lib/utils";
+import { color } from "@/lib/constants/data-type";
 
 interface LinkCardProps {
   title: string;
   description?: string;
   href: string;
   icon: LucideIcon;
-  iconColor?: IconColor;
+  iconColor?: color;
   ctaText?: string;
   className?: string;
 }

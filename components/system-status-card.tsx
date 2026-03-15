@@ -1,9 +1,9 @@
 import { getRelativeTime } from "@/lib/relative-time";
 import { RadioIcon } from "lucide-react";
-import { Badge, BadgeCircle } from "./ui/badge";
+import { Badge} from "./ui/badge";
 
 interface SystemStatusCardProps {
-  lastReading: Date;
+  lastReading: Date | string;
   attendance: number;
   course: string;
   isOnline: boolean;
@@ -23,8 +23,7 @@ export function SystemStatusCard({
             Estado del sistema
           </p>
 
-          <Badge color={isOnline ? "green" : "red"} variant="solid">
-            <BadgeCircle pulse={isOnline} />
+          <Badge color={isOnline ? "green" : "red"} variant="solid" circle circlePulse>
             {isOnline ? "En línea" : "Fuera de línea"}
           </Badge>
         </div>

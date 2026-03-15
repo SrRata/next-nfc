@@ -1,18 +1,10 @@
+import { color } from "@/lib/constants/data-type";
 import { LucideIcon } from "lucide-react";
-
-export type IconColor =
-  | "red"
-  | "green"
-  | "yellow"
-  | "blue"
-  | "purple"
-  | "orange"
-  | "gray";
 
 type IconShapeVariant = "circle" | "rounded" | "square";
 type IconShapeSize = "xs" | "sm" | "md" | "lg" | "xl";
 
-const colorVariants: Record<IconColor, string> = {
+const colorVariants: Record<color, string> = {
   red: "bg-red-secondary text-red-primary",
   green: "bg-green-secondary text-green-primary",
   yellow: "bg-yellow-secondary text-yellow-primary",
@@ -20,6 +12,7 @@ const colorVariants: Record<IconColor, string> = {
   purple: "bg-purple-secondary text-purple-primary",
   orange: "bg-orange-secondary text-orange-primary",
   gray: "bg-gray text-black-primary",
+  sky: "bg-sky-secondary text-sky-primary",
 };
 
 const shapeVariants: Record<IconShapeVariant, string> = {
@@ -40,7 +33,7 @@ const sizeVariants: Record<IconShapeSize, { container: string; icon: number }> =
 interface IconShapeProps {
   icon: LucideIcon;
   className?: string;
-  color?: IconColor;
+  color?: color;
   shape?: IconShapeVariant;
   size?: IconShapeSize;
 }

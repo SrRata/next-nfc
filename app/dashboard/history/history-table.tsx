@@ -11,14 +11,14 @@ type Data = {
   section: string;
   entry: string;
   exit: string;
-  observation: state; //"presente" | "ausente" | "atrasado"
+  observation: studentState;
 };
 
 import data from "./data.json";
 import { DataTable } from "@/components/data-table";
-import { Badge, BadgeCircle } from "@/components/ui/badge";
-import { state } from "@/lib/data-type";
-import { stateBadgeColor } from "@/lib/get-badge-color";
+import { Badge } from "@/components/ui/badge";
+import { studentState } from "@/lib/constants/data-type";
+import { stateBadgeColor } from "@/lib/constants/get-badge-color";
 
 export function HistoryTable() {
   const columns: ColumnDef<Data>[] = [
@@ -52,8 +52,7 @@ export function HistoryTable() {
         const state = row.original.observation;
 
         return (
-          <Badge color={stateBadgeColor[state].color}>
-            <BadgeCircle />
+          <Badge color={stateBadgeColor[state].color} circle>
             {stateBadgeColor[state].label}
           </Badge>
         );

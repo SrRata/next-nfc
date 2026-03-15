@@ -1,9 +1,15 @@
-import { BadgeColor } from "@/components/ui/badge";
-import { educationLevel, gender, isActive, role, section, state } from "./data-type";
+import {
+  color,
+  educationLevel,
+  gender,
+  role,
+  section,
+  studentState,
+} from "./data-type";
 
 export const levelBadgeColor: Record<
   educationLevel,
-  { label: string; color: BadgeColor }
+  { label: string; color: color }
 > = {
   preparatoria: {
     label: "Preparatoria",
@@ -25,15 +31,11 @@ export const levelBadgeColor: Record<
     label: "Bachillerato",
     color: "purple",
   },
-  todos: {
-    label: "Todos",
-    color: "gray",
-  },
 };
 
 export const sectionBadgeColor: Record<
   section,
-  { label: string; color: BadgeColor }
+  { label: string; color: color }
 > = {
   matutina: {
     label: "Matutina",
@@ -43,14 +45,25 @@ export const sectionBadgeColor: Record<
     label: "Vespertina",
     color: "yellow",
   },
-  todos: {
-    label: "Todos",
-    color: "gray",
-  },
 };
 
-export const stateBadgeColor: Record<state, { label: string; color: BadgeColor }> = {
-    presente: {
+interface BadgeConfig {
+  label: string;
+  color: color;
+}
+
+export const getActiveBadgeColor = (isActive: boolean): BadgeConfig => {
+  if (isActive) {
+    return { label: "Activo", color: "green" };
+  }
+  return { label: "Inactivo", color: "red" };
+};
+
+export const stateBadgeColor: Record<
+  studentState,
+  { label: string; color: color }
+> = {
+  presente: {
     label: "Presente",
     color: "green",
   },
@@ -62,16 +75,9 @@ export const stateBadgeColor: Record<state, { label: string; color: BadgeColor }
     label: "Atrasado",
     color: "orange",
   },
-}
+};
 
-export function isActiveBadgeColor(isActive: isActive) {
-  return isActive
-    ? { label: "Activo", color: "green" }
-    : { label: "Inactivo", color: "red" };
-    
-}
-
-export const roleBadgeColor: Record<role, { label: string; color: BadgeColor }> = {
+export const roleBadgeColor: Record<role, { label: string; color: color }> = {
   admin: {
     label: "Administrador",
     color: "purple",
@@ -84,16 +90,16 @@ export const roleBadgeColor: Record<role, { label: string; color: BadgeColor }> 
     label: "Usuario",
     color: "green",
   },
-}
+};
 
-
-export const genderBadgeColor: Record<gender, { label: string; color: BadgeColor }> = {
-  hombre: {
-    label: "Hombre",
-    color: "blue",
-  },
-  mujer: {
-    label: "Mujer",
-    color: "purple",
-  },
-}
+export const colorBadgeColor: Record<gender, { label: string; color: color }> =
+  {
+    hombre: {
+      label: "Hombre",
+      color: "blue",
+    },
+    mujer: {
+      label: "Mujer",
+      color: "purple",
+    },
+  };

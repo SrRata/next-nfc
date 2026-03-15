@@ -61,7 +61,7 @@ function DialogContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-5 rounded-primary bg-white-primary p-9 duration-200 outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95", 
+          "fixed top-[50%] left-[50%] z-50 grid translate-x-[-50%] translate-y-[-50%] gap-6 rounded-primary bg-white-primary p-9 duration-200 outline-none data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95", 
           // sm:max-w-lg
           className
         )}
@@ -145,6 +145,23 @@ function DialogDescription({
   )
 }
 
+import { LucideIcon } from "lucide-react";
+
+interface DialogLegendProps {
+  text: string;
+  icon: LucideIcon;
+}
+
+function DialogLegend({ text, icon: Icon }: DialogLegendProps) {
+  return (
+    <p className="flex items-center gap-4 col-span-full font-bold text-xl text-blue-primary">
+      <Icon size={20}/>
+      {text}
+    </p>
+  );
+}
+
+
 export {
   Dialog,
   DialogClose,
@@ -156,4 +173,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  DialogLegend,
 }

@@ -1,38 +1,15 @@
-// import { Avatar } from "./ui/avatar";
-
-// interface UserInfoProps {
-//     name?: string;
-//     userName?: string;
-//     role?: string;
-// }
-
-
-// export function UserInfo({userName = "userName", role = "role", name = "name"}: UserInfoProps) {
-//     return (
-//         <div className="flex items-center gap-5">
-//             <div>
-//                 <h4 className="font-semibold text-black-primary text-right">{userName}</h4>
-//                 <p className="text-black-secondary text-sm font-medium text-right">{role}</p>
-//             </div>
-//             <Avatar name={name}/>
-//         </div>
-//     )
-// }
-
-
-
-
+import { role } from "@/lib/constants/data-type";
 import { Avatar } from "./ui/avatar";
 
 interface UserInfoProps {
-    fullName: string;
+    name: string;
     username: string;
-    role: string;
+    role: role;
     align?: "left" | "right";
 }
 
 export function UserInfo({
-    fullName,
+    name,
     username,
     role,
     align = "right",
@@ -46,12 +23,12 @@ export function UserInfo({
                 <p className="font-semibold text-black-primary">
                     {username}
                 </p>
-                <p className="text-black-secondary text-sm font-medium">
+                <p className="text-black-secondary text-sm font-medium capitalize">
                     {role}
                 </p>
             </div>
 
-            <Avatar name={fullName} />
+            <Avatar name={name} />
         </div>
     );
 }

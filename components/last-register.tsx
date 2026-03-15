@@ -6,14 +6,14 @@ import { getRelativeTime } from "@/lib/relative-time";
 interface LastRegisterProps {
   lastStudent: string;
   createdAt: Date | string;
-  href?: string;
+  href: string;
   className?: string;
 }
 
 export function LastRegister({
   lastStudent,
   createdAt,
-  href = "/",
+  href,
   className,
 }: LastRegisterProps) {
   const date = typeof createdAt === "string" ? new Date(createdAt) : createdAt;

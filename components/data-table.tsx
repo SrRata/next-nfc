@@ -24,7 +24,7 @@ import { TablePagination } from "./ui/table-pagination";
 
 interface DataTableProps {
   legend: string;
-  button?: string;
+  buttonCTA?: string;
   buttonAction?: () => void;
   data: any[];
   columns: any[];
@@ -35,7 +35,7 @@ interface DataTableProps {
 
 export function DataTable({
   legend,
-  button,
+  buttonCTA,
   buttonAction,
   data,
   columns,
@@ -63,7 +63,7 @@ export function DataTable({
     <TableContainer className={className}>
       <TableContainerHeader>
         <TableContainerHeaderLegend title={legend} />
-        {button ? <Button onClick={buttonAction}>{button}</Button> : null}
+        { buttonCTA ? <Button size="lg" variant="outline" onClick={buttonAction}>{buttonCTA}</Button> : null}
       </TableContainerHeader>
       <Table>
         <TableHeader>

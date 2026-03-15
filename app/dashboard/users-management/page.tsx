@@ -4,58 +4,47 @@ import { ColumnDef } from "@tanstack/react-table";
 import data from "./data.json";
 import { DataTable } from "@/components/data-table";
 import { DataUser } from "@/components/data-user";
-import { Badge, BadgeCircle } from "@/components/ui/badge";
+import { Badge} from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  AlertCircle,
-  GraduationCap,
   IdCard,
   Pen,
   Save,
   ShieldUser,
   Trash,
-  User,
 } from "lucide-react";
-import { isActive, ModalType, role } from "@/lib/data-type";
-import { isActiveBadgeColor, roleBadgeColor } from "@/lib/get-badge-color";
+import { role } from "@/lib/constants/data-type";
+import { getActiveBadgeColor, roleBadgeColor } from "@/lib/constants/get-badge-color";
 import { useState } from "react";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { formatFullName } from "@/lib/format-full-name";
+import { formatFullName } from "@/lib/hooks/format-full-name";
+import { useModal } from "@/lib/hooks/use-modal";
 
 type Data = {
   id: string;
   firstName: string;
   lastName: string;
   role: role;
-  isActive: isActive;
+  isActive: boolean;
   email: string;
 };
 
 export default function UsersPage() {
-  const [modalType, setModalType] = useState<ModalType>(null);
-  const [selected, setSelected] = useState<Data | null>(null);
 
-  const openModal = (type: ModalType, student?: Data) => {
-    setSelected(student ?? null);
-    setModalType(type);
-  };
-
-  const closeModal = () => {
-    setModalType(null);
-    // setSelected(null);
-  };
+      const {modal, openModal, closeModal} = useModal<Data>();
+      const modalType = modal.type;
+      const selected = modal.data;
+  
 
   const columns: ColumnDef<Data>[] = [
     {
@@ -90,12 +79,10 @@ export default function UsersPage() {
       header: "Estado",
       cell: ({ row }) => {
         const isActive = row.original.isActive;
-        const isActiveColor = isActiveBadgeColor(isActive);
 
         return (
-          <Badge color={isActiveColor.color}>
-            <BadgeCircle />
-            {isActiveColor.label}
+          <Badge color={getActiveBadgeColor(isActive).color} circle>
+            {getActiveBadgeColor(isActive).label}
           </Badge>
         );
       },

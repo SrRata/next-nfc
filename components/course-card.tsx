@@ -2,29 +2,28 @@ import { ChevronRight, GraduationCap, Users } from "lucide-react";
 import { IconShape } from "./ui/icon-shape";
 import { Badge } from "./ui/badge";
 import { InternalLink } from "./ui/link";
-import { educationLevel, isActive, section} from "@/lib/data-type";
+import { educationLevel, section} from "@/lib/constants/data-type";
 import {
-  isActiveBadgeColor,
   levelBadgeColor,
   sectionBadgeColor,
-} from "@/lib/get-badge-color";
+} from "@/lib/constants/get-badge-color";
 
 export interface Subject {
   name: string;
 }
 
 interface CourseCardProps {
-  id: number;
+  courseId: number;
   course: string;
   section: section;
   level: educationLevel;
   subjects: Subject[];
   studentCount: number;
-  isActive: isActive;
+  isActive: boolean;
 }
 
 export function CourseCard({
-  id,
+  courseId,
   course,
   section,
   level,
@@ -33,7 +32,6 @@ export function CourseCard({
   isActive,
 }: CourseCardProps) {
 
-  const status = isActiveBadgeColor(isActive)
 
   return (
     <div className="bg-white-primary rounded-primary p-7 flex flex-col justify-between gap-10">
@@ -49,8 +47,8 @@ export function CourseCard({
             {sectionBadgeColor[section].label}
           </Badge>
 
-          <Badge color={status.color}>
-            {status.label}
+          <Badge color={isActive ? "green" : "red"}>
+            {isActive ? "Activo" : "Inactivo"}
           </Badge> 
         </div>
       </div>
@@ -67,7 +65,7 @@ export function CourseCard({
         </div>
       </div>
 
-      <InternalLink href={`/courses/${id}`}>
+      <InternalLink href={`/courses$course-id=${courseId}`}>
         Seleccionar curso
         <ChevronRight size={18} strokeWidth={3} />
       </InternalLink>
