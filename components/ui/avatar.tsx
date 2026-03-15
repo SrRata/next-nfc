@@ -87,10 +87,3 @@ export function Avatar({
     </div>
   );
 }
-
-//Componente mejorado, version final
-// 01-03-2026
-
-//parametros 
-///name del tipo string 
-//size = sm | md | lg |

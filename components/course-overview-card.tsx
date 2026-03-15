@@ -156,6 +156,3 @@ export function AbsenceStatCard({ absences, late }: AbsenceStatCardProps) {
     </StatContainer>
   );
 }
-
-//Componente mejorado, version final
-//01-03-2026
