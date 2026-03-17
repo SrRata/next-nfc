@@ -12,9 +12,9 @@ export const sections = ["matutina", "vespertina"] as const;
 
 export type section = (typeof sections)[number];
 
-export const estudentStates = ["presente", "ausente", "atrasado"] as const;
+export const studentStates = ["presente", "ausente", "atrasado"] as const;
 
-export type studentState = (typeof estudentStates)[number];
+export type studentState = (typeof studentStates)[number];
 
 export const roles = ["admin", "profesor", "usuario"] as const;
 
