@@ -27,7 +27,7 @@ const badgeStyles: Record<color, Record<BadgeVariant, string>> = {
   },
   gray: {
     solid: "bg-black-secondary text-white",
-    soft: "bg-gray text-black-secondary",
+    soft: "bg-gray text-black-primary",
     outline: "border border-gray text-black-secondary bg-transparent",
   },
   orange: {
@@ -69,7 +69,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full px-5 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer",
+        "inline-flex items-center gap-2 rounded-full px-5 py-1 text-sm font-semibold capitalize w-fit transition-colors cursor-pointer text-nowrap",
         badgeStyles[color][variant],
         className,
       )}
