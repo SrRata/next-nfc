@@ -26,7 +26,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useUpdateUrl } from "@/lib/hooks/update-url";
 import { section } from "@/lib/constants/data-type";
 import { getActiveBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
 import { formatFullName } from "@/lib/hooks/format-full-name";
@@ -46,11 +45,6 @@ export default function StudentsPageStructure() {
 
   const searchParams = useSearchParams();
   const active = searchParams.get("active");
-
-//inicializacion de la funcion para actualizar la url
-
-  const updateUrl = useUpdateUrl();
-
 
 // modal
     const {modal, openModal, closeModal} = useModal<Data>();
@@ -141,11 +135,6 @@ export default function StudentsPageStructure() {
 
   return (
     <>
-      <select onChange={(e) => updateUrl("active", e.target.value)}>
-        <option value="">Todos</option>
-        <option value="true">Activos</option>
-        <option value="false">Inactivos</option>
-      </select>
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
