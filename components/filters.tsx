@@ -93,3 +93,18 @@ export function Filters({
     </div>
   );
 }
+
+
+
+export function FiltersSkeleton() {
+  return (
+    <div className="px-5 flex items-center justify-between bg-gray-200 animate-pulse h-20 rounded-primary col-span-full gap-4">
+      <div className="bg-gray-300 w-100 h-10 rounded-primary"></div>
+      <div className="flex items-center gap-3">
+        <div className="bg-gray-300 w-35 h-6 rounded-primary"></div>
+        <div className="bg-gray-300 w-40 h-6 rounded-primary"></div>
+        <div className="bg-gray-300 w-25 h-6 rounded-primary"></div>
+      </div>
+    </div>
+  )
+}

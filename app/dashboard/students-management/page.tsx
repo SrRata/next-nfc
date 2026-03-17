@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import StudentsPageStructure from "./structure";
-import { Filters } from "../../../components/filters";
+import { Filters, FiltersSkeleton } from "../../../components/filters";
 import { educationLevels, sections } from "@/lib/constants/data-type";
+import { TableSkeleton } from "@/components/table";
 
 export default function StudentsPage() {
   return (
     <>
-      <Suspense fallback={<div>Cargando filtros...</div>}>
+      <Suspense fallback={<FiltersSkeleton />}>
         <Filters
           searchPlaceholder="Buscar un estudiante..."
           fields={[
@@ -48,7 +49,7 @@ export default function StudentsPage() {
         />
       </Suspense>
 
-      <Suspense fallback={<div>Cargando tabla...</div>}>
+      <Suspense fallback={<TableSkeleton />}>
         <StudentsPageStructure />
       </Suspense>
     </>
