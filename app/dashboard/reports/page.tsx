@@ -42,16 +42,11 @@ export default function reportsPage() {
 
       <Suspense fallback={<FiltersSkeleton />}>
         <Filters
-          searchPlaceholder="Buscar un estudiante..."
+          hideSearch
+          prefix="chart"
           fields={[
-            {
-              id: "date",
-              label: "Periodo",
-              options: sections.map((state) => ({
-                label: state,
-                value: state,
-              })),
-            },
+            { id: "date_range", label: "Periodo", type: "date-range" },
+            { id: "date", label: "Fecha", type: "date" },
             {
               id: "level",
               label: "Nivel educativo",
@@ -82,6 +77,7 @@ export default function reportsPage() {
       <ReportChart />
       <Suspense fallback={<FiltersSkeleton />}>
         <Filters
+          prefix="table"
           searchPlaceholder="Buscar un estudiante..."
           fields={[
             {

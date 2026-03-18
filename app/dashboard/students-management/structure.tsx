@@ -138,7 +138,7 @@ export default function StudentsPageStructure() {
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
-        data={students}
+        data={students ?? []}
       />
 
       <Dialog open={modalType === "edit"} onOpenChange={closeModal}>
