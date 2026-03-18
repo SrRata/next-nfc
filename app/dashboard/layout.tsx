@@ -40,7 +40,7 @@ export default function DashboardLayout({
       </Header>
 
       <main className="fixed left-width-sidebar top-height-header overflow-y-auto w-width-main h-height-main">
-        <section className="max-w-max-width m-auto p-6 grid grid-cols-3 gap-6 w-full">
+        <section className="max-w-max-width m-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {children}
         </section>
       </main>
