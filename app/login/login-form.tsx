@@ -6,6 +6,7 @@ import { InternalLink } from "@/components/ui/link";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import axios from "axios";
 
 export function LoginForm() {
 
@@ -26,9 +27,11 @@ export function LoginForm() {
 
   };
 
-      const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(),
-        console.log(credentials)
+      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(credentials);
+        const response = await axios.post('/api/auth', credentials);
+        console.log(response);
     }
   return (
     <form onSubmit={handleSubmit} className="bg-white-primary rounded-primary w-full p-8 flex flex-col gap-8">

@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { DataUser } from "@/components/data-user";
-import { Badge} from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   AlertCircle,
@@ -27,45 +27,26 @@ import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { section } from "@/lib/constants/data-type";
-import { getActiveBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
+import { getActiveBadgeColor, levelBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
 import { formatFullName } from "@/lib/hooks/format-full-name";
 import { useModal } from "@/lib/hooks/use-modal";
+import { getStudents, Student } from "@/lib/hooks/fetch/getStudents";
 
-type Data = {
-  id: string;
-  nfc: string;
-  firstName: string;
-  lastName: string;
-  course: string;
-  section: section;
-  isActive: boolean;
-};
-
-export default function StudentsPageStructure() {
+export default function TableStudentsManagement() {
 
   const searchParams = useSearchParams();
   const active = searchParams.get("active");
 
-// modal
-    const {modal, openModal, closeModal} = useModal<Data>();
-    const modalType = modal.type;
-    const selected = modal.data;
+  // modal
+  const { modal, openModal, closeModal } = useModal<Student>();
+  const modalType = modal.type;
+  const selected = modal.data;
 
-//use state encargado del fetch y actualizar los datos con filtros. inicualemnte vacio carga los datos se vuelve a hacer el fech cuando cambia un filtro
+  //use state encargado del fetch y actualizar los datos con filtros. inicualemnte vacio carga los datos se vuelve a hacer el fech cuando cambia un filtro
 
-    const [students, setStudents] = useState<Data[]>([]);
+  const { students, loading, error } = getStudents()
 
-  useEffect(() => {
-    async function fetchStudents() {
-      const res = await fetch(`/api/students-management?active=${active}`);
-      const data = await res.json();
-      setStudents(data);
-    }
-
-    fetchStudents();
-  }, [active]);
-
-  const columns: ColumnDef<Data>[] = [
+  const columns: ColumnDef<Student>[] = [
     {
       accessorKey: "name",
       header: "Estudiante",
@@ -77,12 +58,24 @@ export default function StudentsPageStructure() {
       ),
     },
     {
+      accessorKey: "points",
+      header: "Puntos",
+      cell: ({ row }) => (
+        <Badge color="yellow">
+          {row.original.points}
+        </Badge>
+      )
+    },
+    {
       accessorKey: "nfc",
       header: "Código NFC",
     },
     {
       accessorKey: "course",
       header: "Curso",
+      cell: ({row}) => (
+        <p className="capitalize">{`${row.original.course} ${row.original.parallel}`}</p>
+      )
     },
     {
       accessorKey: "section",
@@ -95,6 +88,18 @@ export default function StudentsPageStructure() {
           </Badge>
         );
       },
+    },
+    {
+      accessorKey: "level",
+      header: "Nivel educativo",
+      cell: ({ row }) => {
+        const level = row.original.level
+        return (
+          <Badge color={levelBadgeColor[level].color}>
+            {levelBadgeColor[level].label}
+          </Badge>
+        )
+      }
     },
     {
       accessorKey: "state",
@@ -138,6 +143,7 @@ export default function StudentsPageStructure() {
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
+        isLoading={loading}
         data={students ?? []}
       />
 
@@ -146,6 +152,10 @@ export default function StudentsPageStructure() {
           className="w-full max-w-230 max-h-[95vh] overflow-y-auto no-scrollbar"
           showCloseButton={false}
         >
+
+          <DialogHeader>
+            <DialogTitle>Editar estudiante</DialogTitle>
+          </DialogHeader>
           <div className="grid grid-cols-2 gap-5">
             <p className="flex items-center gap-4 col-span-2 font-bold text-xl text-blue-primary">
               <IdCard />

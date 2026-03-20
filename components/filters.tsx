@@ -628,9 +628,9 @@ export function Filters({
                   <SelectTrigger className="h-auto p-0 bg-transparent border-none focus:ring-0 shadow-none capitalize">
                     <SelectValue placeholder={field.placeholder || "Seleccione"} />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent position="popper">
                     {field.options?.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
+                      <SelectItem key={opt.value} value={opt.value} className="capitalize">
                         {opt.label}
                       </SelectItem>
                     ))}
