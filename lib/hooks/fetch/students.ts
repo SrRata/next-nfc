@@ -1,6 +1,8 @@
 "use client"
 
 import { educationLevel, section } from "@/lib/constants/data-type";
+import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
 
 export interface Student {
     id: string,
@@ -15,49 +17,6 @@ export interface Student {
     points: string
 }
 
-// interface listCoursesProps {
-//     course?: string,
-//     level?: string,
-//     section?: string,
-//     isActive?: boolean
-// }
-
-// export function getStudents() {
-
-//     const searchParams = useSearchParams();
-
-
-//     const [students, setStudents] = useState<Student[]>([]);
-//     const [loading, setLoading] = useState(true);
-//     const [error, setError] = useState(false);
-
-//     const fetchCourses = async () => {
-//         setLoading(true);
-
-//         try {
-//             const res = await fetch('/api/students');
-//             const data = await res.json();
-//             setStudents(data);
-//         } catch {
-//             setError(true)
-//         } finally {
-//             setLoading(false)
-//         }
-//     }
-
-//     useEffect(() => {
-//         fetchCourses();
-//     }, []);
-
-
-//     return { students, loading, error, refresh: fetchCourses }
-
-// }
-
-
-
-import { useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
 
 export function getStudents() {
     const searchParams = useSearchParams();
@@ -72,9 +31,7 @@ export function getStudents() {
         try {
             const query = searchParams.toString();
             const res = await fetch(`/api/students${query ? `?${query}` : ""}`);
-            
             if (!res.ok) throw new Error("Error en la carga");
-            
             const data = await res.json();
             setStudents(data);
         } catch (err) {
@@ -89,4 +46,33 @@ export function getStudents() {
     }, [fetchStudents]);
 
     return { students, loading, error, refresh: fetchStudents };
+}
+
+
+
+
+// Cambiar estado activo/inactivo rápidamente
+export async function toggleStudentStatus(id: string, currentStatus: boolean) {
+    const res = await fetch(`/api/students/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !currentStatus }),
+    });
+    return res.ok;
+}
+
+// Eliminar
+export async function deleteStudent(id: string) {
+    const res = await fetch(`/api/students/${id}`, { method: "DELETE" });
+    return res.ok;
+}
+
+// Actualizar datos generales
+export async function updateStudent(id: string, data: Partial<Student>) {
+    const res = await fetch(`/api/students/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return res.json();
 }

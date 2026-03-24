@@ -4,6 +4,7 @@ export const educationLevels = [
   "media",
   "superior",
   "bachillerato",
+  "bachillerato técnico",
 ] as const;
 
 export type educationLevel = (typeof educationLevels)[number];

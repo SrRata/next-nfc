@@ -3,29 +3,13 @@
 import { Filters } from "../../../components/filters";
 import { educationLevels, sections } from "@/lib/constants/data-type";
 
-export function FiltersStudentsManagement() {
+export function FiltersCursesManagement() {
 
-    // const {courses, loading, error} = listCourses("5")
-
-    //     const getCourseOptions = () => {
-    //     if (loading) return [{ label: "Cargando cursos...", value: "loading" }];
-    //     if (error) return [{ label: "Error al cargar", value: "error" }]; 
-    //     if (courses.length === 0) return [{ label: "No hay cursos disponibles", value: "none" }];
-    //     return courses.map(c => ({
-    //         label: `${c.course} ${c.parallel}`,
-    //         value: c.id.toString()
-    //     }));
-    // };
 
     return (
         <Filters
-            searchPlaceholder="Buscar un estudiante..."
+            searchPlaceholder="Buscar un curso o tutor..."
             fields={[
-                // {
-                //     id: "course",
-                //     label: "Curso",
-                //     options: getCourseOptions()
-                // },
                 {
                     id: "level",
                     label: "Nivel educativo",

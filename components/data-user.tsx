@@ -17,7 +17,7 @@ export function DataUser({ name, id, section, course }: DataUserProps) {
 
         {(id || section) && (
           <span className="text-sm font-medium text-black-secondary truncate">
-            {id && `ID: ${id}`}
+            {id && `Cd: ${id}`}
             {id && course && " • "}
             {course}
             {course && section && " • "}
