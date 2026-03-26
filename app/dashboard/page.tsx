@@ -22,8 +22,8 @@ export default function HomeTeacher() {
       <InfoCardSmall icon={UserMinus} color="orange" title="Total de faltas" value="42" alert="Faltas en el periodo vigente"/>
       <InfoCardSmall icon={ChartBar} color="red" alertColor="red" title="Estudiantes en alerta" value="5" alert="> 20% de asistencias"/>
       <LinkCard href="/" link="Ver listados" title="Gestion de mis alumnos" description="Ver reportes generales/individuales y tags NFC asignados a estudiantes"/>
-      <CourseCard active course="1ro de bachillerato informatica - vespertina" subjects="Programacion / Diseño web" students="24 estudiantes registrados"/>
-      <CourseCard course="3ro de bachillerato informatica - matutina" subjects="Programacion / Diseño web / Sistemas Operativos" students="35 estudiantes registrados"/>
+      <CourseCard active course="1ro de bachillerato informatica - vespertina" subjects="Programacion / Diseño web" students_number="24 estudiantes registrados"/>
+      <CourseCard course="3ro de bachillerato informatica - matutina" subjects="Programacion / Diseño web / Sistemas Operativos" students_number="35 estudiantes registrados"/>
       <NotificationContain>
         <NotificationHeader/>
         <Notification icon={Check}/>
