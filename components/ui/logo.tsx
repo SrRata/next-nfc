@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 interface LogoProps {
   className?: string;
-  variant?: "Docente" | "Admin"
+  variant?: "Docente" | "Admin"| "Usuario"
 }
 
 export function Logo({ className, variant }: LogoProps) {
