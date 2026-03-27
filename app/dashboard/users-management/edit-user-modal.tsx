@@ -9,8 +9,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { roles } from "@/lib/constants/data-type";
-import { User } from "@/lib/hooks/fetch/users";
+import { User, useUpdateUser } from "@/lib/hooks/fetch/users";
+import React, { useState } from "react";
 
 interface DeleteUserModalProps {
     isOpen: boolean;
@@ -18,105 +20,123 @@ interface DeleteUserModalProps {
     user: User | null | undefined;
 }
 
+
 export function EditUserModal({ isOpen, onClose, user }: DeleteUserModalProps) {
+    // Estado para el Select, inicializado con el rol del usuario
+    const [role, setRole] = useState(user?.role || "");
+    const { mutate: updateUser, isPending } = useUpdateUser();
+
+    React.useEffect(() => {
+        if (user) setRole(user.role);
+    }, [user]);
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!user?.id) return;
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+
+        // Incluimos el rol del estado ya que el Select de Radix a veces no entra en FormData
+        const payload = { ...data, role };
+
+        updateUser({ id: user.id, data: payload }, {
+            onSuccess: () => {
+                onClose();
+            },
+            onError: (err) => {
+                alert(err.message);
+            }
+        });
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="w-full max-w-200" showCloseButton={false}>
-                <DialogHeader>
-                    <DialogTitle>Editar usuario</DialogTitle>
-                </DialogHeader>
+            <DialogContent className="w-full max-w-2xl">
+                <DialogTitle className="sr-only">Editar Usuario </DialogTitle>
 
-                {user && (
-                    <form className="grid grid-cols-2 gap-6">
-
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label>Nombre *</Label>
+                            <Label>Nombres</Label>
                             <Input
-                            name="firstName"
-                                className="capitalize"
-                                defaultValue={user.firstName}
+                                name="firstName"
+                                defaultValue={user?.firstName}
                                 required
-                                placeholder="Ej. Juan Miguel"
                             />
                         </div>
 
                         <div>
-                            <Label>Apellido *</Label>
+                            <Label>Apellidos</Label>
                             <Input
-                            name="lastName"
-                                className="capitalize"
-                                defaultValue={user.lastName}
+                                name="lastName"
+                                defaultValue={user?.lastName}
                                 required
-                                placeholder="Ej. Alvarez Flores"
                             />
                         </div>
+                    </div>
 
-
-                        <div className="col-span-full">
-                            <Label>Correo</Label>
-                            <Input
+                    <div>
+                        <Label>Correo electrónico</Label>
+                        <Input
                             name="email"
-                                defaultValue={user.email}
-                                type="email"
-                                required
-                                placeholder="Ej. usuario@correo.com"
-                            />
-                        </div>
+                            type="email"
+                            defaultValue={user?.email}
+                            required
+                        />
+                    </div>
 
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <Label>Cedula *</Label>
+                            <Label>CDL</Label>
                             <Input
-                            name="cdl"
-                                defaultValue={user.cdl}
+                                name="cdl"
+                                defaultValue={user?.cdl}
                                 required
-                                placeholder="Ej. 1719690487"
+                                maxLength={10}
                             />
                         </div>
-
 
                         <div>
                             <Label>Contacto</Label>
                             <Input
-                            name="phoneNumber"
-                                defaultValue={user.phoneNumber}
-                                required
-                                placeholder="Ej. 0929405265"
+                                name="phoneNumber"
+                                defaultValue={user?.phoneNumber}
+                                maxLength={10}
                             />
                         </div>
+                    </div>
 
-                        <div>
-                            <Label>Rol</Label>
+                    <div>
+                        <Label>Rol</Label>
+                        <Select onValueChange={setRole} value={role} name="role" required>
+                            <SelectTrigger className="capitalize">
+                                <SelectValue placeholder="Seleccione" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {roles.map((r) => (
+                                    <SelectItem key={r} value={r} className="capitalize">
+                                        {r}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                            <Select
-                                required
-                                defaultValue={user.role}
-                            >
-                                <SelectTrigger className="capitalize">
-                                    <SelectValue placeholder="Seleccione" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    {roles.map((r) => (
-                                        <SelectItem key={r} value={r} className="capitalize">
-                                            {r}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                    </form>
-                )}
-
-                <DialogFooter>
-                    <Button variant="outline" onClick={onClose} size="lg">
-                        Cancelar
-                    </Button>
-                    <Button size="lg" onClick={() => {
-                        onClose();
-                    }}>
-                        Guardar cambios
-                    </Button>
-                </DialogFooter>
+                    <DialogFooter className="gap-3">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button type="submit" disabled={isPending}>
+                            {isPending && <Spinner className="mr-2" />}
+                            Guardar Cambios
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

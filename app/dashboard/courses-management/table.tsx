@@ -5,23 +5,25 @@ import { DataTable } from "@/components/data-table";
 import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontalIcon, Pen, Trash } from "lucide-react";
+import { MoreHorizontalIcon } from "lucide-react";
 import {
   getActiveBadgeColor,
   levelBadgeColor,
   sectionBadgeColor,
 } from "@/lib/constants/get-badge-color";
 import { useModal } from "@/lib/hooks/use-modal";
-import { Course, getCourses } from "@/lib/hooks/fetch/courses";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DeleteCourseModal } from "./delete-course-modal";
 import { CreateCourseModal } from "./create-course-modal";
 import { EditCourseModal } from "./edit-course-modal";
+import { Course, useCourses, useUpdateCourseStatus } from "@/lib/hooks/fetch/courses";
 
 export function CoursesTable() {
 
   const { modal, openModal, closeModal } = useModal<Course>();
-  const { courses, loading, error } = getCourses()
+
+  const { data: courses, isLoading, isError } = useCourses();
+  const { mutate: toggleStatus, isPending } = useUpdateCourseStatus();
 
 
   const columns: ColumnDef<Course>[] = [
@@ -40,10 +42,6 @@ export function CoursesTable() {
     {
       accessorKey: "courseName",
       header: "Curso",
-    },
-    {
-      accessorKey: "parallel",
-      header: "Paralelo"
     },
     {
       accessorKey: "totalStudents",
@@ -99,7 +97,14 @@ export function CoursesTable() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => openModal("edit", row.original)}>Editar</DropdownMenuItem>
-              <DropdownMenuItem >Desactivar</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => toggleStatus({
+                  id: row.original.id,
+                  isActive: !row.original.isActive
+                })}
+              >
+                {row.original.isActive ? "Desactivar" : "Activar"}
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem variant="destructive" onClick={() => openModal("delete", row.original)}>
                 Borrar
@@ -116,9 +121,9 @@ export function CoursesTable() {
       <DataTable
         legend="Cursos registrados"
         columns={columns}
-        isLoading={loading}
         data={courses ?? []}
-        buttonCTA="Crear curso"
+        isLoading={isLoading}
+        buttonCTA="Nuevo curso"
         buttonAction={() => openModal("create")}
       />
 

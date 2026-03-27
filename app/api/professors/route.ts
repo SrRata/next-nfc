@@ -1,12 +1,11 @@
 import { db } from '@/lib/hooks/db';
 import { NextResponse } from 'next/server';
-import { RowDataPacket } from 'mysql2';
 
 
 export async function GET() {
   try {
     const [rows] = await db.query(
-      `SELECT id, CONCAT(first_name, ' ', last_name) as fullName 
+      `SELECT id, first_name AS firstName, last_name AS lastName 
        FROM users 
        WHERE role = 'profesor' AND is_active = TRUE`
     );

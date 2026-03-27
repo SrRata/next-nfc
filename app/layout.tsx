@@ -1,6 +1,8 @@
 import { Montserrat } from 'next/font/google'
 import type { Metadata } from "next";
 import "./globals.css";
+import QueryProvider from '@/providers/QueryProvider';
+
 
 
 const montserrat = Montserrat({
@@ -21,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
+        <QueryProvider>
         {children}
+        </QueryProvider>
       </body>
     </html>
   );

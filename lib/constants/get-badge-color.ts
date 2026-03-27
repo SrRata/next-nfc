@@ -31,6 +31,10 @@ export const levelBadgeColor: Record<
     label: "Bachillerato",
     color: "purple",
   },
+  "bachillerato técnico": {
+    label: "Bachillerato tecnico",
+    color: "blue"
+  }
 };
 
 export const sectionBadgeColor: Record<

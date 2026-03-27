@@ -8,14 +8,12 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon, Pen, Trash } from "lucide-react";
 import {
     getActiveBadgeColor,
-    levelBadgeColor,
     roleBadgeColor,
-    sectionBadgeColor,
 } from "@/lib/constants/get-badge-color";
 import { useModal } from "@/lib/hooks/use-modal";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { formatFullName } from "@/lib/hooks/format-full-name";
-import { getUsers, User, useUpdateUserStatus } from "@/lib/hooks/fetch/users";
+import { User, useUpdateUserStatus, useUsers } from "@/lib/hooks/fetch/users";
 import { DeleteUserModal } from "./delete-user-modal";
 import { EditUserModal } from "./edit-user-modal";
 import { CreateUserModal } from "./create-user-modal";
@@ -24,16 +22,20 @@ export function UsersTable() {
 
     const { modal, openModal, closeModal } = useModal<User>();
 
-    const { users, loading, error, refresh } = getUsers()
+    const { data: users, isLoading, isError } = useUsers();
+    const { mutate: toggleStatus, isPending } = useUpdateUserStatus();
 
-    const { toggleStatus, loading: statusLoading } = useUpdateUserStatus();
 
     const columns: ColumnDef<User>[] = [
         {
-            header: "Usuario",
+            header: "Nombre",
             cell: ({ row }) => (
                 <DataUser name={formatFullName(row.original.firstName, row.original.lastName)} id={row.original.cdl} />
             ),
+        },
+        {
+            accessorKey: "userName",
+            header: "Usuario"
         },
         {
             header: "Rol",
@@ -53,6 +55,10 @@ export function UsersTable() {
         {
             accessorKey: "phoneNumber",
             header: "Contacto",
+            cell: ({ row }) => {
+                const phone = row.original.phoneNumber;
+                return <span>{phone ? phone : "Sin contacto"}</span>;
+            }
         },
         {
             header: "Estado",
@@ -78,7 +84,10 @@ export function UsersTable() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => openModal("edit", row.original)} >Editar</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toggleStatus(row.original.id, row.original.isActive)}>
+                            <DropdownMenuItem onClick={() => toggleStatus({
+                                id: row.original.id,
+                                isActive: !row.original.isActive 
+                            })} >
                                 {row.original.isActive ? "Desactivar" : "Activar"}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -98,13 +107,13 @@ export function UsersTable() {
                 legend="Cursos registrados"
                 columns={columns}
                 data={users ?? []}
-                isLoading={loading}
+                isLoading={isLoading}
                 buttonCTA="Nuevo usuario"
                 buttonAction={() => openModal("create")}
             />
 
             <EditUserModal isOpen={modal.type === "edit"} onClose={closeModal} user={modal.data} />
-            <CreateUserModal isOpen={modal.type === "create"} onClose={closeModal}/>
+            <CreateUserModal isOpen={modal.type === "create"} onClose={closeModal} />
             <DeleteUserModal isOpen={modal.type === "delete"} onClose={closeModal} user={modal.data} />
         </>
 

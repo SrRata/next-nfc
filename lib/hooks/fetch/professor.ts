@@ -1,33 +1,23 @@
+import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect, useCallback } from 'react';
 
-interface Professor {
+export interface Professor {
   id: number;
-  fullName: string;
+  firstName: string;
+  lastName: string
 }
 
 export function useProfessors() {
-  const [professors, setProfessors] = useState<Professor[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+    const fetchProfessors = async () => {
+        const res = await fetch(`/api/professors`);
+        if (!res.ok) {
+            throw new Error('Error al cargar profesores');
+        }
+        return res.json();
+    };
 
-  const fetchProfessors = useCallback(async () => {
-    setLoading(true);
-    setError(false);
-    try {
-      const res = await fetch('/api/professors');
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      setProfessors(data);
-    } catch (err) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchProfessors();
-  }, [fetchProfessors]);
-
-  return { professors, loading, error, refresh: fetchProfessors };
+    return useQuery<Professor[]>({
+        queryKey: ["professors"],
+        queryFn: fetchProfessors,
+    });
 }

@@ -1,11 +1,12 @@
 import { db } from "@/lib/hooks/db";
+import { ResultSetHeader } from "mysql2";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
 
-        const searchTerm = searchParams.get('search'); 
+        const searchTerm = searchParams.get('search');
         const role = searchParams.get('role');
         const isActive = searchParams.get('isActive');
 
@@ -14,7 +15,7 @@ export async function GET(request: Request) {
                 id,
                 first_name AS firstName,
                 last_name AS lastName,
-                username,
+                username AS userName,
                 email,
                 phone_number AS phoneNumber,
                 role,
@@ -44,42 +45,46 @@ export async function GET(request: Request) {
 
         sql += " ORDER BY last_name ASC";
 
-        const [rows] = await db.query(sql, queryParams);
-        return NextResponse.json(rows);
+        const [data] = await db.query(sql, queryParams);
+        return NextResponse.json(data);
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("API Users Error:", error);
         return NextResponse.json({ error: "Error al obtener usuarios" }, { status: 500 });
     }
 }
 
-
 export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { firstName, lastName, email, cdl, phoneNumber, role } = body;
+    try {
+        const body = await request.json();
 
-    // El username será el email o la cédula (tú eliges)
-    const username = email.split('@')[0] + cdl.slice(-3); 
-    const password = cdl; // Contraseña por defecto
+        const { firstName, lastName, role, cdl, email } = body;
 
-    const [result]: any = await db.query(
-      `INSERT INTO users (first_name, last_name, cdl, username, password, email, phone_number, role, is_active) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, TRUE)`,
-      [firstName, lastName, cdl, username, password, email, phoneNumber, role]
-    );
+        const phoneNumber = body.phoneNumber || null;
+        const password = cdl
+        const userName = body.userName || `User_${Date.now().toString().slice(-8)}`
 
-    return NextResponse.json({ id: result.insertId, message: "Usuario creado" }, { status: 201 });
+        if (!firstName || !lastName || !role || !email || !cdl) {
+            return NextResponse.json(
+                { error: "Faltan campos obligatorios" },
+                { status: 400 }
+            );
+        }
 
-  } catch (error: any) {
-    console.error(error);
-    // Manejo de duplicados (Email o Cédula)
-    if (error.code === 'ER_DUP_ENTRY') {
-      return NextResponse.json({ message: "El email o la cédula ya existen" }, { status: 409 });
+        const [result] = await db.query<ResultSetHeader>(
+            `INSERT INTO users (first_name, last_name, cdl, username, password, email, phone_number, role) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [firstName, lastName, cdl, userName, password, email, phoneNumber, role]
+        );
+
+
+        return NextResponse.json(
+            { message: "Usuario creado con éxito", id: result.insertId },
+            { status: 201 }
+        );
+
+    } catch (error: any) {
+        console.error("Error en POST /api/users:", error);
+        return NextResponse.json({ error: "Error al crear usuario" }, { status: 500 });
     }
-    return NextResponse.json({ message: "Error al crear usuario" }, { status: 500 });
-  }
 }
-
-
-

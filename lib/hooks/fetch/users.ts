@@ -3,8 +3,9 @@
 import { role } from "@/lib/constants/data-type";
 import { User } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface User {
     id: string,
@@ -18,142 +19,100 @@ export interface User {
     cdl: string
 }
 
-export function getUsers() {
+export function useUsers() {
     const searchParams = useSearchParams();
-    const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const queryStr = searchParams.toString();
 
-    const fetchCourses = useCallback(async () => {
+    const fetchUsers = async (searchParams: string) => {
+        const res = await fetch(`/api/users${searchParams ? `?${searchParams}` : ""}`);
+        return res.json();
+    };
 
-        setLoading(true);
-        setError(false);
+    return useQuery({
+        queryKey: ["users", queryStr],
+        queryFn: () => fetchUsers(queryStr),
+        placeholderData: (previousData) => previousData,
+    });
+}
 
-        try {
-            const query = searchParams.toString();
-            const res = await fetch(`/api/users${query ? `?${query}` : ""}`);
-            if (!res.ok) throw new Error("Error en la carga");
-            const data = await res.json();
-            setUsers(data);
-        } catch (err) {
-            setError(true);
-        } finally {
-            setLoading(false);
-        }
-    }, [searchParams]);
+export function useDeleteUser() {
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        fetchCourses();
-    }, [fetchCourses]);
-
-    return { users, loading, error, refresh: fetchCourses };
+    return useMutation({
+        mutationFn: async (id: string | null | undefined) => {
+            if (!id) throw new Error("ID no proporcionado");
+            const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error("Error al eliminar");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+    });
 }
 
 
-
-export const useDeleteUser = () => {
-    const [loading, setLoading] = useState(false);
-    const router = useRouter();
-    const [error, setError] = useState(false);
-
-    const deleteUser = async (id: number | string | undefined) => {
-
-        if (id === undefined || id === null) {
-            console.error("No se pudo eliminar: El ID del usuario es inválido.");
-            return;
-        }
-
-        setLoading(true);
-        setError(false)
-
-        try {
-            const response = await fetch(`/api/users/${id}`, {
-                method: 'DELETE',
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Error al eliminar');
-            }
-
-            router.refresh();
-
-        } catch (error: any) {
-            setError(true)
-            return false
-            // alert(error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { deleteUser, loading, error };
-};
-
-
-
-
-export const useUpdateUserStatus = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const router = useRouter();
-
-    const toggleStatus = async (id: string | number | undefined, currentStatus: boolean) => {
-        if (!id) return;
-
-        setLoading(true);
-        setError(false);
-
-        try {
-            const response = await fetch(`/api/users/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ isActive: !currentStatus }), // Invertimos el estado
-            });
-
-            if (!response.ok) throw new Error();
-
-            router.refresh(); // Actualiza la tabla automáticamente
-            return true;
-        } catch (err) {
-            setError(true);
-            return false;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return { toggleStatus, loading, error };
-};
-
-
 export const useCreateUser = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const router = useRouter();
+    const queryClient = useQueryClient();
 
-    const createUser = async (formData: any) => {
-        setLoading(true);
-        setError(false);
-        try {
-            const res = await fetch('/api/users', {
+    return useMutation({
+        mutationFn: async (userData: any) => {
+            const response = await fetch('/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(userData),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Error al crear el usuario');
+            }
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+    });
+};
+
+
+export function useUpdateUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, data }: { id: string; data: any }) => {
+            const res = await fetch(`/api/users/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
             });
 
-            if (!res.ok) throw new Error();
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || "Error al actualizar");
+            return result;
+        },
+        onSuccess: () => {
+            // Invalida la caché para que la tabla UsersTable se actualice
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+    });
+}
 
-            router.refresh();
-            return true;
-        } catch (err) {
-            setError(true);
-            return false;
-        } finally {
-            setLoading(false);
-        }
-    };
 
-    return { createUser, loading, error };
-};
+export function useUpdateUserStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      const res = await fetch(`/api/users/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive }),
+      });
+      if (!res.ok) throw new Error("Error al actualizar el estado");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+}

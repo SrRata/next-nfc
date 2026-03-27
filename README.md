@@ -50,7 +50,7 @@ ui de pagina cursos de dashboard esta finalizada
 
 ## DATABASE STRUCTURE 
 
--- 1. Table: courses
+-- 1. Cursos (Primero, para que otras tablas apunten aquí)
 CREATE TABLE courses (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     course_name VARCHAR(255) NOT NULL,
@@ -60,24 +60,26 @@ CREATE TABLE courses (
     is_active BOOLEAN DEFAULT TRUE
 );
 
--- 2. Table: users (Professors, Admins, Parents)
+-- 2. Usuarios (Administradores, Profesores/Tutores, Padres)
 CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
+    cdl VARCHAR(20) NOT NULL,
     username VARCHAR(191) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(191) UNIQUE NOT NULL,
     phone_number VARCHAR(50),
-    is_active BOOLEAN DEFAULT TRUE,
-    role VARCHAR(50) NOT NULL
+    role ENUM('Admin', 'Professor', 'Parent') NOT NULL, -- Uso de ENUM para control de roles
+    is_active BOOLEAN DEFAULT TRUE
 );
 
--- 3. Table: students
+-- 3. Estudiantes (Vinculados a un curso)
 CREATE TABLE students (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
+    cdl VARCHAR(20) NOT NULL,
     email VARCHAR(191) UNIQUE NOT NULL,
     phone_number VARCHAR(50),
     nfc_uid VARCHAR(50) UNIQUE, 
@@ -86,24 +88,16 @@ CREATE TABLE students (
     CONSTRAINT fk_student_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
 );
 
--- 4. Table: subjects (Materias)
-CREATE TABLE subjects (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    subject_name VARCHAR(255) NOT NULL
-);
-
--- 5. Table: assignments (Asignaciones)
-CREATE TABLE assignments (
+-- 4. Tutorías (Nueva: Une al Profesor con su Curso)
+CREATE TABLE tutor_assignments (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     professor_id BIGINT,
-    subject_id BIGINT,
-    course_id BIGINT,
-    CONSTRAINT fk_assign_professor FOREIGN KEY (professor_id) REFERENCES users(id) ON DELETE SET NULL,
-    CONSTRAINT fk_assign_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-    CONSTRAINT fk_assign_subject FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
+    course_id BIGINT UNIQUE NOT NULL, -- UNIQUE garantiza que un curso tenga solo un tutor
+    CONSTRAINT fk_tutor_professor FOREIGN KEY (professor_id) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_tutor_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
--- 6. Table: relationships (Parentescos)
+-- 5. Parentescos (Une Padres con Estudiantes)
 CREATE TABLE relationships (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     parent_id BIGINT,
@@ -112,7 +106,7 @@ CREATE TABLE relationships (
     CONSTRAINT fk_rel_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
 
--- 7. Table: attendance_records (Registros)
+-- 6. Registros de Asistencia
 CREATE TABLE attendance_records (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     date DATE NOT NULL,
@@ -124,7 +118,7 @@ CREATE TABLE attendance_records (
     CONSTRAINT fk_record_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
 
--- 8. Table: student_summaries (Resumen Estudiante)
+-- 7. Resumen de Estudiantes (Para el Dashboard del Profesor)
 CREATE TABLE student_summaries (
     student_id BIGINT PRIMARY KEY,
     total_attendances INTEGER DEFAULT 0,
@@ -134,7 +128,7 @@ CREATE TABLE student_summaries (
     CONSTRAINT fk_summary_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
 
--- 9. Table: daily_course_summaries (Resumen Diario Cursos)
+-- 8. Resumen Diario por Curso
 CREATE TABLE daily_course_summaries (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     date DATE NOT NULL,
@@ -146,12 +140,12 @@ CREATE TABLE daily_course_summaries (
     CONSTRAINT fk_daily_summary_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 
--- 10. Table: point_transactions (Transacción Puntos)
+-- 9. Transacciones de Puntos
 CREATE TABLE point_transactions (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     student_id BIGINT,
     points INTEGER,
     concept TEXT,
-    date DATE,
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Cambio a TIMESTAMP para mejor control
     CONSTRAINT fk_points_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
 );
