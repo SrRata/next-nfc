@@ -10,10 +10,31 @@ export interface Course {
     section: section,
     level: educationLevel
     isActive: boolean,
+    professor_id: number | null;
     tutorName: string,
     totalStudents: number,
 }
 
+export function useUpdateCourse() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({id, data}: {id: string, data: any}) => {
+            const res = await fetch(`/api/courses/${id}` , {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || "Error al actualizar");
+            return result;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["courses"] });
+        }
+    })
+}
 
 export function useCourses() {
     const searchParams = useSearchParams();
@@ -47,25 +68,6 @@ export function useDeleteCourse() {
     });
 }
 
-export function useUpdateCourseStatus() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
-      const res = await fetch(`/api/courses/${id}/status`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isActive }),
-      });
-      if (!res.ok) throw new Error("Error al actualizar el estado");
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["courses"] });
-    },
-  });
-}
-
 export const useCreateCourse = () => {
     const queryClient = useQueryClient();
 
@@ -85,4 +87,23 @@ export const useCreateCourse = () => {
         },
     });
 };
+
+export function useUpdateCourseStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      const res = await fetch(`/api/courses/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive }),
+      });
+      if (!res.ok) throw new Error("Error al actualizar el estado");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+    },
+  });
+}
 

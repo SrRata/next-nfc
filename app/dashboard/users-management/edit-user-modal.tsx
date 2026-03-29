@@ -22,7 +22,6 @@ interface DeleteUserModalProps {
 
 
 export function EditUserModal({ isOpen, onClose, user }: DeleteUserModalProps) {
-    // Estado para el Select, inicializado con el rol del usuario
     const [role, setRole] = useState(user?.role || "");
     const { mutate: updateUser, isPending } = useUpdateUser();
 

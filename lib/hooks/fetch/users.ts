@@ -51,7 +51,6 @@ export function useDeleteUser() {
     });
 }
 
-
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
 
@@ -74,30 +73,6 @@ export const useCreateUser = () => {
     });
 };
 
-
-export function useUpdateUser() {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async ({ id, data }: { id: string; data: any }) => {
-            const res = await fetch(`/api/users/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.error || "Error al actualizar");
-            return result;
-        },
-        onSuccess: () => {
-            // Invalida la caché para que la tabla UsersTable se actualice
-            queryClient.invalidateQueries({ queryKey: ["users"] });
-        },
-    });
-}
-
-
 export function useUpdateUserStatus() {
   const queryClient = useQueryClient();
 
@@ -116,3 +91,26 @@ export function useUpdateUserStatus() {
     },
   });
 }
+
+export function useUpdateUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ id, data }: { id: string; data: any }) => {
+            const res = await fetch(`/api/users/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || "Error al actualizar");
+            return result;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["users"] });
+        },
+    });
+}
+
+

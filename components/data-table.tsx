@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -19,11 +20,12 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  PaginationState, // Importamos el tipo para TS
 } from "@tanstack/react-table";
-import { useState } from "react";
 import { TablePagination } from "./ui/table-pagination";
 import { FileExclamationPoint } from "lucide-react";
 import { IconShape } from "./ui/icon-shape";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps {
   legend: string;
@@ -34,7 +36,7 @@ interface DataTableProps {
   className?: string;
   noPagination?: boolean;
   pageSize?: number;
-  isLoading?: boolean; 
+  isLoading?: boolean;
 }
 
 export function DataTable({
@@ -48,28 +50,45 @@ export function DataTable({
   pageSize = 10,
   isLoading = false,
 }: DataTableProps) {
-  const [pagination, setPagination] = useState({
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+
+  const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSize,
   });
+
+  // Esta función solo se dispara cuando el usuario cambia de página
+  const handlePageChange = (updater: any) => {
+    // 1. Actualizamos el estado interno de la tabla
+    setPagination((old) => {
+      const nextState = typeof updater === "function" ? updater(old) : updater;
+      return nextState;
+    });
+
+    // 2. Ejecutamos el scroll al inicio del contenedor
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   const table = useReactTable({
     data,
     columns,
     state: { pagination },
-    onPaginationChange: setPagination,
+    onPaginationChange: handlePageChange, // <--- Solo una vez aquí
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  // 1. Si está cargando, retornamos el Skeleton completo y cortamos la ejecución aquí
   if (isLoading) {
     return <TableSkeleton />;
   }
 
-  // 2. Si no está cargando, retornamos la tabla normal
   return (
-    <TableContainer className={className}>
+    <TableContainer ref={tableContainerRef} className={cn("scroll-mt-10", className)}>
       <TableContainerHeader>
         <TableContainerHeaderLegend title={legend} />
         {buttonCTA && (
@@ -78,7 +97,7 @@ export function DataTable({
           </Button>
         )}
       </TableContainerHeader>
-      
+
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

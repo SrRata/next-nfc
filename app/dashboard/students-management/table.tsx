@@ -6,19 +6,19 @@ import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
-import { getActiveBadgeColor, levelBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
+import { getActiveBadgeColor, getLevelBadge, getSectionBadge, levelBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
 import { formatFullName } from "@/lib/hooks/format-full-name";
 import { useModal } from "@/lib/hooks/use-modal";
-import { DeleteStudentModal } from "./delete-student-modal";
-import { getStudents, Student, toggleStudentStatus } from "@/lib/hooks/fetch/students";
+// import { DeleteStudentModal } from "./delete-student-modal";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { UpdateStudentModal } from "./update-student-modal";
+import { Student, useStudents } from "@/lib/hooks/fetch/students";
 
 export default function TableStudentsManagement() {
 
   // modal
   const { modal, openModal, closeModal } = useModal<Student>();
-  const { students, loading, error } = getStudents()
+  const { data: students, isLoading} = useStudents()
 
   const columns: ColumnDef<Student>[] = [
     {
@@ -31,7 +31,6 @@ export default function TableStudentsManagement() {
       ),
     },
     {
-      accessorKey: "points",
       header: "Puntos",
       cell: ({ row }) => (
         <Badge color="yellow">
@@ -48,29 +47,23 @@ export default function TableStudentsManagement() {
       header: "Curso",
     },
     {
-      accessorKey: "parallel",
-      header: "Paralelo"
-    },
-    {
-      accessorKey: "section",
       header: "Sección",
       cell: ({ row }) => {
-        const section = row.original.section;
+        const section = getSectionBadge(row.original.section)
         return (
-          <Badge color={sectionBadgeColor[section].color}>
-            {sectionBadgeColor[section].label}
+          <Badge color={section.color}>
+            {section.label}
           </Badge>
         );
       },
     },
     {
-      accessorKey: "level",
       header: "Nivel educativo",
       cell: ({ row }) => {
-        const level = row.original.level
+        const level = getLevelBadge(row.original.level)
         return (
-          <Badge color={levelBadgeColor[level].color}>
-            {levelBadgeColor[level].label}
+          <Badge color={level.color}>
+            {level.label}
           </Badge>
         )
       }
@@ -80,7 +73,6 @@ export default function TableStudentsManagement() {
       header: "Estado",
       cell: ({ row }) => {
         const state = row.original.isActive;
-
         return (
           <Badge color={getActiveBadgeColor(state).color} circle>
             {getActiveBadgeColor(state).label}
@@ -101,7 +93,7 @@ export default function TableStudentsManagement() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => openModal("edit", row.original)}>Editar</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => toggleStudentStatus(row.original.id, row.original.isActive)}>Desactivar</DropdownMenuItem>
+            {/* <DropdownMenuItem onClick={() => toggleStudentStatus(row.original.id, row.original.isActive)}>Desactivar</DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={() => openModal("delete", row.original)}>
               Borrar
@@ -117,12 +109,12 @@ export default function TableStudentsManagement() {
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
-        isLoading={loading}
+        isLoading={isLoading}
         data={students ?? []}
       />
 
-      <UpdateStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} />
-      <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} />
+      {/* <UpdateStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} /> */}
+      {/* <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} /> */}
     </>
   );
 }

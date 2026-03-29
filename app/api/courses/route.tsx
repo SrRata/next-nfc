@@ -81,6 +81,7 @@ export async function GET(request: Request) {
                 c.section,
                 c.educational_level AS level,
                 c.is_active AS isActive,
+                c.professor_id,
                 CONCAT(u.first_name, ' ', u.last_name) AS tutorName,
                 COUNT(DISTINCT s.id) AS totalStudents
             FROM courses c
