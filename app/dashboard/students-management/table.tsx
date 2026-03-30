@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { UpdateStudentModal } from "./update-student-modal";
 import { Student, useStudents, useUpdateStudentStatus } from "@/lib/hooks/fetch/students";
 import { DeleteStudentModal } from "./delete-student-modal";
+import { CreateStudentModal } from "./create-student-modal";
 
 export default function TableStudentsManagement() {
 
@@ -132,7 +133,11 @@ export default function TableStudentsManagement() {
         columns={columns}
         isLoading={isLoading}
         data={students ?? []}
+        buttonCTA="Nuevo Estudiante"
+        buttonAction={() => openModal("create")}
       />
+
+      <CreateStudentModal isOpen={modal.type === "create"} onClose={closeModal}/>
 
       {/* <UpdateStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} /> */}
       <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} />
