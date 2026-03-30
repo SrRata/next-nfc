@@ -9,16 +9,19 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { getActiveBadgeColor, getLevelBadge, getSectionBadge, levelBadgeColor, sectionBadgeColor } from "@/lib/constants/get-badge-color";
 import { formatFullName } from "@/lib/hooks/format-full-name";
 import { useModal } from "@/lib/hooks/use-modal";
-// import { DeleteStudentModal } from "./delete-student-modal";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { UpdateStudentModal } from "./update-student-modal";
-import { Student, useStudents } from "@/lib/hooks/fetch/students";
+import { Student, useStudents, useUpdateStudentStatus } from "@/lib/hooks/fetch/students";
+import { DeleteStudentModal } from "./delete-student-modal";
 
 export default function TableStudentsManagement() {
 
   // modal
   const { modal, openModal, closeModal } = useModal<Student>();
-  const { data: students, isLoading} = useStudents()
+
+  const { data: students, isLoading } = useStudents()
+  const { mutate: toggleStatus, isPending } = useUpdateStudentStatus();
+
 
   const columns: ColumnDef<Student>[] = [
     {
@@ -26,7 +29,7 @@ export default function TableStudentsManagement() {
       cell: ({ row }) => (
         <DataUser
           name={formatFullName(row.original.firstName, row.original.lastName)}
-          id={row.original.id}
+          id={row.original.cdl}
         />
       ),
     },
@@ -39,12 +42,24 @@ export default function TableStudentsManagement() {
       )
     },
     {
+      accessorKey: "email",
+      header: "Correo"
+    },
+    {
       accessorKey: "nfc",
       header: "Código NFC",
     },
     {
-      accessorKey: "course",
+      header: "Representante",
+      cell: ({ row }) => (
+        row.original.parents || "Sin representante asignado"
+      )
+    },
+    {
       header: "Curso",
+      cell: ({ row }) => (
+        row.original.course || "Sin curso asignado"
+      )
     },
     {
       header: "Sección",
@@ -93,7 +108,13 @@ export default function TableStudentsManagement() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => openModal("edit", row.original)}>Editar</DropdownMenuItem>
-            {/* <DropdownMenuItem onClick={() => toggleStudentStatus(row.original.id, row.original.isActive)}>Desactivar</DropdownMenuItem> */}
+            <DropdownMenuItem onClick={() => toggleStatus({
+              id: row.original.id,
+              isActive: !row.original.isActive
+            })} >
+              {row.original.isActive ? "Desactivar" : "Activar"}
+
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={() => openModal("delete", row.original)}>
               Borrar
@@ -114,7 +135,7 @@ export default function TableStudentsManagement() {
       />
 
       {/* <UpdateStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} /> */}
-      {/* <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} /> */}
+      <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} />
     </>
   );
 }

@@ -3,8 +3,6 @@
 import { role } from "@/lib/constants/data-type";
 import { User } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface User {

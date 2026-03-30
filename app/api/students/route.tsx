@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        
+
         const searchTerm = searchParams.get('search');
         const level = searchParams.get('level');
         const section = searchParams.get('section');
@@ -16,32 +16,43 @@ export async function GET(request: Request) {
                 s.id, 
                 s.first_name AS firstName, 
                 s.last_name AS lastName,
+                s.cdl,
+                s.email,
+                s.phone_number AS phoneNumber,
                 s.nfc_uid AS nfc, 
                 s.is_active AS isActive,
                 c.course_name AS course,
                 c.section AS section, 
                 c.educational_level AS level,
-                COALESCE(ss.current_points, 0) AS points
+                COALESCE(ss.current_points, 0) AS points,
+                (
+                    SELECT GROUP_CONCAT(CONCAT(u.first_name, ' ', u.last_name) SEPARATOR ', ')
+                    FROM relationships r
+                    JOIN users u ON r.parent_id = u.id
+                    WHERE r.student_id = s.id
+                ) AS parents
             FROM students s
             LEFT JOIN courses c ON s.course_id = c.id
             LEFT JOIN student_summaries ss ON s.id = ss.student_id
             WHERE 1=1
         `;
 
+
         const queryParams = [];
 
         if (searchTerm && searchTerm.trim() !== "") {
-            sql += " AND (s.first_name LIKE ? OR s.last_name LIKE ? OR s.nfc_uid LIKE ?)";
+            // Buscamos por nombre, apellido, NFC o Email
+            sql += " AND (s.first_name LIKE ? OR s.last_name LIKE ? OR s.nfc_uid LIKE ? OR s.email LIKE ?)";
             const value = `%${searchTerm}%`;
-            queryParams.push(value, value, value);
+            queryParams.push(value, value, value, value);
         }
 
-        if (level && level !== "") {
+        if (level && level !== "" && level !== "all") {
             sql += " AND c.educational_level = ?";
             queryParams.push(level);
         }
 
-        if (section && section !== "") {
+        if (section && section !== "" && section !== "all") {
             sql += " AND c.section = ?";
             queryParams.push(section);
         }
