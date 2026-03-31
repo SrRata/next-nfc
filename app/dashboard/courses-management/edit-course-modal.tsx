@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Spinner } from "@/components/ui/spinner";
 import { educationLevels, sections } from "@/lib/constants/data-type";
 import { Course, useCreateCourse, useUpdateCourse } from "@/lib/hooks/fetch/courses";
-import { useProfessors, Professor } from "@/lib/hooks/fetch/professor";
+import { useProfessors, Professor } from "@/lib/hooks/fetch/system/professor";
 
 interface CreateCourseModalProps {
     isOpen: boolean;

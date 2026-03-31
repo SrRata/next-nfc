@@ -1,5 +1,6 @@
 import { db } from "@/lib/hooks/db";
-import { NextResponse } from "next/server";
+import { ResultSetHeader } from "mysql2";
+import { connection, NextResponse } from "next/server";
 
 
 export async function GET(request: Request) {
@@ -74,21 +75,71 @@ export async function GET(request: Request) {
 }
 
 
-
-// CREAR ESTUDIANTE
-
 export async function POST(request: Request) {
+    // Obtenemos una conexión para la transacción
+    const connection = await db.getConnection(); 
+    
     try {
-        const { firstName, lastName, email, nfc, courseId } = await request.json();
+        const body = await request.json();
+        const { firstName, lastName, email, cdl, phoneNumber, nfc, parentId, courseId } = body;
 
-        const sql = `INSERT INTO students (first_name, last_name, email, nfc_uid, course_id) VALUES (?, ?, ?, ?, ?)`;
-        const [result]: any = await db.query(sql, [firstName, lastName, email, nfc, courseId]);
+        const parentValue = (parentId && parentId !== "none") ? parentId : null;
+        const courseValue = (courseId && courseId !== "none") ? courseId : null;
 
-        // Opcional: Crear el registro de resumen (puntos) inicial
-        await db.query("INSERT INTO student_summaries (student_id) VALUES (?)", [result.insertId]);
+        if (!firstName || !lastName || !cdl || !nfc) {
+            return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
+        }
 
-        return NextResponse.json({ id: result.insertId, message: "Estudiante creado" });
+        await connection.beginTransaction();
+
+        const [studentResult] = await connection.query<ResultSetHeader>(
+            `INSERT INTO students (first_name, last_name, cdl, email, phone_number, nfc_uid, course_id) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [firstName, lastName, cdl, email, phoneNumber, nfc, courseValue]
+        );
+
+        const newStudentId = studentResult.insertId;
+
+        if (parentValue) {
+            await connection.query(
+                `INSERT INTO relationships (parent_id, student_id) VALUES (?, ?)`,
+                [parentValue, newStudentId]
+            );
+        }
+
+        await connection.query(
+            `INSERT INTO student_summaries (student_id, total_attendances, current_points) VALUES (?, 0, 0)`,
+            [newStudentId]
+        );
+
+        await connection.commit();
+
+        return NextResponse.json(
+            { message: "Estudiante creado con éxito", id: newStudentId },
+            { status: 201 }
+        );
+
     } catch (error: any) {
-        return NextResponse.json({ error: "Error al crear estudiante" }, { status: 500 });
+        await connection.rollback();
+
+         if (error.errno === 1062) {
+        let field = "dato";
+        if (error.sqlMessage.includes('email')) field = "correo electrónico";
+        if (error.sqlMessage.includes('nfc_uid')) field = "código NFC";
+        if (error.sqlMessage.includes('cdl')) field = "CDL";
+
+        return NextResponse.json(
+            { error: `Ya existe un estudiante con este ${field}.` }, 
+            { status: 409 } 
+        );
+    }
+
+        console.error("Error en POST /api/students:", error);
+        return NextResponse.json({ error: "Error al crear el estudiante" }, { status: 500 });
+    } finally {
+        connection.release();
     }
 }
+
+
+

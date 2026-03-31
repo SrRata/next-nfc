@@ -80,12 +80,13 @@ export function useUpdateStudentStatus() {
 }
 
 
+
 export const useCreateStudent = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (courseData: any) => {
-            const response = await fetch('/api/student', { // <-- API Correcta
+            const response = await fetch('/api/students', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(courseData),

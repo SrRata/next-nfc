@@ -10,7 +10,6 @@ import { getActiveBadgeColor, getLevelBadge, getSectionBadge, levelBadgeColor, s
 import { formatFullName } from "@/lib/hooks/format-full-name";
 import { useModal } from "@/lib/hooks/use-modal";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { UpdateStudentModal } from "./update-student-modal";
 import { Student, useStudents, useUpdateStudentStatus } from "@/lib/hooks/fetch/students";
 import { DeleteStudentModal } from "./delete-student-modal";
 import { CreateStudentModal } from "./create-student-modal";

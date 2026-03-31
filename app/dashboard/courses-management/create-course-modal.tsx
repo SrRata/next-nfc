@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Spinner } from "@/components/ui/spinner";
 import { educationLevels, roles, sections } from "@/lib/constants/data-type";
 import { useCreateCourse } from "@/lib/hooks/fetch/courses";
-import { useProfessors } from "@/lib/hooks/fetch/professor";
+import { useProfessors } from "@/lib/hooks/fetch/system/professor";
 import { useCreateUser } from "@/lib/hooks/fetch/users";
 import React, { useState } from "react";
 
@@ -56,7 +56,6 @@ export function CreateCourseModal({ isOpen, onClose }: CreateCourseModalProps) {
             ...data,
             section,
             level,
-            // Mandamos null si es "none", de lo contrario el ID
             professorId: tutorId === "none" ? null : tutorId
         };
 
