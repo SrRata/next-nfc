@@ -9,7 +9,7 @@ export interface Professor {
 
 export function useProfessors() {
     const fetchProfessors = async () => {
-        const res = await fetch(`/api/professors`);
+        const res = await fetch(`/api/system/professors`);
         if (!res.ok) {
             throw new Error('Error al cargar profesores');
         }

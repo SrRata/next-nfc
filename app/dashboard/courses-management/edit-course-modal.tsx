@@ -50,30 +50,34 @@ export function EditCourseModal({ isOpen, onClose, course }: CreateCourseModalPr
             }
         }
     }, [course, isOpen]);
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        
-        const payload = {
-            courseName: formData.get("courseName"),
-            section,
-            level,
-            // Si es "none", mandamos null a la DB
-            professorId: tutorId === "none" ? null : tutorId 
+        const data = Object.fromEntries(formData.entries());
+
+        // 1. Preparamos los datos del curso
+        const courseData = {
+            courseName: data.courseName,
+            section: section,
+            level: level,
+            professorId: tutorId === "none" ? null : tutorId,
         };
 
-        if (course?.id) {
-            // Modo Edición
-            updateCourse({ id: course.id.toString(), data: payload }, {
+        // 2. Decidimos si editar o crear
+        if (course) {
+            // Para editar, enviamos el objeto { id, data } que espera tu hook
+            updateCourse({
+                id: course.id.toString(),
+                data: courseData
+            }, {
                 onSuccess: () => onClose(),
-                onError: (err) => console.error("Error al actualizar:", err.message)
+                onError: (err) => alert(err.message)
             });
         } else {
-            // Modo Creación
-            createCourse(payload, {
+            // Para crear, enviamos solo los datos
+            createCourse(courseData, {
                 onSuccess: () => onClose(),
-                onError: (err) => console.error("Error al crear:", err.message)
+                onError: (err) => alert(err.message)
             });
         }
     };
@@ -89,11 +93,11 @@ export function EditCourseModal({ isOpen, onClose, course }: CreateCourseModalPr
                     {/* Nombre del Curso */}
                     <div>
                         <Label>Nombre del Curso</Label>
-                        <Input 
-                            name="courseName" 
-                            defaultValue={course?.courseName || ""} 
-                            placeholder="Ej. Décimo EGB" 
-                            required 
+                        <Input
+                            name="courseName"
+                            defaultValue={course?.courseName || ""}
+                            placeholder="Ej. Décimo EGB"
+                            required
                         />
                     </div>
 

@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Student, useStudents, useUpdateStudentStatus } from "@/lib/hooks/fetch/students";
 import { DeleteStudentModal } from "./delete-student-modal";
 import { CreateStudentModal } from "./create-student-modal";
+import { EditStudentModal } from "./edit-student-modal";
 
 export default function TableStudentsManagement() {
 
@@ -46,13 +47,9 @@ export default function TableStudentsManagement() {
       header: "Correo"
     },
     {
-      accessorKey: "nfc",
-      header: "Código NFC",
-    },
-    {
       header: "Representante",
       cell: ({ row }) => (
-        row.original.parents || "Sin representante asignado"
+        row.original.parent || "Sin representante asignado"
       )
     },
     {
@@ -137,8 +134,7 @@ export default function TableStudentsManagement() {
       />
 
       <CreateStudentModal isOpen={modal.type === "create"} onClose={closeModal}/>
-
-      {/* <UpdateStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} /> */}
+      <EditStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} />
       <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} />
     </>
   );

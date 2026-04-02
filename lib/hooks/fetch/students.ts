@@ -14,11 +14,13 @@ export interface Student {
     phoneNumber: string,
     nfc: string,
     isActive: boolean,
+    courseId: string,
     course: string,
     section: section,
     level: educationLevel
     points: string,
-    parents: string,
+    parent: string,
+    parentId: string,
 }
 
 export function useStudents() {
@@ -100,3 +102,25 @@ export const useCreateStudent = () => {
         },
     });
 };
+
+
+export function useUpdateStudent() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({id, data}: {id: string, data: any}) => {
+            const res = await fetch(`/api/students/${id}` , {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || "Error al actualizar");
+            return result;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["students"] });
+        }
+    })
+}

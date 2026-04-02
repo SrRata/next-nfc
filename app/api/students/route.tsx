@@ -22,6 +22,7 @@ export async function GET(request: Request) {
                 s.phone_number AS phoneNumber,
                 s.nfc_uid AS nfc, 
                 s.is_active AS isActive,
+                s.course_id AS courseId, 
                 c.course_name AS course,
                 c.section AS section, 
                 c.educational_level AS level,
@@ -31,7 +32,7 @@ export async function GET(request: Request) {
                     FROM relationships r
                     JOIN users u ON r.parent_id = u.id
                     WHERE r.student_id = s.id
-                ) AS parents
+                ) AS parent
             FROM students s
             LEFT JOIN courses c ON s.course_id = c.id
             LEFT JOIN student_summaries ss ON s.id = ss.student_id

@@ -9,7 +9,7 @@ export interface Parent {
 
 export function useParents() {
     const fetchParents = async () => {
-        const res = await fetch(`/api/parents`);
+        const res = await fetch(`/api/system/parents`);
         if (!res.ok) {
             throw new Error('Error al cargar padres');
         }
