@@ -16,19 +16,19 @@ export default function Home() {
     return (
       <>
 
-        <header className="fixed  left-1/2 -translate-x-1/2 top-5 w-full max-w-350 bg-white-primary/70 backdrop-blur-lg flex justify-between py-4 px-10 rounded-full z-50 shadow-xl mx-3 ">
+        <header className="fixed  left-1/2 -translate-x-1/2 top-5 w-[95%] max-w-350 bg-white-primary/70 backdrop-blur-lg flex justify-between py-4 px-10 rounded-full z-50 shadow-xl ">
 
           <Logo />
 
 
-          <ul className="flex gap-10 items-center">
+          {/* <ul className="hidden md:flex gap-10 items-center">
             <li><a className="font-medium hover:underline text-black-primary" href="#1">¿Qué es el sistema?</a></li>
             <li><a className="font-medium hover:underline text-black-primary" href="#2">Funciones</a></li>
             <li><a className="font-medium hover:underline text-black-primary" href="#3">Tecnologías</a></li>
             <li><a className="font-medium hover:underline text-black-primary" href="#4">Equipo </a></li>
-          </ul>
+          </ul> */}
 
-          <Link href="/login" target="_blanck">
+          <Link href="/dashboard" target="_blanck">
             <Button className="rounded-full" >
               Acceder
             </Button>
@@ -37,11 +37,11 @@ export default function Home() {
         </header>
 
 
-        <section className="grid grid-cols-2 max-w-350 mx-auto py-15 pt-45 gap-20">
+        <section className="grid md:grid-cols-2 max-w-350 mx-auto py-15 px-6 pt-45 gap-20">
 
           <div className="flex flex-col gap-5">
 
-            <h2 className="text-7xl md:text-6xl font-extrabold tracking-tight text-blue-900 leading-tight mb-6">
+            <h2 className="text-5xl md:text-6xl font-extrabold tracking-tight text-blue-900 leading-tight mb-6 text-center md:text-left">
               Sistema Inteligente de Asistencia Escolar con NFC
             </h2>
 
@@ -50,19 +50,19 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Link href="/login" target="_blanck">
+              <Link href="/dashboard" target="_blanck">
                 <Button className="w-fit">
                   <ShieldUser className="size-7" />
                   Acceso Administrador
                 </Button>
               </Link>
-              <Link href="/login" target="_blanck">
+              <Link href="/dashboard" target="_blanck">
                 <Button className="w-fit" variant="outline">
                   <GraduationCap className="size-7" />
                   Acceso Docente
                 </Button>
               </Link>
-              <Link href="/login" target="_blanck">
+              <Link href="/dashboard" target="_blanck">
                 <Button className="w-fit" variant="outline" >
                   <Baby className="size-7" />
                   Acceso Padres
@@ -73,8 +73,7 @@ export default function Home() {
 
           </div>
 
-
-          <div className="bg-white p-4 rounded-2xl shadow-2xl rotate-3 transform h-140">
+          <div className="bg-white p-4 rounded-2xl shadow-2xl rotate-3 transform h-140 hidden md:block">
             <img className="rounded-2xl w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDP5bJ4gGbnW5xi3Rqzs9uvp9_8fMcw0vEUwzgLGbBQgd5wQ2JHP3x1u5eZ_Gf1cWyRmldOaZmv_hg5xXDlRxI3Ea6O50VklT6h8urwmI_TqP2-EEjVQy_CQYvLGwlg4fHDU0xRBX-m1zuJTCKun-SrngIsunWpgigsHSej9B0Sm1aG4LA8_dMY26iqcgZCqR6oOepOSM-q-UNPDKNLBiHqblfwY4MWfeqNKgiv4WXZi__lipQE8YTQxDSShEsGgA7DPE20RxN3Se-" />
             <div className="absolute -bottom-6 -left-6 bg-blue-primary text-white p-6 rounded-2xl shadow-xl">
               <div className="flex items-center gap-3 mb-2">
@@ -93,7 +92,7 @@ export default function Home() {
         </section >
 
         <div className="bg-white w-full" id="1">
-          <section className="grid grid-cols-4 max-w-350 mx-auto py-15 gap-10">
+          <section className="grid md:grid-cols-4 max-w-350 mx-auto py-15 gap-10 px-6">
 
             <div className="flex justify-center col-span-full mb-15">
               <h3 className="font-extrabold text-3xl text-blue-900">
@@ -131,20 +130,20 @@ export default function Home() {
         </div>
 
 
-        <section className="grid grid-cols-3 max-w-350 mx-auto py-15 gap-7" id="2">
+        <section className="grid md:grid-cols-3 max-w-350 mx-auto py-15 gap-7 px-6" id="2">
 
           <div className="col-span-full flex items-center justify-between mb-8">
             <div>
               <p className="text-primary font-bold text-sm tracking-widest uppercase mb-2">Herramientas</p>
               <h2 className="text-4xl font-extrabold text-blue-900">Funcionalidades Principales</h2>
             </div>
-            <p className="max-w-md text-gray-700 font-medium">
+            <p className="max-w-md text-gray-700 font-medium hidden md:block">
               Una suite completa diseñada para cubrir todas las necesidades de la comunidad educativa.
             </p>
           </div>
 
 
-          <div className="bg-white rounded-primary p-10 border border-blue-primary/20 col-span-2 relative cursor-pointer group">
+          <div className="bg-white rounded-primary p-10 border border-blue-primary/20 md:col-span-2 relative cursor-pointer group">
             <Users className="mb-6 size-12 text-blue-900" strokeWidth={2.5} />
             <h3 className="text-2xl font-bold text-blue-900 mb-4">
               Gestión de Estudiantes
@@ -172,7 +171,7 @@ export default function Home() {
             <p className="font-medium text-gray-700 max-w-sm">Visualice quién está en la institución en cada momento desde cualquier dispositivo móvil o PC.</p>
           </div>
 
-          <div className="bg-white rounded-primary p-10 border border-blue-primary/20 col-span-2 cursor-pointer flex justify-between items-center">
+          <div className="bg-white rounded-primary p-10 border border-blue-primary/20 md:col-span-2 cursor-pointer flex justify-between items-center">
             <div>
               <ChartArea className="mb-6 size-12 text-blue-900" strokeWidth={2.5} />
               <h3 className="text-2xl font-bold text-blue-900 mb-4">
@@ -193,7 +192,7 @@ export default function Home() {
 
         <div className="bg-white w-full" id="3">
 
-          <section className="max-w-350 mx-auto py-15 ">
+          <section className="max-w-350 mx-auto py-15 px-6">
 
             <div className="col-span-full mb-15 flex justify-end">
               <div>
@@ -202,9 +201,9 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-12 gap-6">
 
-              <div className="md:col-span-6 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex items-center gap-6 group hover:border-blue-primary transition-all duration-300 cursor-pointer">
+              <div className="col-span-full md:col-span-6 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex items-center gap-6 group hover:border-blue-primary transition-all duration-300 cursor-pointer">
                 <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
                   <LayoutTemplate className="size-10 text-blue-900" />
                 </div>
@@ -226,7 +225,7 @@ export default function Home() {
                 <p className=" text-slate-600">Estilizado utility-first para interfaces modernas.</p>
               </div>
 
-              <div className="md:col-span-7 bg-blue-900 text-white rounded-2xl p-8 flex items-center gap-8 shadow-lg cursor-pointer">
+              <div className="col-span-full md:col-span-7 bg-blue-900 text-white rounded-2xl p-8 flex items-center gap-8 shadow-lg cursor-pointer">
                 <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">
                   <Cpu className="size-10 text-white-primary" />
                 </div>
@@ -236,7 +235,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="md:col-span-5 bg-surface-container-high rounded-2xl p-6 flex items-center gap-4 border border-blue-secondary hover:border-blue-primary transition-all duration-300 group cursor-pointer">
+              <div className="md:col-span-5 bg-surface-container-high rounded-2xl p-6 flex flex-col md:flex-row md:items-center gap-4 border border-blue-secondary hover:border-blue-primary transition-all duration-300 group cursor-pointer">
                 <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm shrink-0">
                   <Blocks className="size-10 mb-3 text-blue-900" />
                 </div>
@@ -247,7 +246,7 @@ export default function Home() {
               </div>
 
 
-              <div className="md:col-span-4 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex items-center gap-4 hover:border-blue-primary transition-all duration-300 cursor-pointer">
+              <div className="md:col-span-4 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-blue-primary transition-all duration-300 cursor-pointer">
                 <Code className="size-10 mb-3 text-blue-900" />
                 <div>
                   <h4 className="font-bold text-blue-900">TypeScript</h4>
@@ -255,7 +254,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="md:col-span-4 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex items-center gap-4 hover:border-blue-primary transition-all duration-300 cursor-pointer">
+              <div className="md:col-span-4 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-blue-primary transition-all duration-300 cursor-pointer">
                 <Database className="size-10 mb-3 text-blue-900" />
                 <div>
                   <h4 className="font-bold text-blue-900">SQL en MariaDB</h4>
@@ -263,7 +262,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="md:col-span-4 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex items-center gap-4 hover:border-blue-primary transition-all duration-300 cursor-pointer">
+              <div className="md:col-span-4 bg-blue-secondary/40 border border-blue-secondary rounded-2xl p-6 flex flex-col md:flex-row md:items-center gap-4 hover:border-blue-primary transition-all duration-300 cursor-pointer">
                 <Cloudy className="size-10 mb-3 text-blue-900" />
                 <div>
                   <h4 className="font-bold text-blue-900">Hostinger</h4>
@@ -279,7 +278,7 @@ export default function Home() {
 
 
 
-        <section className="grid grid-cols-4 max-w-350 mx-auto py-15 gap-10" id="4">
+        <section className="grid grid-cols-2 md:grid-cols-4 max-w-350 mx-auto py-15 gap-10 px-6" id="4">
 
           <div className="flex justify-center col-span-full mb-15">
             <h3 className="font-extrabold text-3xl text-blue-900">
@@ -324,16 +323,16 @@ export default function Home() {
 
         <footer className="bg-white">
 
-          <div className="w-full max-w-350 mx-auto px-5 pt-10 pb-3 flex justify-between items-center">
+          <div className="w-full max-w-350 mx-auto px-4 py-10 flex flex-col md:flex-row gap-5 justify-between items-center">
 
             <Logo />
 
-            <ul className="flex gap-10 items-center">
-              <li><a className="hover:underline font-medium text-black-primary" href="#1">¿Qué es el sistema?</a></li>
-              <li><a className="hover:underline font-medium text-black-primary" href="#2">Funciones</a></li>
-              <li><a className="hover:underline font-medium text-black-primary" href="#3">Tecnologías</a></li>
-              <li><a className="hover:underline font-medium text-black-primary" href="#4">Equipo </a></li>
-            </ul>
+              {/* <ul className="flex flex-wrap gap-10 items-center">
+                <li><a className="hover:underline font-medium text-black-primary" href="#1">¿Qué es el sistema?</a></li>
+                <li><a className="hover:underline font-medium text-black-primary" href="#2">Funciones</a></li>
+                <li><a className="hover:underline font-medium text-black-primary" href="#3">Tecnologías</a></li>
+                <li><a className="hover:underline font-medium text-black-primary" href="#4">Equipo </a></li>
+              </ul> */}
 
             <Button variant="ghost" size="sm">
               <a href="https://github.com/SrRata" target="_blanck">
@@ -343,9 +342,6 @@ export default function Home() {
 
 
           </div>
-          <p className="font-medium text-gray-700 pb-2 text-center ">
-            © 2026 SiaeNFC (Sistema Inteligente de Asistencia Escolar con NFC)
-          </p>
         </footer>
 
       </>
