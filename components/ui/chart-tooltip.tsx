@@ -19,7 +19,7 @@ interface CustomTooltipProps extends TooltipProps<ValueType, NameType> {
 const labelMap = {
   assists: "Asistencias",
   absences: "Inasistencias",
-  attendanceRate: "Tasa de asistencia"
+  attendanceRate: "Tasa de asistencia"  
 }
 
 export function ChartTooltip({

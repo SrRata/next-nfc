@@ -7,32 +7,44 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
 
-    const [credentials, setCredentials] = useState(
-        {
-            user: "",
-            password: ""
-        }
-    )
+  const [credentials, setCredentials] = useState(
+    {
+      user: "",
+      password: ""
+    }
+  )
+
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials(
-        {
-            ...credentials,
-            [e.target.name]: e.target.value
-        }
+      {
+        ...credentials,
+        [e.target.name]: e.target.value
+      }
     )
 
   };
 
-      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(credentials);
-        const response = await axios.post('/api/auth', credentials);
-        console.log(response);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(credentials);
+    const response = await axios.post('/api/auth', credentials);
+
+    if (response.status === 200) {
+      router.push('/dashboard')
     }
+
+
+    console.log(response);
+  }
+
+
+
   return (
     <form onSubmit={handleSubmit} className="bg-white-primary rounded-primary w-full p-8 flex flex-col gap-8">
       <div className="flex flex-col w-full gap-5">

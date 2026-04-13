@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { type Icon } from "@tabler/icons-react"
+import { useRouter } from "next/navigation";
 
 import {
   SidebarGroup,
@@ -10,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import axios from "axios"
 
 export function NavSecondary({
   items,
@@ -21,6 +23,18 @@ export function NavSecondary({
     icon: Icon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      await axios.post('/api/logout');
+      router.push('/login');
+    } catch (error: any) {
+      console.error(error.response?.data);
+    }
+  };
+
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
@@ -35,6 +49,16 @@ export function NavSecondary({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+
+
+          <SidebarMenuItem key="logout">
+            <SidebarMenuButton asChild>
+              <button onClick={logout}>
+                <span>Cerrar Sesión</span>
+              </button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
