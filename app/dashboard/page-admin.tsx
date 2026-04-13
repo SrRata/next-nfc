@@ -21,10 +21,6 @@ import {
 export default function HomePageAdmin() {
   return (
     <>
-      {/* <div className="col-span-full py-5">
-        <h2 className="text-black-primary text-2xl font-bold">Accesos directos</h2>
-        <p className="text-black-secondary font-medium text-xl">Seleccione una de las siguientes opciones para gestionar el sistema.</p>
-    </div> */}
 
       <InfoCard
         icon={Book}

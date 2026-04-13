@@ -1,4 +1,4 @@
-import { Montserrat } from 'next/font/google'
+import { League_Spartan, Montserrat } from 'next/font/google'
 import type { Metadata } from "next";
 import "./globals.css";
 import QueryProvider from '@/providers/QueryProvider';
@@ -8,6 +8,11 @@ import QueryProvider from '@/providers/QueryProvider';
 const montserrat = Montserrat({
   subsets: ['latin'],
 })
+
+const leagueSpartan = League_Spartan({ 
+  subsets: ["latin"],
+  variable: "--font-spartan",    // Nombre de la variable para League Spartan
+});
 
 export const metadata: Metadata = {
   title: "Siae-NFC",
@@ -22,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={montserrat.className}>
+      <body className={`${montserrat.className} ${leagueSpartan.variable}`} >
         <QueryProvider>
         {children}
         </QueryProvider>
