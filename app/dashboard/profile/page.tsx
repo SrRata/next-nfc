@@ -2,6 +2,7 @@ import { Alert } from "@/components/alert";
 import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { roleBadgeColor } from "@/lib/constants/get-badge-color";
 import { IdCard, Key, Lock, User, UserLock } from "lucide-react";
 
@@ -20,31 +21,25 @@ export default function ProfilePage() {
         </div>
 
         <div>
-          <p className="font-bold text-black-secondary text-sm mb-2">
-            Rango / Rol
-          </p>
+          <Label>Rango / Rol</Label>
           <Badge color={roleBadgeColor["admin"].color}>Administrador</Badge>
         </div>
         <div>
-          <p className="font-bold text-black-secondary text-sm mb-2">
-            Correo electrónico
-          </p>
+          <Label>Correo electrónico</Label>
           <p className="font-semibold text-black-primary">
             luis.matailo@uemfebrescordero.com
           </p>
         </div>
         <div>
-          <p className="font-bold text-black-secondary text-sm mb-2">Genero</p>
+          <Label>Genero</Label>
           <Badge color="orange">Masculino</Badge>
         </div>
         <div>
-          <p className="font-bold text-black-secondary text-sm mb-2">Titulo</p>
+          <Label>Titulo</Label>
           <Badge>Ninguno</Badge>
         </div>
         <div>
-          <p className="font-bold text-black-secondary text-sm mb-2">
-            Teléfono
-          </p>
+          <Label>Teléfono</Label>
           <p className="font-semibold text-black-primary">+593 98 417 6619</p>
         </div>
       </div>

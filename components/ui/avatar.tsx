@@ -1,32 +1,22 @@
-import { cn } from "@/lib/utils";
+"use client"
+
+
+import { cn } from "@/lib/utils"
+
 
 const avatarVariants = [
-  {
-    bg: "bg-blue-secondary",
-    text: "text-blue-primary",
-  },
-  {
-    bg: "bg-green-secondary",
-    text: "text-green-primary",
-  },
-  {
-    bg: "bg-purple-secondary",
-    text: "text-purple-primary",
-  },
-  {
-    bg: "bg-orange-secondary",
-    text: "text-orange-primary",
-  },
+  { bg: "bg-blue-secondary", text: "text-blue-primary" },
+  { bg: "bg-green-secondary", text: "text-green-primary" },
+  { bg: "bg-purple-secondary", text: "text-purple-primary" },
+  { bg: "bg-orange-secondary", text: "text-orange-primary" },
 ];
 
-function getInitials(text?: string): string {
-  if (!text || !text.trim()) return "U";
+function getInitials(text: string): string {
+  // Si el texto es nulo, vacío o solo espacios, devolvemos "ST" (Sin Tutor) o "?"
+  if (!text || !text.trim()) return "ST";
 
   const words = text.trim().split(/\s+/);
-
-  if (words.length === 1) {
-    return words[0].slice(0, 2).toUpperCase();
-  }
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
 
   return words
     .slice(0, 2)
@@ -37,8 +27,10 @@ function getInitials(text?: string): string {
 
 function stringToHash(str: string): number {
   let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  // Usamos un string vacío si llega undefined o null para evitar errores
+  const safeStr = str || "";
+  for (let i = 0; i < safeStr.length; i++) {
+    hash = safeStr.charCodeAt(i) + ((hash << 5) - hash);
   }
   return Math.abs(hash);
 }
@@ -50,7 +42,7 @@ function getVariantFromName(name: string) {
 }
 
 interface AvatarProps {
-  name?: string;
+  name?: string | null; // Aceptamos null explícitamente
   size?: "sm" | "md" | "lg" | "xl";
   className?: string;
   variant?: "auto" | number;
@@ -64,16 +56,21 @@ const sizeClasses = {
 };
 
 export function Avatar({
-  name = "User",
+  name,
   size = "md",
   className,
   variant = "auto",
 }: AvatarProps) {
+  // 1. Normalizamos el nombre: si es null/undefined, usamos "Sin Tutor"
+  const safeName = name?.trim() ? name : "Sin Tutor";
+
+  // 2. Obtenemos la variante basada en el nombre seguro
   const selectedVariant =
-    variant === "auto" ? getVariantFromName(name) : avatarVariants[variant];
+    variant === "auto"
+      ? getVariantFromName(safeName)
+      : avatarVariants[variant] || avatarVariants[0]; // Fallback a la primera variante
 
   return (
-    
     <div
       className={cn(
         "rounded-full font-semibold grid place-content-center uppercase",
@@ -83,7 +80,7 @@ export function Avatar({
         className,
       )}
     >
-      {getInitials(name)}
+      {getInitials(safeName)}
     </div>
   );
 }

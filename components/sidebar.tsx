@@ -15,7 +15,7 @@ export function Sidebar({ children, className }: SidebarBaseProps) {
   return (
     <aside
       className={cn(
-        "bg-white-primary min-h-screen w-width-sidebar flex flex-col justify-between p-5 gap-5",
+        "bg-white-primary min-h-screen w-width-sidebar flex flex-col fixed top-0 left-0 justify-between p-5 gap-5",
         className,
       )}
     >

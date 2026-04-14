@@ -21,10 +21,6 @@ import {
 export default function HomePageAdmin() {
   return (
     <>
-      {/* <div className="col-span-full py-5">
-        <h2 className="text-black-primary text-2xl font-bold">Accesos directos</h2>
-        <p className="text-black-secondary font-medium text-xl">Seleccione una de las siguientes opciones para gestionar el sistema.</p>
-    </div> */}
 
       <InfoCard
         icon={Book}
@@ -54,35 +50,35 @@ export default function HomePageAdmin() {
       <LinkCard
         title="Gestión de estudiantes"
         description="Administre el registro de nuevos o existentes estudiantes, edición de perfiles y asignación de tags NFC."
-        href="/"
+        href="/dashboard/students-management"
         ctaText="Gestionar estudiantes"
         icon={Users}
       />
       <LinkCard
         title="Gestión de usuarios"
         description="Administre el registro de nuevos o existentes usuarios, edición de perfiles y asignación de permisos."
-        href="/"
+        href="/dashboard/users-management"
         ctaText="Gestionar usuarios"
         icon={UserLock}
       />
       <LinkCard
         title="Historial de asistencias"
         description="Consulta registros históricos de entradas y salidas de todos los estudiantes."
-        href="/"
+        href="/dashboard/history"
         ctaText="Visualizar historial"
         icon={History}
       />
       <LinkCard
         title="Reportes y estadísticas"
         description="Genere reportes PDF/Exel y visualice estadísticas de puntualidad y ausentismo."
-        href="/"
+        href="/dashboard/reports"
         ctaText="Visualizas estadísticas"
         icon={Clipboard}
       />
       <LinkCard
         title="Configuración"
         description="Gestione los parametros del sistema como horarios y margenes de espera para los registros."
-        href="/"
+        href="/dashboard/settings"
         ctaText="Ir a configuraciones"
         icon={Settings}
       />
@@ -91,7 +87,7 @@ export default function HomePageAdmin() {
         <NotificationHeader
           title="Actividad reciente en mis cursos asignados."
           description="Ultimos 5 registros de actividad."
-          href="/"
+          href="/dashboard/history"
           hrefLabel="Ver todo"
         />
         <NotificationItem

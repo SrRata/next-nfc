@@ -3,7 +3,14 @@ import { CourseCard, Subject } from "@/components/course-card";
 
 import rawData from "./data.json";
 
-import { educationLevel, section} from "@/lib/constants/data-type";
+import {
+  educationLevel,
+  educationLevels,
+  section,
+  sections,
+} from "@/lib/constants/data-type";
+import { Suspense } from "react";
+import { Filters, FiltersSkeleton } from "@/components/filters";
 
 type CourseData = {
   id: number;
@@ -12,15 +19,48 @@ type CourseData = {
   level: educationLevel;
   subjects: Subject[];
   studentCount: number;
-  isActive: boolean; 
+  isActive: boolean;
 };
 
-  const data: CourseData[] = rawData as CourseData[];
-
+const data: CourseData[] = rawData as CourseData[];
 
 export default function CoursesPage() {
   return (
     <>
+      <Suspense fallback={<FiltersSkeleton />}>
+        <Filters
+          searchPlaceholder="Buscar un curso..."
+          fields={[
+            {
+              id: "level",
+              label: "Nivel educativo",
+              options: educationLevels.map((level) => ({
+                label: level,
+                value: level,
+              })),
+            },
+
+            {
+              id: "section",
+              label: "Seccion",
+              options: sections.map((section) => ({
+                label: section,
+                value: section,
+              })),
+            },
+
+            {
+              id: "isActive",
+              label: "Estado",
+              options: [
+                { label: "Activo", value: "true" },
+                { label: "Inactivo", value: "false" },
+              ],
+            },
+          ]}
+        />
+      </Suspense>
+
       {data.map((course) => (
         <CourseCard
           key={course.id}
@@ -30,7 +70,7 @@ export default function CoursesPage() {
           level={course.level}
           subjects={course.subjects}
           studentCount={course.studentCount}
-          isActive={course.isActive} 
+          isActive={course.isActive}
         />
       ))}
 

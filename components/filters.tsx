@@ -1,9 +1,16 @@
 "use client";
 
+import { DateRange } from "react-day-picker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -12,8 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUpdateUrl } from "@/lib/hooks/update-url";
-import { RotateCcw, Search } from "lucide-react";
+import { CalendarIcon, RotateCcw, Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { format, isValid } from "date-fns";
+import { es } from "date-fns/locale";
+
+type FieldType = "select" | "date" | "date-range";
 
 interface FilterOption {
   label: string;
@@ -24,71 +36,223 @@ interface FilterField {
   id: string;
   label: string;
   placeholder?: string;
-  options: FilterOption[];
+  type?: FieldType;
+  options?: FilterOption[];
 }
 
 interface DataFiltersProps {
   searchPlaceholder?: string;
   fields?: FilterField[];
+  hideSearch?: boolean;
+  prefix?: string;
 }
 
-export function Filters({ 
-  searchPlaceholder = "Buscar...", 
-  fields = [] 
+export function Filters({
+  searchPlaceholder = "Buscar...",
+  fields = [],
+  hideSearch = false,
+  prefix = "",
 }: DataFiltersProps) {
-  const { updateFilter, clearFilters } = useUpdateUrl();
+  const { updateFilter, clearPrefixFilters } = useUpdateUrl();
   const searchParams = useSearchParams();
 
-  const hasFilters = searchParams.toString().length > 0;
+  // --- HELPERS DE LLAVES Y FORMATO ---
+  const getFieldKey = (key: string) => (prefix ? `${prefix}_${key}` : key);
+  const searchKey = getFieldKey("search");
+
+  const formatToLocalISO = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const parseLocalDate = (dateStr: string) => {
+    if (!dateStr) return undefined;
+    const [year, month, day] = dateStr.split("-").map(Number);
+    const date = new Date(year, month - 1, day);
+    return isValid(date) ? date : undefined;
+  };
+
+  const getRangeFromParams = (value: string | null): DateRange | undefined => {
+    if (!value) return undefined;
+    const parts = value.split("_to_");
+    const from = parseLocalDate(parts[0]);
+    if (!from) return undefined;
+    return {
+      from,
+      to: parts[1] ? parseLocalDate(parts[1]) : undefined,
+    };
+  };
+
+  const getFriendlyDateLabel = (value: string | null) => {
+    if (!value) return null;
+
+    if (value.includes("_to_")) {
+      const [fromStr, toStr] = value.split("_to_");
+      const from = parseLocalDate(fromStr);
+      const to = toStr ? parseLocalDate(toStr) : null;
+      if (!from) return "Elegir rango";
+      return `${format(from, "dd MMM", { locale: es })} - ${to ? format(to, "dd MMM", { locale: es }) : "..."}`;
+    }
+
+    const date = parseLocalDate(value);
+    return date ? format(date, "dd MMM, yyyy", { locale: es }) : value;
+  };
+
+  // --- ESTADO BÚSQUEDA ---
+  const [localSearch, setLocalSearch] = useState(searchParams.get(searchKey) || "");
+
+  useEffect(() => {
+    setLocalSearch(searchParams.get(searchKey) || "");
+  }, [searchParams, searchKey]);
+
+  const handleSearch = () => updateFilter(searchKey, localSearch);
+  
+  const hasFilters = fields.some((f) => searchParams.has(getFieldKey(f.id))) || searchParams.has(searchKey);
+
+  const handleClear = () => {
+    setLocalSearch("");
+    const fieldIds = fields.map((f) => f.id);
+    clearPrefixFilters(prefix, fieldIds);
+  };
 
   return (
     <div className="flex items-center justify-between bg-white-primary p-6 rounded-primary col-span-full gap-4">
-      
-      <div className="border-gray-200 border rounded-primary flex items-center px-1 flex-1 max-w-sm">
-        <Input 
-          placeholder={searchPlaceholder} 
-          className="border-none p-2 focus-visible:ring-0"
-          value={searchParams.get("search") || ""}
-          onChange={(e) => updateFilter("search", e.target.value)}
-        />
-        <Button variant="ghost" className="p-2 hover:bg-transparent">
-          <Search size={18} />
-        </Button>
-      </div>
+      {/* INPUT DE BÚSQUEDA */}
+      {!hideSearch && (
+        <div className="border-gray-200 border rounded-primary flex items-center px-1 flex-1 max-w-sm">
+          <Input
+            placeholder={searchPlaceholder}
+            className="border-none p-2 focus-visible:ring-0"
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          />
+          <Button variant="ghost" className="p-2 hover:bg-transparent" onClick={handleSearch}>
+            <Search size={18} />
+          </Button>
+        </div>
+      )}
 
-      <div className="flex items-center gap-3 flex-wrap">
-        {fields.map((field) => (
-          <Badge key={field.id} className="flex items-center gap-2 py-1 px-3">
-            <Label htmlFor={field.id} className="mb-0">{field.label}</Label>
-            <Select 
-              value={searchParams.get(field.id) || ""} 
-              onValueChange={(v) => updateFilter(field.id, v)}
+      {/* CONTENEDOR DE FILTROS DINÁMICOS */}
+      <div className={`flex items-center gap-3 flex-wrap ${hideSearch ? "ml-auto" : ""}`}>
+        {fields.map((field, index) => {
+          const fieldKey = getFieldKey(field.id);
+          const currentValue = searchParams.get(fieldKey);
+          const type = field.type || "select";
+
+          return (
+            <Badge
+              key={`${field.id}-${index}`}
+              className="flex items-center gap-2 py-1 px-3 bg-gray-100 hover:bg-gray-100 text-black border-none font-normal"
             >
-              <SelectTrigger id={field.id} className="h-auto p-0 bg-transparent border-none focus:ring-0 capitalize">
-                <SelectValue placeholder={field.placeholder || "Seleccione"} />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                {field.options.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value} className="capitalize">
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Badge>
-        ))}
+              <Label className="mb-0 text-gray-500">{field.label}:</Label>
 
+              {/* 1. CASO: SELECT */}
+              {type === "select" && (
+                <Select
+                  value={currentValue || ""}
+                  onValueChange={(v) => updateFilter(fieldKey, v)}
+                >
+                  <SelectTrigger className="h-auto p-0 bg-transparent border-none focus:ring-0 shadow-none capitalize">
+                    <SelectValue placeholder={field.placeholder || "Seleccione"} />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    {field.options?.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value} className="capitalize">
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+
+              {/* 2. CASO: FECHA ÚNICA */}
+              {type === "date" && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-1 text-sm outline-none">
+                      <span className={currentValue ? "font-medium" : "text-gray-400"}>
+                        {getFriendlyDateLabel(currentValue) || field.placeholder || "Elegir fecha"}
+                      </span>
+                      <CalendarIcon size={14} className="text-gray-400" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={currentValue ? parseLocalDate(currentValue) : undefined}
+                      onSelect={(date) => {
+                        if (date) updateFilter(fieldKey, formatToLocalISO(date));
+                      }}
+                      locale={es}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+
+              {/* 3. CASO: RANGO DE FECHAS */}
+              {type === "date-range" && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-1 text-sm outline-none">
+                      <span className={currentValue ? "font-medium" : "text-gray-400"}>
+                        {getFriendlyDateLabel(currentValue) || field.placeholder || "Elegir rango"}
+                      </span>
+                      <CalendarIcon size={14} className="text-gray-400" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="range"
+                      selected={getRangeFromParams(currentValue)}
+                      onSelect={(range) => {
+                        if (range?.from) {
+                          const fromStr = formatToLocalISO(range.from);
+                          const toStr = range.to ? formatToLocalISO(range.to) : "";
+                          updateFilter(fieldKey, toStr ? `${fromStr}_to_${toStr}` : fromStr);
+                        } else {
+                          updateFilter(fieldKey, "");
+                        }
+                      }}
+                      numberOfMonths={2}
+                      locale={es}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              )}
+            </Badge>
+          );
+        })}
+
+        {/* BOTÓN LIMPIAR */}
         {hasFilters && (
-          <Button 
-            variant="destructive" 
-            size="sm" 
-            onClick={clearFilters}
-            className="text-red-primary bg-transparent hover:bg-red-100 gap-2"
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClear}
+            className="text-red-500 hover:text-red-600 hover:bg-red-50 gap-2 h-8"
           >
             <RotateCcw size={14} />
-            Limpiar filtros
+            Limpiar
           </Button>
         )}
+      </div>
+    </div>
+  );
+}
+
+export function FiltersSkeleton() {
+  return (
+    <div className="px-5 flex items-center justify-between bg-gray-200 animate-pulse h-20 rounded-primary col-span-full gap-4">
+      <div className="bg-gray-300 w-100 h-10 rounded-primary"></div>
+      <div className="flex items-center gap-3">
+        <div className="bg-gray-300 w-35 h-6 rounded-primary"></div>
+        <div className="bg-gray-300 w-40 h-6 rounded-primary"></div>
+        <div className="bg-gray-300 w-25 h-6 rounded-primary"></div>
       </div>
     </div>
   );

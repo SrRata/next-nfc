@@ -4,19 +4,21 @@ export const educationLevels = [
   "media",
   "superior",
   "bachillerato",
+  "bachillerato técnico",
+  "default"
 ] as const;
 
 export type educationLevel = (typeof educationLevels)[number];
 
-export const sections = ["matutina", "vespertina"] as const;
+export const sections = ["matutina", "vespertina", "default"] as const;
 
 export type section = (typeof sections)[number];
 
-export const estudentStates = ["presente", "ausente", "atrasado"] as const;
+export const studentStates = ["presente", "ausente", "atrasado", "default"] as const;
 
-export type studentState = (typeof estudentStates)[number];
+export type studentState = (typeof studentStates)[number];
 
-export const roles = ["admin", "profesor", "usuario"] as const;
+export const roles = ["admin", "profesor", "usuario", "default"] as const;
 
 export type role = (typeof roles)[number];
 

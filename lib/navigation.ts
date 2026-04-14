@@ -43,12 +43,12 @@ export const teacherNav: NavItem[] = [
     text: "Gestión de cursos",
     type: "admin",
   },
-  {
-    href: "/dashboard/courses",
-    icon: GraduationCap,
-    text: "Mis cursos",
-    type: "general",
-  },
+  // {
+  //   href: "/dashboard/courses",
+  //   icon: GraduationCap,
+  //   text: "Mis cursos",
+  //   type: "general",
+  // },
   {
     href: "/dashboard/students",
     icon: Users,

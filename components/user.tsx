@@ -4,7 +4,7 @@ import { Avatar } from "./ui/avatar";
 interface UserInfoProps {
     name: string;
     username: string;
-    role: role;
+    role: string;
     align?: "left" | "right";
 }
 

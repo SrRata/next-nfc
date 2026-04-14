@@ -13,11 +13,11 @@ export function DataUser({ name, id, section, course }: DataUserProps) {
       <Avatar name={name} />
 
       <div className="flex flex-col min-w-0">
-        <span className="font-semibold truncate">{name}</span>
+        <span className="font-semibold truncate capitalize">{name}</span>
 
         {(id || section) && (
           <span className="text-sm font-medium text-black-secondary truncate">
-            {id && `ID: ${id}`}
+            {id && `Cd: ${id}`}
             {id && course && " • "}
             {course}
             {course && section && " • "}

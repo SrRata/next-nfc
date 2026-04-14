@@ -1,10 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { IconShape } from "@/components/ui/icon-shape";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { InternalLink } from "@/components/ui/link";
-import { ChevronRight, GraduationCap, Shield } from "lucide-react";
+import { GraduationCap, Shield } from "lucide-react";
 import { Metadata } from "next";
+import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -30,8 +27,8 @@ export default function LoginPage() {
           <p className="font-medium text-black-secondary">
             Sistema de Asistencia Escolar NFC
           </p>
-
         </div>
+
         <div className="bg-white-primary rounded-primary flex items-center gap-4 p-4 w-full mb-7">
           <IconShape icon={Shield} color="blue" />
           <div>
@@ -41,26 +38,7 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
-
-        <div className="bg-white-primary rounded-primary w-full p-8 flex flex-col gap-8">
-          <div className="flex flex-col w-full gap-5">
-            <div className="flex flex-col gap-4">
-              <Label htmlFor="user">Usuario o Correo</Label>
-              <Input id="user" type="text" placeholder="Ej: usuario@uemfebrescordero.com"/>
-            </div>
-            <div className="flex flex-col gap-4">
-              <Label htmlFor="password">Contraseña</Label>
-              <Input id="password" type="password" placeholder="Inserte su contraseña"/>
-            </div>
-          </div>
-          <div className="flex flex-col w-full gap-5 items-center">
-            <Button className="w-full">
-              Ingresar
-              <ChevronRight />
-            </Button>
-            <InternalLink href="/">¿Olvidó su contraseña?</InternalLink>
-          </div>
-        </div>
+        <LoginForm />
       </div>
     </div>
   );

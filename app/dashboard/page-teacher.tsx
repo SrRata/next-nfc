@@ -52,19 +52,19 @@ export default function HomePageTeacher() {
           <AbsenceStatCard absences={2} late={4} />
         </CourseOverviewStats>
 
-        <LastRegister lastStudent="Luis Matailo" createdAt={new Date()} href="/" />
+        <LastRegister lastStudent="Luis Matailo" createdAt={new Date()} href="/dashboard/students?course=id" />
       </CourseOverviewCard>
 
       <LinkCard
         title="Gestión de mis alumnos"
         description="Ver dichas, reportes individuales y tags asignados a sus estudiantes."
-        href="/"
+        href="/dashboard/students"
         icon={Users}
       />
       <LinkCard
         title="Historial de registros"
         description="Revise el registro de asistencia en dias anteriores y modifique estados si es necesario."
-        href="/"
+        href="/dashboard/history"
         icon={History}
       />
 
@@ -72,7 +72,7 @@ export default function HomePageTeacher() {
         <NotificationHeader
           title="Actividad reciente en mis cursos asignados."
           description="Ultimos 5 registros de actividad."
-          href="/"
+          href="/dashboard/history"
           hrefLabel="Ver todo"
         />
         <NotificationItem

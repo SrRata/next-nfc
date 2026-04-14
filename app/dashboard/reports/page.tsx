@@ -2,6 +2,13 @@ import { InfoCard } from "@/components/info-card";
 import { Percent, UserMinus, Users } from "lucide-react";
 import { ReportChart } from "./report-chart";
 import { ReportTable } from "./reports-table";
+import { Suspense } from "react";
+import { Filters, FiltersSkeleton } from "@/components/filters";
+import {
+  educationLevels,
+  sections,
+  studentStates,
+} from "@/lib/constants/data-type";
 
 export default function reportsPage() {
   return (
@@ -33,10 +40,66 @@ export default function reportsPage() {
         alertColor="red"
       />
 
-      <ReportChart />
+      <Suspense fallback={<FiltersSkeleton />}>
+        <Filters
+          hideSearch
+          prefix="chart"
+          fields={[
+            { id: "date_range", label: "Periodo", type: "date-range" },
+            { id: "date", label: "Fecha", type: "date" },
+            {
+              id: "level",
+              label: "Nivel educativo",
+              options: educationLevels.map((level) => ({
+                label: level,
+                value: level,
+              })),
+            },
+            {
+              id: "section",
+              label: "Sección",
+              options: sections.map((state) => ({
+                label: state,
+                value: state,
+              })),
+            },
+                        {
+              id: "view",
+              label: "Vista",
+              options: [
+                {label: "Comparativa", value: "comparative"},
+              ]
+            }
+          ]}
+        />
+      </Suspense>
 
+      <ReportChart />
+      <Suspense fallback={<FiltersSkeleton />}>
+        <Filters
+          prefix="table"
+          searchPlaceholder="Buscar un estudiante..."
+          fields={[
+            {
+              id: "course",
+              label: "Curso",
+              options: [
+                { label: "3ro Informatica", value: "1" },
+                { label: "2do Informatica", value: "2" },
+              ],
+            },
+            {
+              id: "level",
+              label: "Nivel educativo",
+              options: educationLevels.map((level) => ({
+                label: level,
+                value: level,
+              })),
+            },
+          ]}
+        />
+      </Suspense>
       <ReportTable />
-      
     </>
   );
 }
