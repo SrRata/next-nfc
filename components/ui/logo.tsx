@@ -31,5 +31,6 @@ export function Logo({ className, variant }: LogoProps) {
   );
 }
 
+
 //Componente mejorado, version final
 //01-03-2026

@@ -69,12 +69,12 @@ export default function DashboardLayout({
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
+          "--sidebar-width": "calc(var(--spacing) * 80)",
           "--header-height": "calc(var(--spacing) * 25)",
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="sidebar" />
+      <AppSidebar variant="sidebar"/>
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">

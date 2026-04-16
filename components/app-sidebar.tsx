@@ -35,6 +35,11 @@ import {
 } from "@/components/ui/sidebar"
 import { Logo } from "./ui/logo"
 import { title } from "process"
+import { Grid, LogOut, Nfc } from "lucide-react"
+import { SidebarLink, SidebarNav } from "./sidebar"
+
+import { teacherNav } from "@/lib/navigation"
+import { Button } from "./ui/button"
 
 const data = {
   navMain: [
@@ -72,7 +77,7 @@ const data = {
       url: "#",
       icon: IconSchool,
     },
-        {
+    {
       title: "Get Help",
       url: "#",
       icon: IconHelp,
@@ -82,27 +87,58 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props} className="border-none">
+    // <Sidebar collapsible="icon" {...props} className="border-none p-5">
+    //   <SidebarHeader>
+    //     <SidebarMenu>
+    //       <SidebarMenuItem>
+    //         <SidebarMenuButton
+    //           asChild
+    //           className="data-[slot=sidebar-menu-button]:p-1.5 overflow-visible hover:bg-transparent"
+    //         >
+    //           <a href="/dashboard">
+    //           <div className="size-11 rounded-primary bg-blue-secondary grid place-content-center">
+    //             <Nfc className="size-8! text-blue-primary" strokeWidth={2} />
+    //             </div>
+    //             <span className="text-blue-primary font-bold text-2xl leading-tight">siaeNFC</span>
+    //           </a>
+    //         </SidebarMenuButton>
+    //       </SidebarMenuItem>
+    //     </SidebarMenu>
+    //   </SidebarHeader>
+    //   <SidebarContent>
+    //     <NavMain items={data.navMain} />
+    //   </SidebarContent>
+    //   <SidebarFooter>
+    //     <NavSecondary />
+    //   </SidebarFooter>
+    // </Sidebar>
+
+    <Sidebar className="border-none p-5">
+
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5"
-            >
-              <a href="#">
-                <IconInnerShadowTop className="size-8!" strokeWidth={1.5} />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <Logo/>
       </SidebarHeader>
+
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <SidebarNav>
+
+          {teacherNav.map((link) => (
+            <SidebarLink
+              key={link.href} // Siempre añade una key única
+              href={link.href}
+              text={link.text}
+              icon={link.icon}
+            />
+          ))}
+
+        </SidebarNav>
       </SidebarContent>
+
       <SidebarFooter>
-        <NavSecondary />
+          {/* <Button variant="destructive" className="bg-transparent text-red-primary border border-red-primary  hover:bg-red-primary/90 hover:text-white-primary">
+            <LogOut/>
+            Cerrar Sesión
+          </Button> */}
       </SidebarFooter>
     </Sidebar>
   )
