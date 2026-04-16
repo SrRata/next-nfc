@@ -40,6 +40,9 @@ import { SidebarLink, SidebarNav } from "./sidebar"
 
 import { teacherNav } from "@/lib/navigation"
 import { Button } from "./ui/button"
+import { useRouter } from "next/navigation"
+import axios from "axios"
+import { Libre_Barcode_128 } from "next/font/google"
 
 const data = {
   navMain: [
@@ -86,6 +89,20 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const router = useRouter();
+
+
+  const logout = async () => {
+  try {
+    await axios.post('/api/logout');
+    router.refresh();
+    window.location.href = '/login';
+  } catch (error: any) {
+    console.error(error.response?.data);
+  }
+};
+
   return (
     // <Sidebar collapsible="icon" {...props} className="border-none p-5">
     //   <SidebarHeader>
@@ -116,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar className="border-none p-5">
 
       <SidebarHeader>
-        <Logo/>
+        <Logo />
       </SidebarHeader>
 
       <SidebarContent>
@@ -135,10 +152,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-          {/* <Button variant="destructive" className="bg-transparent text-red-primary border border-red-primary  hover:bg-red-primary/90 hover:text-white-primary">
-            <LogOut/>
-            Cerrar Sesión
-          </Button> */}
+        <Button onClick={logout} variant="destructive" className="bg-transparent text-red-primary border border-red-primary  hover:bg-red-primary/90 hover:text-white-primary">
+          <LogOut />
+          Cerrar Sesión
+        </Button>
       </SidebarFooter>
     </Sidebar>
   )

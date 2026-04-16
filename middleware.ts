@@ -1,8 +1,8 @@
 import { jwtVerify } from "jose";
 import { NextResponse, NextRequest } from "next/server";
 
-// 🔐 Validación temprana del secret
 const JWT_SECRET = process.env.JWT_SECRET;
+
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET no está definido");
 }
@@ -17,7 +17,6 @@ export async function middleware(request: NextRequest) {
   const isLoginPage = pathname === "/login";
   const isDashboard = pathname.startsWith("/dashboard");
 
-  // 🔐 Función helper para validar token
   async function isValidToken(token: string) {
     try {
       await jwtVerify(token, secret);
@@ -27,21 +26,16 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 🔁 Caso 1: usuario con token intenta ir a login
-  if (isLoginPage && token) {
-    const valid = await isValidToken(token);
-
-    if (valid) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-
-    // Token inválido → limpiar cookie
-    const response = NextResponse.next();
-    response.cookies.delete("miTokenName");
-    return response;
+if (isLoginPage && token) {
+  const valid = await isValidToken(token);
+  if (valid) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
+  const response = NextResponse.next();
+  response.cookies.set("miTokenName", "", { expires: new Date(0) });
+  return response;
+}
 
-  // 🔒 Caso 2: proteger dashboard
   if (isDashboard) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
@@ -56,10 +50,21 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set('Cache-Control', 'no-store, max-age=0, must-revalidate');
+
+  return response;
 }
 
-// 🎯 Limitar ejecución SOLO a rutas necesarias
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: [
+    /*
+     * Coincidir con todas las rutas de las páginas excepto:
+     * 1. /api (rutas de API)
+     * 2. /_next/static (archivos estáticos)
+     * 3. /_next/image (optimización de imágenes)
+     * 4. /favicon.ico (archivo de favicon)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 };
