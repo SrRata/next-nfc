@@ -33,41 +33,50 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Logo } from "./ui/logo"
+import { GraduationCap, School2Icon, User, UserPen } from "lucide-react"
+import { title } from "process"
 
 const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
+      title: "Admininstrar Cursos",
+      url: "/dashboard/courses-management",
+      icon: School2Icon,
     },
     {
-      title: "Analytics",
+      title: "Administrar Estudiantes",
+      url: "/dashboard/students-management",
+      icon: GraduationCap,
+    },
+    {
+      title: "Administrar Usuarios",
+      url: "/dashboard/users-management",
+      icon: UserPen,
+    },
+    {
+      title: "Mis Estudiantes",
+      url: "/dashboard/students"
+    },
+    {
+      title: "Reportes",
       url: "#",
       icon: IconChartBar,
     },
     {
-      title: "Projects",
+      title: "Perfil",
       url: "#",
-      icon: IconFolder,
+      icon: User,
     },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navSecondary: [
-    {
+        {
       title: "Get Help",
       url: "#",
       icon: IconHelp,
-    },
+    }
   ],
 }
 
@@ -85,16 +94,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <IconInnerShadowTop className="size-8!" strokeWidth={1.5} />
                 <span className="text-base font-semibold">Acme Inc.</span>
               </a>
-              {/* <Logo/> */}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto"/>
       </SidebarContent>
       <SidebarFooter>
+        <NavSecondary />
       </SidebarFooter>
     </Sidebar>
   )

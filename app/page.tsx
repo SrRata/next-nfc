@@ -41,7 +41,7 @@ export default function Home() {
             <li><a className="font-medium hover:underline text-black-primary" href="#5">Responsive design </a></li>
           </ul>
 
-          <Link href="/dashboard" target="_blanck">
+          <Link href="/login" target="_blanck">
             <Button className="rounded-full">
               Acceder
             </Button>
@@ -100,8 +100,17 @@ export default function Home() {
               Acceso Padres
             </Badge>
 
+
           </div>
 
+
+          <BlurFade className="relative mt-15 w-[90%] h-[300px] md:hidden">
+
+            <div className="absolute top-0 left-8 w-full h-full rounded-3xl shadow-xl transform translate-x-4 -translate-y-8 z-10 bg-[url('https://www.hubspot.es/hs-fs/hubfs/dise%C3%B1o-one-page-website.webp?width=567&height=361&name=dise%C3%B1o-one-page-website.webp')] bg-cover"></div>
+            <div className="absolute top-0 left-4 w-full h-full rounded-3xl shadow-xl transform translate-x-2 -translate-y-4 z-20 bg-[url('https://www.komunicando.es/wp-content/uploads/2018/05/diseno-web.jpg')] bg-cover"></div>
+            <div className="absolute top-0 left-0 w-full h-full rounded-3xl shadow-xl z-30 bg-[url('https://www.opiniones.hosting/wp-content/uploads/2024/07/Hostinger-opiniones.jpg')] bg-cover"></div>
+
+          </BlurFade>
         </div>
 
         {/* 

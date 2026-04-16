@@ -12,17 +12,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import axios from "axios"
+import { Button } from "./ui/button";
 
-export function NavSecondary({
-  items,
-  ...props
-}: {
-  items: {
-    title: string
-    url: string
-    icon: Icon
-  }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+export function NavSecondary() {
 
   const router = useRouter();
 
@@ -36,26 +28,15 @@ export function NavSecondary({
   };
 
   return (
-    <SidebarGroup {...props}>
+    <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-
 
           <SidebarMenuItem key="logout">
             <SidebarMenuButton asChild>
-              <button onClick={logout}>
+              <Button onClick={logout} className="rounded-primary" variant="destructive">
                 <span>Cerrar Sesión</span>
-              </button>
+              </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
 
