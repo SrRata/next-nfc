@@ -14,6 +14,7 @@ import {
   IconInnerShadowTop,
   IconListDetails,
   IconReport,
+  IconSchool,
   IconSearch,
   IconSettings,
   IconUsers,
@@ -33,7 +34,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Logo } from "./ui/logo"
-import { GraduationCap, School2Icon, User, UserPen } from "lucide-react"
 import { title } from "process"
 
 const data = {
@@ -46,17 +46,17 @@ const data = {
     {
       title: "Admininstrar Cursos",
       url: "/dashboard/courses-management",
-      icon: School2Icon,
+      icon: IconSchool,
     },
     {
       title: "Administrar Estudiantes",
       url: "/dashboard/students-management",
-      icon: GraduationCap,
+      icon: IconSchool,
     },
     {
       title: "Administrar Usuarios",
       url: "/dashboard/users-management",
-      icon: UserPen,
+      icon: IconSchool,
     },
     {
       title: "Mis Estudiantes",
@@ -70,7 +70,7 @@ const data = {
     {
       title: "Perfil",
       url: "#",
-      icon: User,
+      icon: IconSchool,
     },
         {
       title: "Get Help",
