@@ -41,7 +41,7 @@ export default function Home() {
             <li><a className="font-medium hover:underline text-black-primary" href="#5">Responsive design </a></li>
           </ul>
 
-          <Link href="/login" target="_blanck">
+          <Link href="/dashboard" target="_blanck">
             <Button className="rounded-full">
               Acceder
             </Button>
