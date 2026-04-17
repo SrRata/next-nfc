@@ -61,6 +61,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import data from "./data.json"
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
 export default function DashboardLayout({
   children,
@@ -74,7 +75,7 @@ export default function DashboardLayout({
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="sidebar"/>
+      <AppSidebar variant="sidebar" />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">

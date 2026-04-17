@@ -1,9 +1,11 @@
 "use client"
 
 import {
+  IconBoxAlignBottom,
   IconCreditCard,
   IconDotsVertical,
   IconLogout,
+  IconMailbox,
   IconNotification,
   IconUserCircle,
 } from "@tabler/icons-react"
@@ -124,6 +126,12 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+               <DropdownMenuItem>
+                <Link href="/dashboard/profile" className="flex gap-2 items-center font-medium size-full">
+                  <IconMailbox/>
+                  Notificaciones
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link href="/dashboard/profile" className="flex gap-2 items-center font-medium size-full">
                   <User />
