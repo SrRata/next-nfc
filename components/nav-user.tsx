@@ -26,17 +26,52 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { UserInfo } from "./user"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import Link from "next/link"
+import { HelpCircle, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+export function NavUser() {
   const { isMobile } = useSidebar()
+
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    role: '',
+    username: ''
+  })
+
+  const getProfile = async () => {
+    try {
+      const response = await axios.get('/api/profile');
+      console.log(response.data);
+      setUser(response.data)
+      console.log(user)
+    } catch (error: any) {
+      console.error(error.response?.data);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
+
+
+  const router = useRouter();
+
+
+  const logout = async () => {
+    try {
+      await axios.post('/api/logout');
+      router.refresh();
+      window.location.href = '/login';
+    } catch (error: any) {
+      console.error(error.response?.data);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -45,16 +80,25 @@ export function NavUser({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="cursor-pointer  "
             >
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {user.email}
-                </span>
+
+              <div className="flex items-center gap-2">
+                <Avatar
+                  name={`${user.firstName} ${user.lastName}`}
+                />
+
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate font-semibold capitalize">{user.firstName} {user.lastName}</span>
+                  <span className="truncate text-sm text-black-secondary capitalize">
+                    {user.role}
+                  </span>
+                </div>
+                <IconDotsVertical className="ml-auto size-4" />
               </div>
-              <IconDotsVertical className="ml-auto size-4" />
+
             </SidebarMenuButton>
+
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
@@ -62,39 +106,45 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {user.email}
+            <DropdownMenuLabel className="p-2 font-normal">
+              <div className="flex items-center gap-2">
+                <Avatar
+                  name={`${user.firstName} ${user.lastName}`}
+                />
+
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate font-semibold capitalize">{user.firstName} {user.lastName}</span>
+                  <span className="truncate text-sm text-black-secondary capitalize">
+                    {user.role}
                   </span>
                 </div>
               </div>
+
+
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+                <Link href="/dashboard/profile" className="flex gap-2 items-center font-medium size-full">
+                  <User />
+                  Perfil
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
+              <DropdownMenuItem> 
+                <Link href="/dashboard/help" className="flex gap-2 items-center font-medium size-full">
+                  <HelpCircle />
+                  Ayuda
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}variant="destructive">
               <IconLogout />
-              Log out
+              Cerrar Sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
-    </SidebarMenu>
+    </SidebarMenu >
   )
 }

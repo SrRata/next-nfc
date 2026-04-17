@@ -46,11 +46,11 @@ export function SiteHeader() {
           description={`Panel de ${user.role}`}
         />
         <div className="ml-auto flex items-center gap-2">
-          <UserInfo
+          {/* <UserInfo
             name={`${user.firstName} ${user.lastName}`}
             username={`${user.firstName} ${user.lastName}`}
             role={user.role}
-          />
+          /> */}
         </div>
       </div>
     </header>

@@ -152,10 +152,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        <Button onClick={logout} variant="destructive" className="bg-transparent text-red-primary border border-red-primary  hover:bg-red-primary/90 hover:text-white-primary">
+        {/* <Button onClick={logout} variant="destructive" className="bg-transparent text-red-primary border border-red-primary  hover:bg-red-primary/90 hover:text-white-primary">
           <LogOut />
           Cerrar Sesión
         </Button>
+   */}
+  
+      <NavUser/>
+
       </SidebarFooter>
     </Sidebar>
   )
