@@ -4,6 +4,7 @@ import {
   IconBoxAlignBottom,
   IconCreditCard,
   IconDotsVertical,
+  IconInbox,
   IconLogout,
   IconMailbox,
   IconNotification,
@@ -128,7 +129,7 @@ export function NavUser() {
             <DropdownMenuGroup>
                <DropdownMenuItem>
                 <Link href="/dashboard/profile" className="flex gap-2 items-center font-medium size-full">
-                  <IconMailbox/>
+                  <IconInbox/>
                   Notificaciones
                 </Link>
               </DropdownMenuItem>
