@@ -92,8 +92,8 @@ export function NavUser() {
                 />
 
                 <div className="grid flex-1 text-left leading-tight">
-                  <span className="truncate font-semibold capitalize">{user.firstName} {user.lastName}</span>
-                  <span className="truncate text-sm text-black-secondary capitalize">
+                  <span className="truncate font-semibold capitalize text-[11px]">{user.firstName} {user.lastName}</span>
+                  <span className="truncate text-sm font-semibold text-black-secondary capitalize">
                     {user.role}
                   </span>
                 </div>
@@ -116,8 +116,8 @@ export function NavUser() {
                 />
 
                 <div className="grid flex-1 text-left leading-tight">
-                  <span className="truncate font-semibold capitalize">{user.firstName} {user.lastName}</span>
-                  <span className="truncate text-sm text-black-secondary capitalize">
+                  <span className="truncate font-semibold capitalize text-[11px]">{user.firstName} {user.lastName}</span>
+                  <span className="truncate text-sm font-medium text-black-secondary capitalize">
                     {user.role}
                   </span>
                 </div>
@@ -128,27 +128,27 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
                <DropdownMenuItem>
-                <Link href="/dashboard/profile" className="flex gap-2 items-center font-medium size-full">
-                  <IconInbox/>
+                <Link href="/dashboard/profile" className="flex gap-2 items-center text-[11px] font-medium size-full">
+                  <IconInbox className="size-5"/>
                   Notificaciones
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href="/dashboard/profile" className="flex gap-2 items-center font-medium size-full">
-                  <User />
+                <Link href="/dashboard/profile" className="flex gap-2 items-center text-[11px] font-medium size-full">
+                  <User className="size-5"/>
                   Perfil
-                </Link>
+                </Link >
               </DropdownMenuItem>
               <DropdownMenuItem> 
-                <Link href="/dashboard/help" className="flex gap-2 items-center font-medium size-full">
-                  <HelpCircle />
+                <Link href="/dashboard/help" className="flex gap-2 items-center text-[11px] font-medium size-full">
+                  <HelpCircle className="size-5"/>
                   Ayuda
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logout}variant="destructive">
-              <IconLogout />
+            <DropdownMenuItem onClick={logout}variant="destructive" className="text-[11px]">
+              <IconLogout className="size-5" />
               Cerrar Sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
