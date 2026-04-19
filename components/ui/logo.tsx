@@ -95,4 +95,4 @@ export function Logo({ className, variant }: LogoProps) {
       </div>
     </div>
   )
-}
+} 
