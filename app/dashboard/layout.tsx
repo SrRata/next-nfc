@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 // import { Header, PageTitle } from "@/components/header";
 // import {
