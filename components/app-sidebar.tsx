@@ -130,7 +130,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     //   </SidebarFooter>
     // </Sidebar>
 
-    <Sidebar className="border-none p-5">
+    <Sidebar className="border-none p-5" collapsible="icon">
 
       <SidebarHeader>
         <Logo />
