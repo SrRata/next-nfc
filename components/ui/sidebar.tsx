@@ -46,11 +46,17 @@ const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 
 function useSidebar() {
   const context = React.useContext(SidebarContext)
-  if (!context) {
-    throw new Error("useSidebar must be used within a SidebarProvider.")
+  // Si el hook se usa fuera de un SidebarProvider (como en la landing page),
+  // devolvemos un estado por defecto en lugar de lanzar un error.
+  return context ?? {
+    state: "expanded",
+    open: true,
+    setOpen: () => {},
+    openMobile: false,
+    setOpenMobile: () => {},
+    isMobile: false,
+    toggleSidebar: () => {},
   }
-
-  return context
 }
 
 function SidebarProvider({
