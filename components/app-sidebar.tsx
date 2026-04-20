@@ -94,14 +94,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 
   const logout = async () => {
-  try {
-    await axios.post('/api/logout');
-    router.refresh();
-    window.location.href = '/login';
-  } catch (error: any) {
-    console.error(error.response?.data);
-  }
-};
+    try {
+      await axios.post('/api/logout');
+      router.refresh();
+      window.location.href = '/login';
+    } catch (error: any) {
+      console.error(error.response?.data);
+    }
+  };
 
   return (
     // <Sidebar collapsible="icon" {...props} className="border-none p-5">
@@ -152,14 +152,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
-        {/* <Button onClick={logout} variant="destructive" className="bg-transparent text-red-primary border border-red-primary  hover:bg-red-primary/90 hover:text-white-primary">
-          <LogOut />
-          Cerrar Sesión
-        </Button>
-   */}
-  
-      <NavUser/>
-
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   )

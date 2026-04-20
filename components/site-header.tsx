@@ -314,7 +314,7 @@ export function SiteHeader() {
 
     try {
       const context = getPageContext();
-      const systemPrompt = `Eres un asistente inteligente llamado 'LUMEN' para un panel de administración. 
+      const systemPrompt = `Eres un asistente inteligente llamado 'CEMEN' para un panel de administración. 
 Contexto de la página actual: "${context}".
 Información del usuario: ${user.firstName} ${user.lastName} (${user.role}).
 Responde a las preguntas del usuario considerando este contexto. Sé breve, profesional y útil.`;
