@@ -91,6 +91,7 @@ export async function GET(request: Request) {
 // }
 
 
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
@@ -99,17 +100,13 @@ export async function POST(request: Request) {
         const { firstName, lastName, role, cdl, email } = body;
 
         const phoneNumber = body.phoneNumber || null;
-        const password = cdl; // Usas el CDL como contraseña
+        const password = cdl; 
         const userName = body.userName || `User_${Date.now().toString().slice(-8)}`;
 
         if (!firstName || !lastName || !role || !email || !cdl) {
-            return NextResponse.json(
-                { error: "Faltan campos obligatorios" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Faltan campos" }, { status: 400 });
         }
 
-        // 1. Insertar en la base de datos
         const [result] = await db.query<ResultSetHeader>(
             `INSERT INTO users (first_name, last_name, cdl, username, password, email, phone_number, role) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -118,34 +115,34 @@ export async function POST(request: Request) {
 
         try {
             await resend.emails.send({
-                from: 'Sistema CEMEN <onboarding@resend.dev>', // Cambia por tu dominio verificado luego
-                to: email,
-                subject: 'Bienvenido al Sistema CEMEN',
+                from: 'Sistema SIAENFC <soporte@jlmbgroup.com>', 
+                to: email, // El correo del nuevo usuario
+                subject: 'Bienvenido al Sistema - Tus Credenciales',
                 html: `
-                    <div style="font-family: sans-serif; color: #333;">
-                        <h2>¡Hola, ${firstName}!</h2>
-                        <p>Has sido registrado exitosamente en el sistema con el rol de <strong>${role}</strong>.</p>
-                        <p>Estas son tus credenciales de acceso:</p>
-                        <div style="background-color: #f4f4f4; padding: 15px; border-radius: 8px;">
-                            <p><strong>Usuario:</strong> ${userName} o ${email}</p>
-                            <p><strong>Contraseña:</strong> ${password}</p>
-                        </div>
-                        <p style="margin-top: 20px;">Puedes iniciar sesión desde el panel principal.</p>
+                    <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px;">
+                        <h2 style="color: #333;">¡Bienvenido, ${firstName}!</h2>
+                        <p>Se ha creado tu cuenta en el <strong>Sistema SIAENFC</strong> con el rol de <b>${role}</b>.</p>
+                        <hr />
+                        <p>Utiliza los siguientes datos para ingresar:</p>
+                        <p><strong>Usuario:</strong> ${userName}</p>
+                        <p><strong>Contraseña:</strong> ${password}</p>
+                        <br />
+                        <a href="https://jlmbgroup.com" style="background: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Acceder al Sistema</a>
+                        <p style="font-size: 12px; color: #777; margin-top: 25px;">Si no solicitaste esta cuenta, por favor ignora este correo.</p>
                     </div>
                 `,
             });
         } catch (mailError) {
-            // Logueamos el error del correo pero no detenemos la respuesta exitosa del usuario creado
-            console.error("Error al enviar el correo:", mailError);
+            console.error("Error al enviar email:", mailError);
         }
 
         return NextResponse.json(
-            { message: "Usuario creado con éxito y correo enviado", id: result.insertId },
+            { message: "Usuario creado y notificado", id: result.insertId },
             { status: 201 }
         );
 
     } catch (error: any) {
-        console.error("Error en POST /api/users:", error);
-        return NextResponse.json({ error: "Error al crear usuario" }, { status: 500 });
+        console.error("Error en el servidor:", error);
+        return NextResponse.json({ error: "Error interno" }, { status: 500 });
     }
 }
