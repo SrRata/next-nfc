@@ -53,7 +53,7 @@ export function DataTable({
   pageSize = 10,
   isLoading = false,
   linkCTA,
-  linkhref,
+  linkhref = "#",
 }: DataTableProps) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
