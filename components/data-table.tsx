@@ -39,7 +39,7 @@ interface DataTableProps {
   pageSize?: number;
   isLoading?: boolean;
   linkCTA?: string;
-  linkhref: string
+  linkhref?: string
 }
 
 export function DataTable({
