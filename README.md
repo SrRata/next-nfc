@@ -56,6 +56,7 @@ CREATE TABLE users (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     username VARCHAR(191) UNIQUE NOT NULL,
+    cdl VARCHAR(20) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(191) UNIQUE NOT NULL,
     phone_number VARCHAR(50),

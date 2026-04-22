@@ -301,6 +301,50 @@ export function SiteHeader() {
     }
   }, [input]);
 
+  // const handleSendMessage = async () => {
+  //   if (!input.trim() || isLoading) return;
+
+  //   const userMessage = input.trim();
+  //   const newMessages = [...messages, { role: 'user' as const, content: userMessage }];
+  //   setMessages(newMessages);
+  //   setInput("");
+  //   setIsLoading(true);
+
+  //   if (textareaRef.current) textareaRef.current.style.height = "auto";
+
+  //   try {
+  //     const context = getPageContext();
+  //     const systemPrompt = `Eres un asistente inteligente llamado 'CEMEN' para un panel de administración. 
+  //     Contexto de la página actual: "${context}".
+  //     Información del usuario: ${user.firstName} ${user.lastName} (${user.role}).
+  //     Responde a las preguntas del usuario considerando este contexto. Sé breve, profesional y útil.`;
+
+  //     const history = messages.map(msg => ({
+  //       role: msg.role === 'user' ? 'user' : 'model',
+  //       parts: [{ text: msg.content }]
+  //     }));
+
+  //     const result = await ai.models.generateContent({
+  //       model: CHAT_MODEL,
+  //       contents: [
+  //         ...history,
+  //         { role: 'user', parts: [{ text: userMessage }] }
+  //       ],
+  //       config: {
+  //         systemInstruction: systemPrompt,
+  //       }
+  //     });
+
+  //     const responseText = result.text || "Lo siento, no pude procesar tu solicitud.";
+  //     setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
+  //   } catch (error) {
+  //     console.error("AI Error:", error);
+  //     setMessages(prev => [...prev, { role: 'assistant', content: "Hubo un error al conectar con la inteligencia artificial." }]);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -312,39 +356,56 @@ export function SiteHeader() {
 
     if (textareaRef.current) textareaRef.current.style.height = "auto";
 
-    try {
-      const context = getPageContext();
-      const systemPrompt = `Eres un asistente inteligente llamado 'CEMEN' para un panel de administración. 
-Contexto de la página actual: "${context}".
-Información del usuario: ${user.firstName} ${user.lastName} (${user.role}).
-Responde a las preguntas del usuario considerando este contexto. Sé breve, profesional y útil.`;
+    const askAI = async (retryCount = 0): Promise<string> => {
+      try {
+        const context = getPageContext();
+        const systemPrompt = `Eres un asistente inteligente llamado 'Lumen' para un panel de administración. 
+       Contexto de la página actual: "${context}".
+       Información del usuario: ${user.firstName} ${user.lastName} (${user.role}).
+       Responde a las preguntas del usuario considerando este contexto. Sé breve, profesional y útil.`;
 
-      const history = messages.map(msg => ({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }]
-      }));
+        const history = messages.map(msg => ({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.content }]
+        }));
 
-      // In real scenario we might use chat history, but for simplicity here we'll just send everything
-      const result = await ai.models.generateContent({
-        model: CHAT_MODEL,
-        contents: [
-          ...history,
-          { role: 'user', parts: [{ text: userMessage }] }
-        ],
-        config: {
-          systemInstruction: systemPrompt,
+        const result = await ai.models.generateContent({
+          model: CHAT_MODEL,
+          contents: [
+            ...history,
+            { role: 'user', parts: [{ text: userMessage }] }
+          ],
+          config: { systemInstruction: systemPrompt }
+        });
+
+        return result.text || "Lo siento, no pude procesar tu solicitud.";
+      } catch (error: any) {
+        // Si es error 503 y no hemos reintentado mucho, esperamos 2 segundos y reintentamos
+        if (error.status === 503 && retryCount < 1) {
+          await new Promise(res => setTimeout(res, 2000));
+          return askAI(retryCount + 1);
         }
-      });
+        throw error;
+      }
+    };
 
-      const responseText = result.text || "Lo siento, no pude procesar tu solicitud.";
+    try {
+      const responseText = await askAI();
       setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "Hubo un error al conectar con la inteligencia artificial." }]);
+
+      let errorMessage = "Hubo un error al conectar con la inteligencia artificial.";
+      if (error.status === 503) {
+        errorMessage = "La IA está saturada en este momento (Demanda alta). Por favor, intenta de nuevo en unos segundos.";
+      }
+
+      setMessages(prev => [...prev, { role: 'assistant', content: errorMessage }]);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b border-slate-100 flex h-22 shrink-0 items-center gap-2 transition-[width,height] ease-linear">
@@ -449,7 +510,7 @@ Responde a las preguntas del usuario considerando este contexto. Sé breve, prof
                       <div className={`
                         max-w-[85%] p-3.5 rounded-2xl text-[13px] leading-relaxed
                         ${msg.role === 'user'
-                          ? 'bg-black text-white shadow-sm'
+                          ? 'bg-blue-primary text-white shadow-sm'
                           : 'bg-slate-100 text-slate-800'
                         }
                         break-words whitespace-pre-wrap

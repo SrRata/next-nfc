@@ -129,11 +129,11 @@ export default function TableStudentsManagement() {
         columns={columns}
         isLoading={isLoading}
         data={students ?? []}
-        buttonCTA="Nuevo Estudiante"
-        buttonAction={() => openModal("create")}
+        linkCTA="Nuevo Estudiante"
+        linkhref="./students-management/create"
       />
 
-      <CreateStudentModal isOpen={modal.type === "create"} onClose={closeModal}/>
+      <CreateStudentModal isOpen={modal.type === "create"} onClose={closeModal} />
       <EditStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} />
       <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} />
     </>
