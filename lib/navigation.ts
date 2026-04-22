@@ -15,63 +15,70 @@ interface NavItem {
   href: string;
   icon: LucideIcon;
   text: string;
-  type: string;
+  roles: string[];
 }
 
-export const teacherNav: NavItem[] = [
+export const SystemNav: NavItem[] = [
   {
     href: "/dashboard",
     icon: LayoutDashboard,
     text: "Dashboard",
-    type: "general",
+    roles: ['profesor', 'admin', 'usuario'],
   },
   {
     href: "/dashboard/students-management",
     icon: UserPen,
     text: "Gestión de estudiantes",
-    type: "admin",
+    roles: ['admin'],
+
   },
   {
     href: "/dashboard/users-management",
     icon: Contact,
     text: "Gestión de usuarios",
-    type: "admin",
+    roles: ['admin'],
+
   },
   {
     href: "/dashboard/courses-management",
     icon: Presentation,
     text: "Gestión de cursos",
-    type: "admin",
+    roles: ['admin'],
+
   },
   // {
   //   href: "/dashboard/courses",
   //   icon: GraduationCap,
   //   text: "Mis cursos",
-  //   type: "general",
+  //   roles: "general",
   // },
   {
     href: "/dashboard/students",
     icon: Users,
     text: "Mis alumnos",
-    type: "general",
+    roles: ['profesor', 'usuario'],
+
   },
   {
     href: "/dashboard/history",
     icon: History,
     text: "Historial",
-    type: "general",
+    roles: ['profesor', 'admin', 'usuario'],
+
   },
   {
     href: "/dashboard/reports",
     icon: Clipboard,
     text: "Reportes de cursos",
-    type: "general",
+    roles: ['profesor', 'admin', 'usuario'],
+
   },
   {
     href: "/dashboard/profile",
     icon: User,
     text: "Mi perfil",
-    type: "general",
+    roles: ['profesor', 'admin', 'usuario'],
+
   },
   // { href: "/dashboard/observations", icon: ClipboardEdit, text: "Observaciones" },
   // { href: "/dashboard/help", icon: HelpCircle, text: "Ayuda" },

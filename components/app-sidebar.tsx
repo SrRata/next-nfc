@@ -38,55 +38,12 @@ import { title } from "process"
 import { Grid, LogOut, Nfc } from "lucide-react"
 import { SidebarLink, SidebarNav } from "./sidebar"
 
-import { teacherNav } from "@/lib/navigation"
+import { SystemNav } from "@/lib/navigation"
 import { Button } from "./ui/button"
 import { useRouter } from "next/navigation"
 import axios from "axios"
 import { Libre_Barcode_128 } from "next/font/google"
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: IconDashboard,
-    },
-    {
-      title: "Admininstrar Cursos",
-      url: "/dashboard/courses-management",
-      icon: IconSchool,
-    },
-    {
-      title: "Administrar Estudiantes",
-      url: "/dashboard/students-management",
-      icon: IconSchool,
-    },
-    {
-      title: "Administrar Usuarios",
-      url: "/dashboard/users-management",
-      icon: IconSchool,
-    },
-    {
-      title: "Mis Estudiantes",
-      url: "/dashboard/students"
-    },
-    {
-      title: "Reportes",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Perfil",
-      url: "#",
-      icon: IconSchool,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    }
-  ],
-}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
@@ -102,6 +59,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       console.error(error.response?.data);
     }
   };
+
+
+  const [user, setUser] = React.useState<{ role: string } | null>(null);
+
+  React.useEffect(() => {
+    axios.get('/api/profile').then(res => setUser(res.data));
+  }, []);
+
+
+  if (!user) return null;  // cambiar por mostrar el esqueleto
+
+  const filteredNav = SystemNav.filter((link) =>
+    link.roles.includes(user.role)
+  );
+
 
   return (
     // <Sidebar collapsible="icon" {...props} className="border-none p-5">
@@ -139,9 +111,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarNav>
 
-          {teacherNav.map((link) => (
+          {filteredNav.map((link) => (
             <SidebarLink
-              key={link.href} // Siempre añade una key única
+              key={link.href}
               href={link.href}
               text={link.text}
               icon={link.icon}
