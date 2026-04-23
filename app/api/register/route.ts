@@ -30,7 +30,7 @@ export const SCHEDULES: Record<string, ScheduleDetail> = {
   'preparatoria-matutina': { entry: '07:30:00', exit: '12:30:00', gracePeriod: 15 },
   'elemental-matutina': { entry: '07:15:00', exit: '12:45:00', gracePeriod: 10 },
   'bachillerato-matutina': { entry: '07:00:00', exit: '13:30:00', gracePeriod: 10 },
-  'bachillerato-vespertina': { entry: '13:00:00', exit: '19:00:00', gracePeriod: 10 },
+  'bachillerato-vespertina': { entry: '15:00:00', exit: '19:00:00', gracePeriod: 10 },
   'default-default': { entry: '08:00:00', exit: '14:00:00', gracePeriod: 10 },
 };
 
