@@ -1,12 +1,42 @@
+"use client"
+
 import { Alert } from "@/components/alert";
 import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { roleBadgeColor } from "@/lib/constants/get-badge-color";
+import axios from "axios";
 import { IdCard, Key, Lock, User, UserLock } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
+
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    role: '',
+    username: '',
+    cdl: '',
+    email: '',
+    phone: ''
+  })
+
+  console.log(user)
+
+  const getProfile = async () => {
+    try {
+      const response = await axios.get('/api/profile');
+      setUser(response.data)
+    } catch (error: any) {
+      console.error(error.response?.data);
+    }
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   return (
     <>
       <div className="bg-white-primary rounded-primary p-6 col-span-full grid grid-cols-3 gap-8 ">
@@ -17,22 +47,28 @@ export default function ProfilePage() {
           </p>
         </div>
         <div>
-          <DataUser name="Luis Miguel Matailo Zuñiga" id="0150072668" />
+          <DataUser name={`${user.firstName} ${user.lastName}`} id={user.cdl} />
         </div>
 
         <div>
           <Label>Rango / Rol</Label>
-          <Badge color={roleBadgeColor["admin"].color}>Administrador</Badge>
+          <Badge color={roleBadgeColor["admin"].color}>{user.role}</Badge>
         </div>
         <div>
           <Label>Correo electrónico</Label>
           <p className="font-semibold text-black-primary">
-            luis.matailo@uemfebrescordero.com
+            {user.email}
+          </p>
+        </div>
+        <div>
+          <Label>Código de usuario</Label>
+          <p className="font-semibold text-black-primary">
+            {user.username}
           </p>
         </div>
         <div>
           <Label>Genero</Label>
-          <Badge color="orange">Masculino</Badge>
+          <Badge>Indefinido</Badge>
         </div>
         <div>
           <Label>Titulo</Label>
@@ -40,7 +76,7 @@ export default function ProfilePage() {
         </div>
         <div>
           <Label>Teléfono</Label>
-          <p className="font-semibold text-black-primary">+593 98 417 6619</p>
+          <p className="font-semibold text-black-primary">{user.phone}</p>
         </div>
       </div>
       <div className="bg-white-primary rounded-primary p-6 flex flex-col gap-7 justify-between  ">

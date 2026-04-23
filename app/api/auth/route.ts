@@ -82,12 +82,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     const dbUser = rows[0];
 
-    // Validación: Si no existe el usuario o está inactivo
     if (!dbUser || !dbUser.is_active) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Validación de contraseña (Si usas bcrypt: await bcrypt.compare(password, dbUser.password))
     if (password !== dbUser.password) { 
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
@@ -99,7 +97,10 @@ export async function POST(request: Request): Promise<NextResponse> {
         username: dbUser.username,
         firstName: dbUser.first_name,
         lastName: dbUser.last_name,
-        id: dbUser.id
+        id: dbUser.id,
+        cdl: dbUser.cdl,
+        email: dbUser.email,
+        phone: dbUser.phone_number,
       },
       process.env.JWT_SECRET as string
     );

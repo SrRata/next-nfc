@@ -8,6 +8,9 @@ interface JwtPayload {
   firstName: string;
   lastName: string;
   exp: number;
+  cdl: string;
+  email: string;
+  phone: string;
 }
 
 export async function GET(): Promise<NextResponse> {
@@ -33,7 +36,11 @@ export async function GET(): Promise<NextResponse> {
       role: decoded.role,
       username: decoded.username,
       firstName: decoded.firstName,
-      lastName: decoded.lastName
+      lastName: decoded.lastName,
+      cdl: decoded.cdl,
+      email: decoded.email,
+      phone: decoded.phone,
+      
     });
   } catch {
     return NextResponse.json(

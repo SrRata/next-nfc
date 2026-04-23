@@ -33,10 +33,10 @@ export function UsersTable() {
                 <DataUser name={formatFullName(row.original.firstName, row.original.lastName)} id={row.original.cdl} />
             ),
         },
-        {
-            accessorKey: "userName",
-            header: "Usuario"
-        },
+        // {
+        //     accessorKey: "userName",
+        //     header: "Usuario"
+        // },
         {
             header: "Rol",
             cell: ({ row }) => {
@@ -57,14 +57,14 @@ export function UsersTable() {
             header: "Contacto",
             cell: ({ row }) => {
                 const phone = row.original.phoneNumber;
-                return <span>{phone ? phone : "Sin contacto"}</span>;
+                return <span>{phone ? phone: "Sin contacto"}</span>;
             }
         },
         {
             header: "Estado",
             cell: ({ row }) => {
                 const state = row.original.isActive
-                return (
+                return (    
                     <Badge color={getActiveBadgeColor(state).color} circle>
                         {getActiveBadgeColor(state).label}
                     </Badge>

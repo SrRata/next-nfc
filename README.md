@@ -60,15 +60,15 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(191) UNIQUE NOT NULL,
     phone_number VARCHAR(50),
-    role ENUM('Admin', 'Professor', 'Parent') NOT NULL, 
+    role ENUM('admin', 'profesor', 'usuario') NOT NULL, 
     is_active BOOLEAN DEFAULT TRUE
 );
+
 
 -- 2. Cursos (Aquí se asigna el Profesor/Tutor directamente)
 CREATE TABLE courses (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     course_name VARCHAR(255) NOT NULL,
-    parallel VARCHAR(50),
     section VARCHAR(50),
     educational_level VARCHAR(100),
     is_active BOOLEAN DEFAULT TRUE,
@@ -80,6 +80,7 @@ CREATE TABLE courses (
 CREATE TABLE students (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(255) NOT NULL,
+    cdl VARCHAR(20) UNIQUE NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     email VARCHAR(191) UNIQUE NOT NULL,
     phone_number VARCHAR(50),
@@ -90,6 +91,7 @@ CREATE TABLE students (
 );
 
 -- 4. Parentescos (Padres <-> Estudiantes)
+
 CREATE TABLE relationships (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     parent_id BIGINT,
@@ -140,4 +142,78 @@ CREATE TABLE point_transactions (
     concept TEXT,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_points_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+);
+
+
+--niveles educativos dinamicos 
+
+CREATE TABLE education_levels (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL, -- Ej: "Bachillerato Técnico"
+    section ENUM('mañana', 'tarde', 'noche') NOT NULL,
+    entry_time TIME NOT NULL,   -- Ej: 07:00:00
+    exit_time TIME NOT NULL,    -- Ej: 13:00:00
+    tolerance_minutes INT DEFAULT 15 -- Gracia antes de marcar "Tarde"
+);
+
+
+mejora visual 
+
+
+CREATE TABLE education_levels (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL, -- Ej: Bachillerato Técnico
+    section ENUM('mañana', 'tarde', 'noche') NOT NULL,
+    entry_time TIME NOT NULL,    -- Ej: 07:00:00
+    exit_time TIME NOT NULL,     -- Ej: 13:30:00
+    tolerance_minutes INT DEFAULT 15, -- Gracia para la entrada
+    early_exit_limit TIME DEFAULT NULL, -- Hora mínima para salir sin permiso especial
+    color_hex CHAR(7) DEFAULT '#3b82f6'
+);
+
+
+--dias laborables y dias especiales 
+
+CREATE TABLE weekly_schedules (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    level_id BIGINT,
+    day_of_week ENUM('Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'),
+    is_working_day BOOLEAN DEFAULT TRUE,
+    CONSTRAINT fk_schedule_level FOREIGN KEY (level_id) REFERENCES education_levels(id)
+);
+
+-calendario de eventos 
+
+
+CREATE TABLE calendar_event (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
+    color_hex CHAR(7) DEFAULT '#3b82f6',
+    
+    -- Tipo de evento: 
+    -- 'feriado' (no hay asistencia)
+    -- 'horario_especial' (hay asistencia pero cambia la hora)
+    -- 'evento_social' (informativo, horario normal)
+    event_type ENUM('feriado', 'horario_especial', 'evento_social') DEFAULT 'evento_social',
+    
+    -- Si es NULL afecta a todos. Si tiene ID afecta solo a ese nivel.
+    education_level_id BIGINT NULL,
+    
+    -- Horas personalizadas (se usan solo si event_type = 'horario_especial')
+    custom_entry_time TIME NULL,
+    custom_exit_time TIME NULL,
+    
+    CONSTRAINT fk_event_level FOREIGN KEY (education_level_id) 
+        REFERENCES education_levels(id) ON DELETE CASCADE
+);
+
+
+-- Si el evento no es para todos, aquí defines a quién afecta
+CREATE TABLE event_scope (
+    event_id BIGINT,
+    course_id BIGINT, -- O level_id, según prefieras
+    FOREIGN KEY (event_id) REFERENCES calendar_events(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id)
 );

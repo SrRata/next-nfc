@@ -69,17 +69,17 @@ export default function TableStudentsManagement() {
         );
       },
     },
-    {
-      header: "Nivel educativo",
-      cell: ({ row }) => {
-        const level = getLevelBadge(row.original.level)
-        return (
-          <Badge color={level.color}>
-            {level.label}
-          </Badge>
-        )
-      }
-    },
+    // {
+    //   header: "Nivel educativo",
+    //   cell: ({ row }) => {
+    //     const level = getLevelBadge(row.original.level)
+    //     return (
+    //       <Badge color={level.color}>
+    //         {level.label}
+    //       </Badge>
+    //     )
+    //   }
+    // },
     {
       accessorKey: "state",
       header: "Estado",
@@ -129,8 +129,10 @@ export default function TableStudentsManagement() {
         columns={columns}
         isLoading={isLoading}
         data={students ?? []}
-        linkCTA="Nuevo Estudiante"
-        linkhref="./students-management/create"
+        // linkCTA="Nuevo Estudiante"
+        // linkhref="./students-management/create"
+        buttonCTA="Nuevo Estudiante"
+        buttonAction={() => openModal('create')}
       />
 
       <CreateStudentModal isOpen={modal.type === "create"} onClose={closeModal} />

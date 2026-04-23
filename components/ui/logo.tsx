@@ -74,7 +74,6 @@ export function Logo({ className, variant }: LogoProps) {
         className="w-11 h-11 shrink-0"
       />
 
-      {/* TEXTO CON ANIMACIÓN SUAVE */}
       <div
         className={cn(
           "transition-all duration-200 ease-in-out overflow-hidden",
