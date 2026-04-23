@@ -125,7 +125,11 @@ export async function POST(request: Request) {
                         <hr />
                         <p>Utiliza los siguientes datos para ingresar:</p>
                         <p><strong>Usuario:</strong> ${userName}</p>
+                        <p><strong>Correo:</strong> ${email}</p>
                         <p><strong>Contraseña:</strong> ${password}</p>
+                        <br />
+                        <p><strong>Para inicar secion el sistema pueds usar el <strong>correo o usuario </strong> en el primer campo del formulario.</p>
+                        <br />
                         <br />
                         <a href="https://jlmbgroup.com" style="background: #000; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Acceder al Sistema</a>
                         <p style="font-size: 12px; color: #777; margin-top: 25px;">Si no solicitaste esta cuenta, por favor ignora este correo.</p>
