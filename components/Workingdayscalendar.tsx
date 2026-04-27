@@ -407,7 +407,8 @@ export default function WorkingDaysCalendar({ className, style }: WorkingDaysCal
       if (holidays.has(ds)) hols++;
       else if (specials.has(ds)) spec++;
     }
-    const wknd = Array.from({length:total},(_,i)=>isWeekend(year,month,i+1)?1:0).reduce((a, b) => a + b, 0) as number;
+    const wknd = Array.from({length:total},(_,i)=>isWeekend(year,month,i+1)?1:0).reduce((a, b) => a + b, 0 as number);
+
     return { working: total - wknd - hols, holidays: hols, special: spec };
   })();
 
