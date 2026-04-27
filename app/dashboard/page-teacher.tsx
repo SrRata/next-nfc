@@ -1,3 +1,4 @@
+import AttendanceNotifications from "@/components/AttendanceNotifications";
 import {
   AbsenceStatCard,
   AttendanceStatCard,
@@ -22,13 +23,15 @@ import { Users, Book, ChartArea, History, UserMinus } from "lucide-react";
 export default function HomePageTeacher() {
   return (
     <>
+      <AttendanceNotifications />
+
       <InfoCard
         icon={Users}
         colorIcon="purple"
         title="Estudiantes totales"
         value="24 estudiantes"
       />
-            <InfoCard
+      <InfoCard
         icon={UserMinus}
         colorIcon="red"
         title="Estudiantes en alerta"

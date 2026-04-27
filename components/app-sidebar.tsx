@@ -49,10 +49,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const router = useRouter();
 
-
   const logout = async () => {
     try {
-      await axios.post('/api/logout');
+      await axios.post('/api/auth/logout');
       router.refresh();
       window.location.href = '/login';
     } catch (error: any) {
@@ -76,31 +75,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 
   return (
-    // <Sidebar collapsible="icon" {...props} className="border-none p-5">
-    //   <SidebarHeader>
-    //     <SidebarMenu>
-    //       <SidebarMenuItem>
-    //         <SidebarMenuButton
-    //           asChild
-    //           className="data-[slot=sidebar-menu-button]:p-1.5 overflow-visible hover:bg-transparent"
-    //         >
-    //           <a href="/dashboard">
-    //           <div className="size-11 rounded-primary bg-blue-secondary grid place-content-center">
-    //             <Nfc className="size-8! text-blue-primary" strokeWidth={2} />
-    //             </div>
-    //             <span className="text-blue-primary font-bold text-2xl leading-tight">siaeNFC</span>
-    //           </a>
-    //         </SidebarMenuButton>
-    //       </SidebarMenuItem>
-    //     </SidebarMenu>
-    //   </SidebarHeader>
-    //   <SidebarContent>
-    //     <NavMain items={data.navMain} />
-    //   </SidebarContent>
-    //   <SidebarFooter>
-    //     <NavSecondary />
-    //   </SidebarFooter>
-    // </Sidebar>
 
     <Sidebar className="border-none p-5" collapsible="icon">
 

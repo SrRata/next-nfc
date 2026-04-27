@@ -5,64 +5,115 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { sections } from "@/lib/constants/data-type";
-import { useCreateStudent } from "@/lib/hooks/fetch/students";
 import { useCourseList } from "@/lib/hooks/fetch/system/courses";
-import { IconBinaryTree, IconBinaryTree2, IconIdBadge2, IconNfc, IconRefresh, IconSchool } from "@tabler/icons-react";
+import { course } from "@/types/courses";
+import { IconBinaryTree2, IconIdBadge2, IconNfc, IconRefresh, IconSchool } from "@tabler/icons-react";
+import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner"
 
-
-
-type FormState = {
-    firstName: string;
-    lastName: string;
-    cdl: string;
-    email: string;
-    phoneNumber: string;
-    nfc: string;
-    courseId: string | null;
-
-    parent: {
-        firstName: string;
-        lastName: string;
-        cdl: string;
-        email: string;
-        phoneNumber: string;
-    };
-};
 
 export default function CreateStudentsPage() {
 
-    const { data: coursesList, isLoading: loadingCoursesList } = useCourseList();
+    const [courses, setCourses] = useState<course[]>([]);
+    const [isLoadingCourses, setIsLoadingCourses] = useState(true);
 
 
-    const [form, setForm] = useState<FormState>({
-        firstName: "",
-        lastName: "",
-        cdl: "",
-        email: "",
-        phoneNumber: "",
-        nfc: "",
-        courseId: null,
+    useEffect(() => {
+        async function loadCourses() {
+            try {
+                const response = await axios.get('/api/coursesc');
+                if (response.data.success) {
+                    setCourses(response.data.data);
+                }
 
-        parent: {
-            firstName: "",
-            lastName: "",
-            cdl: "",
-            email: "",
-            phoneNumber: "",
-        },
-    });
+            } catch (error) {
+                console.error('Error fetching courses:', error)
 
-    const { mutate, isPending } = useCreateStudent();
+            } finally {
+                setIsLoadingCourses(false)
+            }
+        }
+        loadCourses();
+    }, []);
 
+
+    const [courseId, setCourseId] = useState<string>("");
+
+
+    const [formDataStudent, setFormDataStudent] = useState({
+        studentFirstName: "",
+        studentLastName: "",
+        stuedntCdl: "",
+        studentPhoneNumber: "",
+        studentEmail: "",
+        nfcUid: "",
+    })
+
+    const handleChangeStudent = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormDataStudent({
+            ...formDataStudent,
+            [e.target.id]: e.target.value,
+        });
+        // console.log(formDataStudent) //DEBUG
+    };
+
+    const [formDataParent, setFormDataParent] = useState({
+        parentFirstName: "",
+        parentLastName: "",
+        parentCdl: "",
+        parentPhoneNumber: "",
+        parentEmail: "",
+    })
+
+    const handleChangeParent = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormDataParent({
+            ...formDataParent,
+            [e.target.id]: e.target.value
+        });
+        // console.log(formDataParent)  //DEBUG
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const payload = {
+            first_name: formDataStudent.studentFirstName,
+            last_name: formDataStudent.studentLastName,
+            cdl: formDataStudent.stuedntCdl,
+            email: formDataStudent.studentEmail,
+            course_id: courseId,
+            nfc_uid: formDataStudent.nfcUid,
+            phone_number: formDataStudent.studentPhoneNumber,
+            ...(formDataParent.parentCdl && {
+                parent: {
+                    first_name: formDataParent.parentFirstName,
+                    last_name: formDataParent.parentLastName,
+                    cdl: formDataParent.parentCdl,
+                    email: formDataParent.parentEmail,
+                    username: formDataParent.parentEmail.split('@')[0],
+                    password: formDataParent.parentCdl,
+                    phone_number: formDataParent.parentPhoneNumber
+                }
+            })
+        }
+
+        try {
+            axios.post('/api/students', payload)
+            toast.success(`El estudiante ${formDataStudent.studentFirstName} fue creado con exito`)
+        } catch (error) {
+            console.error('Error create student', error)
+            toast.success(`Error al ${formDataStudent.studentFirstName} no pudo ser creado`)
+        }
+    }
 
     return (
 
-
         <>
-            <div className="col-span-full grid grid-cols-3 gap-7">
+            <form
+                onSubmit={handleSubmit}
+                className="col-span-full grid grid-cols-3 gap-7">
 
                 <div className="col-span-full flex justify-between my-2">
 
@@ -76,49 +127,12 @@ export default function CreateStudentsPage() {
                             <Button
                                 variant="outline"
                             >
-                                Cancelar
+                                Cancelar registro
                             </Button>
                         </Link>
 
-                        <Button
-                            onClick={() => {
-
-                                if (!form.firstName || !form.cdl || !form.email) {
-                                    alert("Faltan campos obligatorios");
-                                    return;
-                                }
-
-                                const hasParent =
-                                    form.parent.firstName &&
-                                    form.parent.lastName &&
-                                    form.parent.cdl;
-
-                                console.log(form)
-
-                                mutate({
-                                    firstName: form.firstName,
-                                    lastName: form.lastName,
-                                    cdl: form.cdl,
-                                    email: form.email,
-                                    phoneNumber: form.phoneNumber,
-                                    nfc: form.nfc,
-                                    courseId: form.courseId ? Number(form.courseId) : null,
-
-                                    parent: hasParent
-                                        ? {
-                                            firstName: form.parent.firstName,
-                                            lastName: form.parent.lastName,
-                                            cdl: form.parent.cdl,
-                                            email: form.parent.email,
-                                            phoneNumber: form.parent.phoneNumber,
-                                        }
-                                        : null,
-                                });
-                            }}
-
-                            disabled={isPending}
-                        >
-                            {isPending ? "Guardando..." : "Guardar Registro"}
+                        <Button type="submit">
+                            Registrar nuevo estudiante
                         </Button>
 
                     </div>
@@ -143,67 +157,79 @@ export default function CreateStudentsPage() {
 
                         <div>
                             <Label
-                                htmlFor="name"
+                                htmlFor="studentFirstName"
                             >Nombre del estudiante</Label>
                             <Input
-                                placeholder="Ej. Juan Andres"
-                                id="name"
-                                onChange={(e) =>
-                                    setForm({ ...form, firstName: e.target.value })
-                                }
+                                minLength={2}
+                                maxLength={255}
+                                required
+                                placeholder="Nombres completos"
+                                id="studentFirstName"
+                                type="text"
+                                value={formDataStudent.studentFirstName || ""}
+                                onChange={handleChangeStudent}
                             />
 
                         </div>
 
                         <div>
                             <Label
-                                htmlFor="lastname"
+                                htmlFor="studentLastName"
                             >Apellido del estudiante</Label>
                             <Input
-                                placeholder="Pérez García"
-                                id="lastname"
-                                onChange={(e) =>
-                                    setForm({ ...form, lastName: e.target.value })
-                                }
+                                required
+                                minLength={2}
+                                maxLength={255}
+                                placeholder="Apelldios completos"
+                                id="studentLastName"
+                                type="text"
+                                value={formDataStudent.studentLastName || ""}
+                                onChange={handleChangeStudent}
                             />
                         </div>
 
                         <div>
                             <Label
-                                htmlFor="id"
+                                htmlFor="stuedntCdl"
                             >Cédula / Identificación</Label>
                             <Input
+                                maxLength={10}
+                                minLength={10}
+                                required
                                 placeholder="17xxxxxxx-x"
-                                id="id"
-                                onChange={(e) =>
-                                    setForm({ ...form, cdl: e.target.value })
-                                }
+                                id="stuedntCdl"
+                                type="text"
+                                value={formDataStudent.stuedntCdl || ""}
+                                onChange={handleChangeStudent}
                             />
                         </div>
 
                         <div>
                             <Label
-                                htmlFor="phonenumber"
+                                htmlFor="studentPhoneNumber"
                             >Teléfono de contacto</Label>
                             <Input
+                                maxLength={10}
+                                minLength={10}
                                 placeholder="+593 9..."
-                                id="phonenumber"
-                                onChange={(e) =>
-                                    setForm({ ...form, phoneNumber: e.target.value })
-                                }
+                                id="studentPhoneNumber"
+                                type="text"
+                                value={formDataStudent.studentPhoneNumber || ""}
+                                onChange={handleChangeStudent}
                             />
                         </div>
 
                         <div className="col-span-full">
                             <Label
-                                htmlFor="email"
+                                htmlFor="studentEmail"
                             >Correo Electrónico</Label>
                             <Input
-                                placeholder="estudiante@ejemplo.edu.ec"
-                                id="email"
-                                onChange={(e) =>
-                                    setForm({ ...form, email: e.target.value })
-                                }
+                                maxLength={255}
+                                type="email"
+                                placeholder="estudiante@ejemplo.com"
+                                id="studentEmail"
+                                value={formDataStudent.studentEmail || ""}
+                                onChange={handleChangeStudent}
                             />
                         </div>
                     </div>
@@ -223,24 +249,25 @@ export default function CreateStudentsPage() {
 
                     <Label>Curso / Nivel</Label>
                     <Select
-                        onValueChange={(value) =>
-                            setForm({ ...form, courseId: value })
-                        }
-                        value={form.courseId?.toString() || ""}
+                        value={courseId}
+                        onValueChange={(value) => {
+                            setCourseId(value)
+                            // console.log(courseId) //DEBUG
+                        }}
                     >
                         <SelectTrigger>
                             <SelectValue placeholder="Sin asignar curso" />
                         </SelectTrigger>
                         <SelectContent>
-                            {coursesList?.map((c) => (
+                            {courses?.map((c) => (
                                 <SelectItem key={c.id} value={c.id.toString()}>
-                                    {c.courseName}
+                                    {c.course_name}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
-
                 </div>
+
 
 
                 <div className="bg-blue-primary rounded-primary p-7">
@@ -252,16 +279,17 @@ export default function CreateStudentsPage() {
                     <div className="w-full">
                         <Label
                             className="text-white-primary uppercase"
-                            htmlFor="email"
+                            htmlFor="nfcUid"
                         >Código de identificación digital</Label>
                         <div className="flex items-center gap-2">
                             <Input
                                 type="text"
+                                maxLength={50}
+                                required
                                 placeholder="00 : 00 : 00 : 00"
-                                value={form.nfc}
-                                onChange={(e) =>
-                                    setForm({ ...form, nfc: e.target.value })
-                                }
+                                id="nfcUid"
+                                value={formDataStudent.nfcUid || ""}
+                                onChange={handleChangeStudent}
                             />
                             <Button className="size-fit bg-white-primary border-white">
                                 <IconRefresh className="size-7 text-blue-primary" />
@@ -291,92 +319,82 @@ export default function CreateStudentsPage() {
 
                     <div className="col-span-2">
                         <Label
-                            htmlFor="parentname"
+                            htmlFor="parentFirstName"
                         >Nombre del representante</Label>
                         <Input
+                            minLength={2}
+                            maxLength={255}
+                            type="text"
                             placeholder="Nombres completos"
-                            id="parentname"
-                            value={form.parent.firstName}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    parent: { ...form.parent, firstName: e.target.value }
-                                })
-                            }
+                            id="parentFirstName"
+                            value={formDataParent.parentFirstName || ""}
+                            onChange={handleChangeParent}
                         />
                     </div>
 
                     <div className="col-span-2">
                         <Label
-                            htmlFor="parentlastname"
+                            htmlFor="parentLastName"
                         >Apellido del representante</Label>
                         <Input
+                            minLength={2}
+                            maxLength={255}
+                            type="text"
                             placeholder="Apellidos completos"
-                            id="parentlastname"
-                            value={form.parent.lastName}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    parent: { ...form.parent, lastName: e.target.value }
-                                })
-                            }
+                            id="parentLastName"
+                            value={formDataParent.parentLastName || ""}
+                            onChange={handleChangeParent}
                         />
                     </div>
 
                     <div className="col-span-2">
                         <Label
-                            htmlFor="parentid"
+                            htmlFor="parentCdl"
                         >Cédula / Identificación</Label>
                         <Input
+                            minLength={10}
+                            maxLength={10}
+                            type="text"
                             placeholder="17xxxxxxx-x"
-                            id="parentid"
-                            value={form.parent.cdl}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    parent: { ...form.parent, cdl: e.target.value }
-                                })
-                            }
+                            id="parentCdl"
+                            value={formDataParent.parentCdl || ""}
+                            onChange={handleChangeParent}
                         />
                     </div>
 
                     <div className="col-span-3">
                         <Label
-                            htmlFor="parent"
-                        >Correo Electrónico</Label>
-                        <Input
-                            placeholder="representante@ejemplo.com"
-                            id="parent"
-                            value={form.parent.email}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    parent: { ...form.parent, email: e.target.value }
-                                })
-                            }
-                        />
-                    </div>
-
-                    <div className="col-span-3">
-                        <Label
-                            htmlFor="parentphonenumber"
+                            htmlFor="parentPhoneNumber"
                         >Télefono de contacto</Label>
                         <Input
-                            value={form.parent.phoneNumber}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    parent: { ...form.parent, phoneNumber: e.target.value }
-                                })
-                            }
+                            type="text"
+                            maxLength={10}
+                            minLength={10}
                             placeholder="+593 9..."
-                            id="parentphonenumber"
+                            id="parentPhoneNumber"
+                            value={formDataParent.parentPhoneNumber || ""}
+                            onChange={handleChangeParent}
                         />
                     </div>
+
+                    <div className="col-span-3">
+                        <Label
+                            htmlFor="parentEmail"
+                        >Correo Electrónico</Label>
+                        <Input
+                            maxLength={255}
+                            type="email"
+                            placeholder="representante@ejemplo.com"
+                            id="parentEmail"
+                            value={formDataParent.parentEmail || ""}
+                            onChange={handleChangeParent}
+                        />
+                    </div>
+
 
                 </div>
 
-            </div>
+            </form>
 
         </>
     );

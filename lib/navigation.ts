@@ -9,6 +9,10 @@ import {
   Contact,
   UserPen,
   Presentation,
+  Calendar,
+  CalendarClockIcon,
+  UserLock,
+  School,
 } from "lucide-react";
 
 interface NavItem {
@@ -27,24 +31,36 @@ export const SystemNav: NavItem[] = [
   },
   {
     href: "/dashboard/students-management",
-    icon: UserPen,
+    icon: Users,
     text: "Gestión de estudiantes",
     roles: ['admin'],
-
   },
   {
     href: "/dashboard/users-management",
-    icon: Contact,
+    icon: UserLock,
     text: "Gestión de usuarios",
     roles: ['admin'],
 
   },
+  //   {
+  //   href: "/dashboard/calendar",
+  //   icon: Calendar,
+  //   text: "Gestión de calendario",
+  //   roles: ['admin'],
+
+  // },
   {
     href: "/dashboard/courses-management",
-    icon: Presentation,
+    icon: School,
     text: "Gestión de cursos",
     roles: ['admin'],
 
+  },
+  {
+    href: "/dashboard/schedules",
+    icon: CalendarClockIcon,
+    text: "Gestión de horarios",
+    roles: ['admin'],
   },
   // {
   //   href: "/dashboard/courses",

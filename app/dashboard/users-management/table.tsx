@@ -17,26 +17,40 @@ import { User, useUpdateUserStatus, useUsers } from "@/lib/hooks/fetch/users";
 import { DeleteUserModal } from "./delete-user-modal";
 import { EditUserModal } from "./edit-user-modal";
 import { CreateUserModal } from "./create-user-modal";
+import { useEffect, useState } from "react";
+import { user } from "@/types/users";
+import axios from "axios";
 
 export function UsersTable() {
 
     const { modal, openModal, closeModal } = useModal<User>();
 
-    const { data: users, isLoading, isError } = useUsers();
-    const { mutate: toggleStatus, isPending } = useUpdateUserStatus();
+    const [isLoading, setIsLoading] = useState(true)
+    const [users, setUsers] = useState<user[]>([])
 
+    useEffect(() => {
+        async function loadUsers() {
+            try {
+                const response = await axios.get('/api/usersc');
+                if (response.data.success) {
+                    setUsers(response.data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadUsers();
+    }, []);
 
-    const columns: ColumnDef<User>[] = [
+    const columns: ColumnDef<user>[] = [
         {
             header: "Nombre",
             cell: ({ row }) => (
-                <DataUser name={formatFullName(row.original.firstName, row.original.lastName)} id={row.original.cdl} />
+                <DataUser name={formatFullName(row.original.first_name, row.original.last_name)} id={row.original.id.toString()} />
             ),
         },
-        // {
-        //     accessorKey: "userName",
-        //     header: "Usuario"
-        // },
         {
             header: "Rol",
             cell: ({ row }) => {
@@ -53,18 +67,10 @@ export function UsersTable() {
             header: "Email"
         },
         {
-            accessorKey: "phoneNumber",
-            header: "Contacto",
-            cell: ({ row }) => {
-                const phone = row.original.phoneNumber;
-                return <span>{phone ? phone: "Sin contacto"}</span>;
-            }
-        },
-        {
             header: "Estado",
             cell: ({ row }) => {
-                const state = row.original.isActive
-                return (    
+                const state = row.original.is_active
+                return (
                     <Badge color={getActiveBadgeColor(state).color} circle>
                         {getActiveBadgeColor(state).label}
                     </Badge>
@@ -83,17 +89,6 @@ export function UsersTable() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openModal("edit", row.original)} >Editar</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => toggleStatus({
-                                id: row.original.id,
-                                isActive: !row.original.isActive 
-                            })} >
-                                {row.original.isActive ? "Desactivar" : "Activar"}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem variant="destructive" onClick={() => openModal("delete", row.original)}>
-                                Borrar
-                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
