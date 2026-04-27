@@ -5,12 +5,15 @@ import { requireAdmin } from "@/lib/auth/middleware";
 // GET /api/working-days/:date — detalle de un feriado
 export async function GET(
   req: NextRequest,
-  { params }: { params: { date: string } }
+  { params }: { params: Promise<{ date: string }> }
 ) {
+
+  const {date} = await params
+
   try {
     const [rows]: any = await pool.query(
       `SELECT id, date, reason FROM working_days WHERE date = ?`,
-      [params.date]
+      [date]
     );
 
     if (!rows.length) {
@@ -29,8 +32,11 @@ export async function GET(
 // DELETE /api/working-days/:date — eliminar feriado (restaurar día como laborable)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { date: string } }
+  { params }: { params: Promise<{ date: string }> }
 ) {
+
+  const {date} = await params
+
   const admin = requireAdmin(req);
   if (!admin) {
     return NextResponse.json(
@@ -45,7 +51,7 @@ export async function DELETE(
 
     const [existing]: any = await conn.query(
       `SELECT id FROM working_days WHERE date = ?`,
-      [params.date]
+      [date]
     );
 
     if (!existing.length) {
@@ -58,14 +64,14 @@ export async function DELETE(
 
     await conn.query(
       `DELETE FROM working_days WHERE date = ?`,
-      [params.date]
+      [date]
     );
 
     await conn.commit();
 
     return NextResponse.json({
       success: true,
-      message: `Feriado del ${params.date} eliminado. El día vuelve a ser laborable.`,
+      message: `Feriado del ${date} eliminado. El día vuelve a ser laborable.`,
     });
 
   } catch (error) {

@@ -3,11 +3,15 @@ import { isForeignKeyError } from "@/lib/db.errors";
 import { db } from "@/lib/hooks/db";
 
 // GET /api/educational-levels/:id
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+
+    const { id } = await params;
+
+
     const [rows]: any = await db.query(
       `SELECT id, name, is_active FROM educational_levels WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!rows.length) {
@@ -25,7 +29,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // PUT /api/educational-levels/:id
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+
+  const { id } = await params;
+
   const conn = await db.getConnection();
   try {
     const { name, is_active } = await req.json();
@@ -41,7 +48,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     const [existing]: any = await conn.query(
       `SELECT id FROM educational_levels WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -54,7 +61,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     await conn.query(
       `UPDATE educational_levels SET name = ?, is_active = ? WHERE id = ?`,
-      [name.trim(), is_active ?? true, params.id]
+      [name.trim(), is_active ?? true, id]
     );
 
     await conn.commit();
@@ -62,7 +69,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json({
       success: true,
       message: "Nivel educativo actualizado correctamente",
-      data: { id: Number(params.id), name: name.trim(), is_active: is_active ?? true },
+      data: { id: Number(id), name: name.trim(), is_active: is_active ?? true },
     });
   } catch (error: any) {
     await conn.rollback();

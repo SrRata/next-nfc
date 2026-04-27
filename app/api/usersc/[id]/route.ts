@@ -6,8 +6,11 @@ import bcrypt from "bcryptjs";
 // Admin ve cualquiera | otros solo se ven a sí mismos
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+
+    const { id } = await params
+
     const payload = getTokenPayload(req);
 
     if (!payload) {
@@ -15,7 +18,7 @@ export async function GET(
     }
 
     // No admin intentando ver a otro usuario
-    if (payload.role !== "admin" && payload.id !== Number(params.id)) {
+    if (payload.role !== "admin" && payload.id !== Number(id)) {
         return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
     }
 
@@ -23,7 +26,7 @@ export async function GET(
         const [rows]: any = await db.query(
             `SELECT id, first_name, last_name, username, cdl, email, phone_number, role, is_active
        FROM users WHERE id = ?`,
-            [params.id]
+            [id]
         );
 
         if (!rows.length) {
@@ -47,8 +50,11 @@ export async function GET(
 // Admin edita cualquiera | otros solo se editan a sí mismos (sin poder cambiar role)
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+
+    const { id } = await params
+
     const payload = getTokenPayload(req);
 
     if (!payload) {
@@ -56,7 +62,7 @@ export async function PUT(
     }
 
     const isAdmin = payload.role === "admin";
-    const isSelf = payload.id === Number(params.id);
+    const isSelf = payload.id === Number(id);
 
     if (!isAdmin && !isSelf) {
         return NextResponse.json({ error: "Acceso denegado" }, { status: 403 });
@@ -109,7 +115,7 @@ export async function PUT(
         // Verificar que el usuario existe
         const [existing]: any = await conn.query(
             `SELECT id, role, password FROM users WHERE id = ?`,
-            [params.id]
+            [id]
         );
 
         if (!existing.length) {
@@ -153,7 +159,7 @@ export async function PUT(
                 phone_number,
                 finalRole,
                 finalIsActive,
-                params.id,
+                id,
             ]
         );
 
@@ -163,7 +169,7 @@ export async function PUT(
             success: true,
             message: "Usuario actualizado correctamente",
             data: {
-                id: Number(params.id),
+                id: Number(id),
                 first_name: first_name.trim(),
                 last_name: last_name.trim(),
                 username: username.trim(),
@@ -202,8 +208,11 @@ export async function PUT(
 // DELETE /api/users/:id — soft delete, solo admin
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+
+    const { id } = await params
+
     const admin = requireAdmin(req);
 
     if (!admin) {
@@ -214,7 +223,7 @@ export async function DELETE(
     }
 
     // Admin no puede desactivarse a sí mismo
-    if (admin.id === Number(params.id)) {
+    if (admin.id === Number(id)) {
         return NextResponse.json(
             { error: "No puedes desactivar tu propia cuenta" },
             { status: 400 }
@@ -228,7 +237,7 @@ export async function DELETE(
 
         const [existing]: any = await conn.query(
             `SELECT id, is_active FROM users WHERE id = ?`,
-            [params.id]
+            [id]
         );
 
         if (!existing.length) {
@@ -249,7 +258,7 @@ export async function DELETE(
 
         await conn.query(
             `UPDATE users SET is_active = FALSE WHERE id = ?`,
-            [params.id]
+            [id]
         );
 
         await conn.commit();

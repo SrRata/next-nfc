@@ -4,13 +4,16 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/courses/:id/students
 export async function GET(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+
+    const {id} = await params 
+
     try {
         // Verificar que el curso existe
         const [course]: any = await db.query(
             `SELECT id FROM courses WHERE id = ? AND is_active = TRUE`,
-            [params.id]
+            [id]
         );
 
         if (!course.length) {
@@ -42,7 +45,7 @@ export async function GET(
        LEFT JOIN users u              ON u.id           = r.parent_id
        WHERE s.course_id = ? AND s.is_active = TRUE
        ORDER BY s.last_name ASC, s.first_name ASC`,
-            [params.id]
+            [id]
         );
 
         return NextResponse.json({ success: true, data: students });

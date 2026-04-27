@@ -3,7 +3,9 @@ import { db } from "@/lib/hooks/db";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/schedules/:id
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+
+  const {id} = await params
   try {
     const [rows]: any = await db.query(
       `SELECT
@@ -20,7 +22,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
        JOIN educational_levels el ON el.id = sc.educational_level_id
        JOIN sections s            ON s.id  = sc.section_id
        WHERE sc.id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!rows.length) {
@@ -35,7 +37,9 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // PUT /api/schedules/:id
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+
+  const {id} = await params
   const conn = await db.getConnection();
   try {
     const {
@@ -75,7 +79,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
     const [existing]: any = await conn.query(
       `SELECT id FROM schedules WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -99,7 +103,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         exit_time,
         entry_tolerance ?? 10,
         exit_tolerance ?? 20,
-        params.id,
+        id,
       ]
     );
 
@@ -109,7 +113,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       success: true,
       message: "Horario actualizado correctamente",
       data: {
-        id: Number(params.id),
+        id: Number(id),
         educational_level_id,
         section_id,
         entry_time,
@@ -134,14 +138,16 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE /api/schedules/:id — eliminación física porque no tiene is_active
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+
+  const {id} = await params
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
     const [existing]: any = await conn.query(
       `SELECT id FROM schedules WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -149,7 +155,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: "Horario no encontrado" }, { status: 404 });
     }
 
-    await conn.query(`DELETE FROM schedules WHERE id = ?`, [params.id]);
+    await conn.query(`DELETE FROM schedules WHERE id = ?`, [id]);
 
     await conn.commit();
 

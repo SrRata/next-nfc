@@ -5,8 +5,12 @@ import { requireAdmin } from "@/lib/auth/middleware";
 // PUT /api/special-schedules/:id
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params;
+
+
   const admin = requireAdmin(req);
   if (!admin) return NextResponse.json({ error: "Solo administradores" }, { status: 403 });
 
@@ -15,7 +19,7 @@ export async function PUT(
     const {
       entry_time, exit_time,
       entry_tolerance = 10,
-      exit_tolerance  = 20,
+      exit_tolerance = 20,
       reason,
     } = await req.json();
 
@@ -37,7 +41,7 @@ export async function PUT(
 
     const [existing]: any = await conn.query(
       `SELECT id FROM special_day_schedules WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -54,7 +58,7 @@ export async function PUT(
            entry_tolerance = ?, exit_tolerance = ?,
            reason = ?
        WHERE id = ?`,
-      [entry_time, exit_time, entry_tolerance, exit_tolerance, reason.trim(), params.id]
+      [entry_time, exit_time, entry_tolerance, exit_tolerance, reason.trim(), id]
     );
 
     await conn.commit();
@@ -76,8 +80,11 @@ export async function PUT(
 // DELETE /api/special-schedules/:id
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params;
+
   const admin = requireAdmin(req);
   if (!admin) return NextResponse.json({ error: "Solo administradores" }, { status: 403 });
 
@@ -87,7 +94,7 @@ export async function DELETE(
 
     const [existing]: any = await conn.query(
       `SELECT id FROM special_day_schedules WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -100,7 +107,7 @@ export async function DELETE(
 
     await conn.query(
       `DELETE FROM special_day_schedules WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     await conn.commit();

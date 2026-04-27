@@ -4,8 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/students/:id
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const {id} = await params;
+
   try {
     const [rows]: any = await db.query(
       `SELECT
@@ -35,7 +38,7 @@ export async function GET(
        LEFT JOIN relationships r       ON r.student_id  = s.id
        LEFT JOIN users u               ON u.id           = r.parent_id
        WHERE s.id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!rows.length) {
@@ -58,8 +61,11 @@ export async function GET(
 // PUT /api/students/:id
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const {id} = await params;
+
   const conn = await db.getConnection();
   try {
     const {
@@ -86,7 +92,7 @@ export async function PUT(
 
     const [existing]: any = await conn.query(
       `SELECT id FROM students WHERE id = ?`,
-      [params.id]
+      [id]
     );
     if (!existing.length) {
       await conn.rollback();
@@ -117,7 +123,7 @@ export async function PUT(
         nfc_uid,
         course_id,
         is_active ?? true,
-        params.id,
+        id,
       ]
     );
 
@@ -141,13 +147,13 @@ export async function PUT(
       // Eliminar relación anterior si existe
       await conn.query(
         `DELETE FROM relationships WHERE student_id = ?`,
-        [params.id]
+        [id]
       );
 
       // Crear nueva relación
       await conn.query(
         `INSERT INTO relationships (parent_id, student_id) VALUES (?, ?)`,
-        [parentId, params.id]
+        [parentId, id]
       );
     }
 
@@ -182,15 +188,18 @@ export async function PUT(
 // DELETE /api/students/:id — soft delete
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const {id} = await params;
+
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
     const [existing]: any = await conn.query(
       `SELECT id, is_active FROM students WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -211,7 +220,7 @@ export async function DELETE(
 
     await conn.query(
       `UPDATE students SET is_active = FALSE WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     await conn.commit();

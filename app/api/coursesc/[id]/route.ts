@@ -4,8 +4,11 @@ import { NextRequest, NextResponse } from "next/server";
 // GET /api/courses/:id
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params
+
   try {
     const [rows]: any = await db.query(
       `SELECT
@@ -23,7 +26,7 @@ export async function GET(
        JOIN sections s            ON s.id  = c.section_id
        LEFT JOIN users u          ON u.id  = c.professor_id
        WHERE c.id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!rows.length) {
@@ -46,8 +49,12 @@ export async function GET(
 // PUT /api/courses/:id
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params
+
+
   const conn = await db.getConnection();
   try {
     const {
@@ -69,7 +76,7 @@ export async function PUT(
 
     const [existing]: any = await conn.query(
       `SELECT id FROM courses WHERE id = ?`,
-      [params.id]
+      [id]
     );
     if (!existing.length) {
       await conn.rollback();
@@ -107,7 +114,7 @@ export async function PUT(
         section_id,
         professor_id,
         is_active ?? true,
-        params.id,
+        id,
       ]
     );
 
@@ -117,7 +124,7 @@ export async function PUT(
       success: true,
       message: "Curso actualizado correctamente",
       data: {
-        id: Number(params.id),
+        id: Number(id),
         course_name: course_name.trim(),
         educational_level_id,
         section_id,
@@ -146,15 +153,18 @@ export async function PUT(
 // DELETE /api/courses/:id — soft delete
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+
+  const { id } = await params
+
   const conn = await db.getConnection();
   try {
     await conn.beginTransaction();
 
     const [existing]: any = await conn.query(
       `SELECT id, is_active FROM courses WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     if (!existing.length) {
@@ -175,7 +185,7 @@ export async function DELETE(
 
     await conn.query(
       `UPDATE courses SET is_active = FALSE WHERE id = ?`,
-      [params.id]
+      [id]
     );
 
     await conn.commit();
