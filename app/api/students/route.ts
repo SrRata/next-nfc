@@ -54,8 +54,10 @@ export async function POST(req: NextRequest) {
       last_name,
       cdl,
       email,
-      phone_number = null,
-      nfc_uid = null,
+      phone_number = "",
+      // phone_number = null,
+      nfc_uid = "",
+      // nfc_uid = null,
       course_id,
       // Datos del representante (todos opcionales)
       parent,
