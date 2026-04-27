@@ -2,7 +2,7 @@ import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 // GET /api/sections/:id
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   
   const {id} = await params;
   
