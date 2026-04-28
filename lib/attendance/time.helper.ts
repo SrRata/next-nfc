@@ -3,12 +3,28 @@ export function timeToMinutes(time: string): number {
   return h * 60 + m;
 }
 
+// export function getCurrentTimeString(): string {
+//   return new Date().toLocaleTimeString("en-GB", { hour12: false });
+// }
+
+// export function getCurrentDateString(): string {
+//   return new Date().toISOString().split("T")[0];
+// }
+
 export function getCurrentTimeString(): string {
-  return new Date().toLocaleTimeString("en-GB", { hour12: false });
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "America/Guayaquil",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).format(new Date());
 }
 
 export function getCurrentDateString(): string {
-  return new Date().toISOString().split("T")[0];
+  return new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "America/Guayaquil",
+  }).format(new Date());
 }
 
 export type EntryStatus = "Puntual" | "Atrasado" | "Fuera de horario";
