@@ -16,6 +16,10 @@ import {
   useReactTable,
   ColumnFiltersState
 } from '@tanstack/react-table';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontalIcon } from "lucide-react";
+import { toast } from "sonner";
 
 export default function TableStudentsManagement() {
 
@@ -40,6 +44,18 @@ export default function TableStudentsManagement() {
     }
     loadStudents();
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`/api/students/${id}`)
+      setStudents((prev) => prev.filter((student) => student.id !== id));
+      toast.success(`Estudiante eliminado con exito`)
+    } catch (error) {
+      console.error('Error delete level', error)
+      toast.error(`No se pudo eliminar el estudiante`)
+    }
+  }
+
 
   const columns: ColumnDef<student>[] = [
     {
@@ -86,46 +102,38 @@ export default function TableStudentsManagement() {
         row.original.nfc_uid || "Sin UID asignada"
       )
     },
-    {
-      accessorKey: "is_active",
-      header: "Estado",
-      cell: ({ row }) => {
-        const state = row.original.is_active;
-        return (
-          <Badge color={getActiveBadgeColor(state).color} circle>
-            {getActiveBadgeColor(state).label}
-          </Badge>
-        );
-      },
-    },
     // {
-    //   header: "Acciones",
-    //   cell: ({ row }) => (
-
-    //     <DropdownMenu>
-    //       <DropdownMenuTrigger asChild>
-    //         <Button variant="ghost" size="icon" className="size-8">
-    //           <MoreHorizontalIcon />
-    //           <span className="sr-only">Open menu</span>
-    //         </Button>
-    //       </DropdownMenuTrigger>
-    //       <DropdownMenuContent align="end">
-    //         <DropdownMenuItem onClick={() => openModal("edit", row.original)}>Editar</DropdownMenuItem>
-    //         <DropdownMenuItem onClick={() => toggleStatus({
-    //           id: row.original.id,
-    //           isActive: !row.original.isActive
-    //         })} >
-    //           {row.original.isActive ? "Desactivar" : "Activar"}
-
-    //         </DropdownMenuItem>
-    //         <DropdownMenuSeparator />
-    //         <DropdownMenuItem variant="destructive" onClick={() => openModal("delete", row.original)}>
-    //           Borrar
-    //         </DropdownMenuItem>
-    //       </DropdownMenuContent>
-    //     </DropdownMenu>
-    //   ),
+    //   accessorKey: "is_active",
+    //   header: "Estado",
+    //   cell: ({ row }) => {
+    //     const state = row.original.is_active;
+    //     return (
+    //       <Badge color={getActiveBadgeColor(state).color} circle>
+    //         {getActiveBadgeColor(state).label}
+    //       </Badge>
+    //     );
+    //   },
     // },
+    {
+      header: "Acciones",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="size-8">
+              <MoreHorizontalIcon />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem >Editar</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
+              Borrar
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
   ];
 
   const table = useReactTable({
@@ -142,7 +150,7 @@ export default function TableStudentsManagement() {
   return (
     <>
 
-      <div className="flex items-center py-4">
+      {/* <div className="flex items-center py-4">
         <input
           placeholder="Busca por nombre o CDL...."
           value={(table.getColumn("student")?.getFilterValue() as string) ?? ""}
@@ -151,7 +159,7 @@ export default function TableStudentsManagement() {
           }
           className="max-w-sm px-3 py-2 border rounded-md"
         />
-      </div>
+      </div> */}
 
       <DataTable
         legend="Estudiantes registrados"

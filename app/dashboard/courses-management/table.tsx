@@ -10,10 +10,15 @@ import { useModal } from "@/lib/hooks/use-modal";
 import { DeleteCourseModal } from "./delete-course-modal";
 import { CreateCourseModal } from "./create-course-modal";
 import { EditCourseModal } from "./edit-course-modal";
-import { Course} from "@/lib/hooks/fetch/courses";
+import { Course } from "@/lib/hooks/fetch/courses";
 import { useEffect, useState } from "react";
 import { course } from "@/types/courses";
 import axios from "axios";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontalIcon } from "lucide-react";
+
 
 export function CoursesTable() {
 
@@ -38,6 +43,18 @@ export function CoursesTable() {
     loadCourses();
   }, []);
 
+
+    const handleDelete = async (id: number) => {
+      try {
+        await axios.delete(`/api/coursesc/${id}`)
+        setCourses((prev) => prev.filter((student) => student.id !== id));
+        toast.success(`Curso eliminado con exito`)
+      } catch (error) {
+        console.error('Error delete level', error)
+        toast.error(`No se pudo eliminar el curso`)
+      }
+    }
+
   const columns: ColumnDef<course>[] = [
     {
       accessorKey: "course_name",
@@ -59,17 +76,26 @@ export function CoursesTable() {
       )
     },
     {
-      accessorKey: "is_active",
-      header: "Estado",
-      cell: ({ row }) => {
-        const state = row.original.is_active;
-        return (
-          <Badge color={getActiveBadgeColor(state).color} circle>
-            {getActiveBadgeColor(state).label}
-          </Badge>
-        );
-      }
-    }
+      header: "Acciones",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="size-8">
+              <MoreHorizontalIcon />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem >Editar</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
+              Borrar
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+
   ]
 
 

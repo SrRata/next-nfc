@@ -20,6 +20,7 @@ import { CreateUserModal } from "./create-user-modal";
 import { useEffect, useState } from "react";
 import { user } from "@/types/users";
 import axios from "axios";
+import { toast } from "sonner";
 
 export function UsersTable() {
 
@@ -43,6 +44,17 @@ export function UsersTable() {
         }
         loadUsers();
     }, []);
+
+      const handleDelete = async (id: number) => {
+        try {
+          await axios.delete(`/api/usersc/${id}`)
+          setUsers((prev) => prev.filter((student) => student.id !== id));
+          toast.success(`Usuario eliminado con exito`)
+        } catch (error) {
+          console.error('Error delete level', error)
+          toast.error(`No se pudo eliminar el usuario`)
+        }
+      }
 
     const columns: ColumnDef<user>[] = [
         {
@@ -80,18 +92,21 @@ export function UsersTable() {
         {
             header: "Acciones",
             cell: ({ row }) => (
-                <div className="flex gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-8">
-                                <MoreHorizontalIcon />
-                                <span className="sr-only">Open menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="size-8">
+                            <MoreHorizontalIcon />
+                            <span className="sr-only">Open menu</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuItem >Editar</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
+                            Borrar
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             ),
         },
     ];
