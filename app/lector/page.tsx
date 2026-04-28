@@ -15,14 +15,14 @@ export default function NFCScanner() {
     try {
       setStatus('scanning');
       setMessage("Escaneando... mantén el tag cerca.");
-      
+
       // @ts-ignore - Web NFC aún es experimental en TS
       const reader = new NDEFReader();
       await reader.scan();
 
       reader.addEventListener("reading", async ({ serialNumber }: any) => {
         setMessage(`ID detectado: ${serialNumber}. Registrando...`);
-        
+
         // Enviamos el serialNumber (UID) a tu API
         try {
           const res = await fetch('/api/register', {
@@ -55,12 +55,11 @@ export default function NFCScanner() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
       <h1 className="text-2xl font-bold mb-6">Registro de Asistencia NFC</h1>
-      
-      <div className={`w-64 h-64 rounded-full flex items-center justify-center border-4 mb-8 transition-colors ${
-        status === 'idle' ? 'border-gray-300' : 
-        status === 'scanning' ? 'border-blue-500 animate-pulse' : 
-        status === 'success' ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'
-      }`}>
+
+      <div className={`w-64 h-64 rounded-full flex items-center justify-center border-4 mb-8 transition-colors ${status === 'idle' ? 'border-gray-300' :
+          status === 'scanning' ? 'border-blue-500 animate-pulse' :
+            status === 'success' ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'
+        }`}>
         <span className="text-5xl">
           {status === 'idle' && '📳'}
           {status === 'scanning' && '📡'}
