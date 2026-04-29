@@ -7,7 +7,7 @@ import { TableSkeleton } from "@/components/table";
 export default function HistoryPage() {
   return (
     <>
-      <Suspense fallback={<FiltersSkeleton />}>
+      {/* <Suspense fallback={<FiltersSkeleton />}>
         <Filters
           searchPlaceholder="Buscar un estudiante..."
           fields={[
@@ -37,7 +37,7 @@ export default function HistoryPage() {
             },
           ]}
         />
-      </Suspense>
+      </Suspense> */}
       <Suspense fallback={<TableSkeleton />}>
         <HistoryTable />
       </Suspense>

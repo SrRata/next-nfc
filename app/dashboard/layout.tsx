@@ -37,8 +37,8 @@ export default function DashboardLayout({
                 {children}
                 <Toaster
                   richColors
-                  position="bottom-left"      
-                  theme="light"              
+                  position="bottom-center"      
+                  theme="light"
                   duration={6000}
                 />
               </section>

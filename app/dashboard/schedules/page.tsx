@@ -22,6 +22,7 @@ export default function SettingsPage() {
 
     const [schedules, setSchedules] = useState<Schedule[]>([]);
     const [isLoadingSchedules, setIsLoadingSchedules] = useState(true);
+    
 
     useEffect(() => {
         async function loadSections() {
@@ -55,21 +56,23 @@ export default function SettingsPage() {
         loadEducationalLevels();
     }, []);
 
-        useEffect(() => {
-            async function loadSchedules() {
-                try {
-                    const response = await axios.get('/api/schedules');
-                    if (response.data.success) {
-                        setSchedules(response.data.data);
-                    }
-                } catch (error) {
-                    console.error('Error fetching schedules:', error)
-                } finally {
-                    setIsLoadingSchedules(false)
-                }
+
+    async function loadSchedules() {
+        try {
+            const response = await axios.get('/api/schedules');
+            if (response.data.success) {
+                setSchedules(response.data.data);
             }
-            loadSchedules();
-        }, []);
+        } catch (error) {
+            console.error('Error fetching schedules:', error)
+        } finally {
+            setIsLoadingSchedules(false)
+        }
+    }
+
+    useEffect(() => {
+        loadSchedules();
+    }, []);
 
 
     return (
@@ -90,7 +93,7 @@ export default function SettingsPage() {
                     title="Secciones totales"
                     value={sections.length.toString()}
                 />
-                <SchedulesManagement schedules={schedules} educationalLevels={educationalLevels} sections={sections}/>
+                <SchedulesManagement schedules={schedules} setSchedules={setSchedules} loadSchedules={loadSchedules} educationalLevels={educationalLevels} sections={sections} />
                 <LevelsManagement educationalLevels={educationalLevels} />
                 <SectionsManagement sections={sections} />
             </div>

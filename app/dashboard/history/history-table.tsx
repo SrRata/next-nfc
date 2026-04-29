@@ -4,7 +4,6 @@ import { DataUser } from "@/components/data-user";
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import data from "./data.json";
 import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { studentState } from "@/lib/constants/data-type";
@@ -12,6 +11,8 @@ import { stateBadgeColor } from "@/lib/constants/get-badge-color";
 import { AttendanceRecords } from "@/types/attendance";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { formatDate, formatTime, formatTime12h } from "@/lib/format-time";
+import { IconAlertCircle, IconAlertCircleFilled } from "@tabler/icons-react";
 
 export function HistoryTable() {
 
@@ -39,38 +40,55 @@ export function HistoryTable() {
     {
       accessorKey: "date",
       header: "Fecha",
+      cell: ({ row }) => (
+        <p>
+          {formatDate(row.original.date)}
+        </p>
+      )
     },
     {
       accessorKey: "student_id",
       header: "Estudiante",
       cell: ({ row }) => (
-        <DataUser name={row.original.student_id.toString()} section={row.original.student_id.toString()} />
+        <DataUser name={`${row.original.student_first_name} ${row.original.student_last_name}`} section={`${row.original.course_name} - ${row.original.section_name}`} />
       ),
     },
     {
       accessorKey: "entry_time",
       header: "Entrada",
+      cell: ({ row }) => (
+        <p className="font-bold text-[12px]">
+          {formatTime12h(row.original.entry_time)}
+        </p>
+      )
     },
     {
       accessorKey: "exit_time",
       header: "Salida",
-      cell: ({row}) => (
-        row.original.exit_time ? row.original.exit_time : "Sin salida"
+      cell: ({ row }) => (
+        row.original.exit_time ? (<p className="font-bold text-[12px]">
+          {formatTime12h(row.original.exit_time)}
+        </p>) : (
+          <Badge color="yellow">Pendiente</Badge>
+        )
       )
     },
-    {
-      accessorKey: "observation",
-      header: "Observación",
-      cell: ({ row }) => {
-        const state = row.original.observation;
+    // {
+    //   accessorKey: "observation",
+    //   header: "Observación",
+    //   cell: ({ row }) => {
+    //     const state = row.original.observation;
 
-        return (
-          <Badge color={stateBadgeColor[state.toLowerCase()].color} circle>
-            {stateBadgeColor[state.toLowerCase()].label}
-          </Badge>
-        );
-      },
-    },
+    //     return (
+    //       row.original.exit_time ? (
+    //         <p>Salida aun no registrada</p>
+    //       ) : (<div className="flex items-center gap-3">
+    //         <IconAlertCircleFilled className="text-yellow-500" />
+    //         <p className="text-black-secondary">Salida aun no registrada</p>
+    //       </div>)
+    //     );
+    //   },
+    // },
     // {
     //   accessorKey: "observation",
     //   header: "Observacion"

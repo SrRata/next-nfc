@@ -12,16 +12,83 @@ import axios from "axios";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Section } from "@/types/section";
 import { toast } from 'sonner';
+import { minutesToTime, timeToMinutes } from "@/lib/format-time";
+
 
 interface SchedulesManagementProps {
     schedules: Schedule[]
+    setSchedules: React.Dispatch<React.SetStateAction<Schedule[]>>
+    loadSchedules: () => void
     educationalLevels: educationalLevel[]
     sections: Section[]
 }
 
 
+interface SchedulePreviewInput {
+    entry_time: string;
+    exit_time: string;
+    entry_tolerance: string | number;
+    exit_tolerance: string | number;
+}
 
-export default function SchedulesManagement({ schedules, educationalLevels, sections }: SchedulesManagementProps) {
+
+function calculateSchedulePreview(
+    data: SchedulePreviewInput
+) {
+
+    if (!data.entry_time || !data.exit_time) {
+        return null;
+    }
+
+    const entryMinutes =
+        timeToMinutes(data.entry_time);
+
+    const exitMinutes =
+        timeToMinutes(data.exit_time);
+
+    const entryTolerance =
+        Number(data.entry_tolerance);
+
+    const exitTolerance =
+        Number(data.exit_tolerance);
+
+    const punctualUntil =
+        minutesToTime(
+            entryMinutes + entryTolerance
+        );
+
+    const exitWindowStart =
+        minutesToTime(
+            exitMinutes - exitTolerance
+        );
+
+    const exitWindowEnd =
+        minutesToTime(
+            exitMinutes + exitTolerance
+        );
+
+    const duration =
+        exitMinutes - entryMinutes;
+
+    const durationHours =
+        Math.floor(duration / 60);
+
+    const durationMinutes =
+        duration % 60;
+
+
+    return {
+        punctualUntil,
+        exitWindowStart,
+        exitWindowEnd,
+        durationText:
+            `${durationHours}h ${durationMinutes}min`,
+    };
+}
+
+
+
+export default function SchedulesManagement({ schedules, educationalLevels, setSchedules, loadSchedules, sections }: SchedulesManagementProps) {
 
     const [sectionId, setSectionId] = useState<string>("");
 
@@ -30,6 +97,8 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
     const [isLoadingSchedules, setIsLoadingSchedules] = useState(true);
 
     const [isOpenForm, setIsOpenForm] = useState(false);
+
+    const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
 
     const [formDataSchedule, setFormDataSchedule] = useState({
         entry_time: "",
@@ -45,7 +114,25 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
         });
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const resetForm = () => {
+
+        setEditingSchedule(null);
+
+        setEducationalLevelId("");
+
+        setSectionId("");
+
+        setFormDataSchedule({
+            entry_time: "",
+            exit_time: "",
+            entry_tolerance: "10",
+            exit_tolerance: "20",
+        });
+
+        setIsOpenForm(false);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         let format_entry_time = formDataSchedule.entry_time
@@ -69,17 +156,116 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
             exit_tolerance: formDataSchedule.exit_tolerance,
         }
 
-        console.log(payload) //Debug
+        // console.log(payload) //Debug
+
+
+        const loadingToast = toast.loading(
+            editingSchedule
+                ? "Actualizando horario..."
+                : "Creando horario..."
+        );
+
 
         try {
-            axios.post('/api/schedules', payload)
-            toast.success('¡Logrado!')
-        } catch (erorr) {
-            console.error('Error create schedule', erorr)
-        }
+            setIsLoadingSchedules(true);
 
+            if (editingSchedule) {
+                const response = await axios.put(
+                    `/api/schedules/${editingSchedule.id}`,
+                    payload
+                );
+
+                await loadSchedules();
+
+
+                toast.success("Horario actualizado correctamente", {
+                    id: loadingToast,
+                });
+
+            } else {
+                setIsLoadingSchedules(true);
+
+                const response = await axios.post("/api/schedules", payload);
+
+                await loadSchedules();
+
+                toast.success("Horario creado correctamente", {
+                    id: loadingToast,
+                });
+
+            }
+
+            setIsOpenForm(false);
+
+        } catch (error) {
+            console.error("Error create schedule", error);
+            toast.error(
+                editingSchedule
+                    ? "Error al actualizar horario"
+                    : "Error al crear horario",
+                {
+                    id: loadingToast,
+                }
+            );
+
+        } finally {
+            setIsLoadingSchedules(false);
+        }
     }
 
+    const handleDelete = async (id: number) => {
+
+        const loadingToastCreate = toast.loading("Borrando horario...");
+
+        try {
+
+            const response = await axios.delete(`/api/schedules/${id}`)
+
+            setSchedules((prev) =>
+                prev.filter((s) => s.id !== id)
+            );
+
+            toast.success("Horario eliminado", {
+                id: loadingToastCreate,
+            });
+
+        } catch (erorr) {
+            console.error('Error create schedule', erorr)
+            toast.error("Error al eliminar horario", {
+                id: loadingToastCreate,
+            });
+        }
+    }
+
+
+    const handleEdit = (schedule: Schedule) => {
+
+        setEditingSchedule(schedule);
+
+        setEducationalLevelId(
+            schedule.educational_level_id.toString()
+        );
+
+        setSectionId(
+            schedule.section_id.toString()
+        );
+
+        setFormDataSchedule({
+            entry_time: schedule.entry_time.slice(0, 5),
+            exit_time: schedule.exit_time.slice(0, 5),
+            entry_tolerance: schedule.entry_tolerance.toString(),
+            exit_tolerance: schedule.exit_tolerance.toString(),
+        });
+
+        setIsOpenForm(true);
+    };
+
+
+
+    //TIEMPO PREVISUALIZADO 
+
+    const preview =
+        calculateSchedulePreview(formDataSchedule);
 
     return (
 
@@ -96,7 +282,10 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
                     <p className="font-medium text-black-primary text-sm">Horario de entrada y salida por nivel y sección</p>
                 </div>
                 <Button
-                    onClick={() => setIsOpenForm(true)}
+                    onClick={() => {
+                        setIsOpenForm(true)
+                        resetForm
+                    }}
                 >
                     <Plus />
                     Nuevo horario
@@ -187,7 +376,7 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
                 <div>
                     <Label>Tolerancia salida (min)</Label>
                     <Input
-                        value={formDataSchedule.entry_tolerance ?? ""}
+                        value={formDataSchedule.exit_tolerance ?? ""}
                         onChange={handleChangeSchedule}
                         id="exit_tolerance"
                         type="number"
@@ -204,17 +393,17 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
                     <div className="flex items-center gap-4">
                         <div>
                             <p className="font-bold text-sm text-black-secondary">Entrada puntual hasta</p>
-                            <p className="font-bold text-black-primary text-xl">07:30</p>
+                            <p className="font-bold text-black-primary text-xl">{preview?.punctualUntil ? preview.punctualUntil : "--:--"}</p>
                         </div>
                         <div className="bg-black-secondary h-10 w-0.5 mx-2"></div>
                         <div>
                             <p className="font-bold text-sm text-black-secondary">Ventana de salida</p>
-                            <p className="font-bold text-black-primary text-xl">12:40 - 13:20</p>
+                            <p className="font-bold text-black-primary text-xl">{preview?.exitWindowStart ? preview.exitWindowStart : "--:--"} - {preview?.exitWindowEnd ? preview.exitWindowEnd : "--:--"}</p>
                         </div>
                         <div className="bg-black-secondary h-10 w-0.5 mx-2"></div>
                         <div>
                             <p className="font-bold text-sm text-black-secondary">Duración jornada</p>
-                            <p className="font-bold text-black-primary text-xl">5h 30min</p>
+                            <p className="font-bold text-black-primary text-xl">{preview?.durationText ? preview.durationText : "0h 0min"}</p>
                         </div>
                     </div>
                 </div>
@@ -222,49 +411,64 @@ export default function SchedulesManagement({ schedules, educationalLevels, sect
 
                 <div className="flex items-center gap-3 justify-end col-span-full">
                     <Button
-                        onClick={() => setIsOpenForm(false)}
+                        onClick={resetForm}
                         variant="outline" type="button">Cancelar</Button>
-                    <Button variant="outline" type="submit">Guardar horario</Button>
+                    <Button variant="outline" type="submit">
+                        {editingSchedule ? 'Actualizar horario' : 'Guardar horario'}
+                    </Button>
                 </div>
 
 
             </form>
 
-            {schedules.map((e) => (
-                <div key={e.id} className="p-6 rounded-primary bg-gray border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer space-y-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="font-bold text-black-primary">{e.educational_level_name} · {e.section_name}</p>
-                            <p className="font-medium text-black-secondary text-sm">Duración: 5h 30min</p>
+            {schedules.map((e) => {
+
+                const scheduleData =
+                    calculateSchedulePreview(e);
+                return (
+                    <div key={e.id} className="p-6 rounded-primary bg-gray border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="font-bold text-black-primary">{e.educational_level_name} · {e.section_name}</p>
+                                <p className="font-medium text-black-secondary text-sm">Duración: {scheduleData?.durationText}</p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={() => handleEdit(e)}
+                                    variant="outline" size="icon">
+                                    <Pen />
+                                </Button>
+                                <Button
+                                    onClick={() => handleDelete(e.id)}
+                                    variant="outline" size="icon">
+                                    <X />
+                                </Button>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="bg-white-primary rounded-primary p-3">
+                                <p className="font-bold text-sm text-black-secondary">Entrada</p>
+                                <p className="font-bold text-black-primary text-2xl">{e.entry_time}</p>
+                            </div>
+                            <div className="bg-white-primary rounded-primary p-3">
+                                <p className="font-bold text-sm text-black-secondary">Salida</p>
+                                <p className="font-bold text-black-primary text-2xl">{e.exit_time}</p>
+                            </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <Button
-                                variant="outline" size="icon">
-                                <Pen />
-                            </Button>
-                            <Button
-                                variant="outline" size="icon">
-                                <X />
-                            </Button>
+                            <Badge color="blue">Puntual hasta {scheduleData?.punctualUntil}</Badge>
+                            <Badge color="purple">
+                                Salida:
+                                {" "}
+                                {scheduleData?.exitWindowStart}
+                                {" - "}
+                                {scheduleData?.exitWindowEnd}
+                            </Badge>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-white-primary rounded-primary p-3">
-                            <p className="font-bold text-sm text-black-secondary">Entrada</p>
-                            <p className="font-bold text-black-primary text-2xl">{e.entry_time}</p>
-                        </div>
-                        <div className="bg-white-primary rounded-primary p-3">
-                            <p className="font-bold text-sm text-black-secondary">Salida</p>
-                            <p className="font-bold text-black-primary text-2xl">{e.exit_time}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Badge color="blue">Puntual hasta 07:40</Badge>
-                        <Badge color="purple">Salida: 12:40 – 13:20</Badge>
-                    </div>
-                </div>
 
-            ))}
+                )
+            })}
         </div>
 
     )

@@ -20,6 +20,8 @@ export interface Schedule {
 
   educational_level_name: string;
   section_name: string;
+  educational_level_id: number;
+  section_id: number;
 }
 
 
@@ -27,8 +29,21 @@ export interface Schedule {
 export interface AttendanceRecords {
   id: number;
   date: string,
-  student_id: number;
   entry_time: string;
   exit_time: string;
   observation: string;
+  student_id: number;
+  student_first_name: string;
+  student_last_name: string;
+  cdl: string;
+  email: string;
+  phone_number: string;
+  nfc_uid: string;
+  student_is_active: boolean;
+  course_id: number;
+  course_name: string;
+  section_id: number;
+  section_name: string;
+  educational_level_id: number;
+  educational_level_name: string
 } 

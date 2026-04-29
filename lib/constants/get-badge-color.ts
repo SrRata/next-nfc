@@ -93,7 +93,7 @@ export const stateBadgeColor: Record<
   },
   atrasado: {
     label: "Atrasado",
-    color: "orange",
+    color: "yellow",
   },
   default: {
     label: "Null",
