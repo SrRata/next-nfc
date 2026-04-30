@@ -8,9 +8,9 @@ export default function CoursesManagementPage() {
 
   return (
     <>
-      <Suspense fallback={<FiltersSkeleton />}>
+      {/* <Suspense fallback={<FiltersSkeleton />}>
         <FiltersCursesManagement />
-      </Suspense>
+      </Suspense> */}
       <Suspense fallback={<TableSkeleton />}>
         <CoursesTable />
       </Suspense>

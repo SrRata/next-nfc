@@ -1,6 +1,7 @@
 "use client"
 
 import { educationLevel, section } from "@/lib/constants/data-type";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 
@@ -8,71 +9,118 @@ export interface Student {
     id: string,
     firstName: string,
     lastName: string,
+    cdl: string,
+    email: string, 
+    phoneNumber: string,
     nfc: string,
     isActive: boolean,
+    courseId: string,
     course: string,
-    parallel: string,
-    level: educationLevel
     section: section,
-    points: string
+    level: educationLevel
+    points: string,
+    parent: string,
+    parentId: string,
 }
 
-
-export function getStudents() {
+export function useStudents() {
     const searchParams = useSearchParams();
-    const [students, setStudents] = useState<Student[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const queryStr = searchParams.toString();
 
-    const fetchStudents = useCallback(async () => {
-        setLoading(true);
-        setError(false);
-
-        try {
-            const query = searchParams.toString();
-            const res = await fetch(`/api/students${query ? `?${query}` : ""}`);
-            if (!res.ok) throw new Error("Error en la carga");
-            const data = await res.json();
-            setStudents(data);
-        } catch (err) {
-            setError(true);
-        } finally {
-            setLoading(false);
+    const fetchStudents = async (queryString: string) => {
+        const res = await fetch(`/api/students${queryString ? `?${queryString}` : ""}`);
+        
+        if (!res.ok) {
+            throw new Error("Error al obtener los estudiantes");
         }
-    }, [searchParams]); 
+        
+        return res.json();
+    };
 
-    useEffect(() => {
-        fetchStudents();
-    }, [fetchStudents]);
-
-    return { students, loading, error, refresh: fetchStudents };
-}
-
-
-
-
-// Cambiar estado activo/inactivo rápidamente
-export async function toggleStudentStatus(id: string, currentStatus: boolean) {
-    const res = await fetch(`/api/students/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isActive: !currentStatus }),
+    return useQuery({
+        queryKey: ["students", queryStr],
+        queryFn: () => fetchStudents(queryStr),
+        placeholderData: (previousData) => previousData,
     });
-    return res.ok;
 }
 
-// Eliminar
-export async function deleteStudent(id: string) {
-    const res = await fetch(`/api/students/${id}`, { method: "DELETE" });
-    return res.ok;
-}
 
-// Actualizar datos generales
-export async function updateStudent(id: string, data: Partial<Student>) {
-    const res = await fetch(`/api/students/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+export function useDeleteUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (id: string | null | undefined) => {
+            if (!id) throw new Error("ID no proporcionado");
+            const res = await fetch(`/api/students/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error("Error al eliminar");
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["students"] });
+        },
     });
-    return res.json();
+}
+
+
+export function useUpdateStudentStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      const res = await fetch(`/api/students/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isActive }),
+      });
+      if (!res.ok) throw new Error("Error al actualizar el estado");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["students"] });
+    },
+  });
+}
+
+
+
+export const useCreateStudent = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (courseData: any) => {
+            const response = await fetch('/api/students', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(courseData),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Error al crear estudiante');
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["students"] });
+        },
+    });
+};
+
+
+export function useUpdateStudent() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({id, data}: {id: string, data: any}) => {
+            const res = await fetch(`/api/students/${id}` , {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || "Error al actualizar");
+            return result;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["students"] });
+        }
+    })
 }

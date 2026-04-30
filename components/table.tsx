@@ -1,18 +1,44 @@
 import { cn } from "@/lib/utils";
 
+// interface TableContainerProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+// export function TableContainer({ className, ...props }: TableContainerProps) {
+//   return (
+//     <div
+//       {...props}
+//       className={cn(
+//         "bg-white-primary rounded-primary col-span-full p-6",
+//         className,
+//       )}
+//     />
+//   );
+// }
+
+
+import React, { forwardRef } from "react"; // 1. Importa forwardRef
+
 interface TableContainerProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function TableContainer({ className, ...props }: TableContainerProps) {
-  return (
-    <div
-      {...props}
-      className={cn(
-        "bg-white-primary rounded-primary col-span-full p-6",
-        className,
-      )}
-    />
-  );
-}
+// 2. Envolvemos la función con forwardRef
+export const TableContainer = forwardRef<HTMLDivElement, TableContainerProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div
+        ref={ref} // 3. ¡Importante! Asignamos la ref al div
+        {...props}
+        className={cn(
+          "bg-white-primary rounded-primary col-span-full p-6",
+          className,
+        )}
+      />
+    );
+  }
+);
+
+// 4. (Opcional pero recomendado) Asigna un nombre para debugging
+TableContainer.displayName = "TableContainer";
+
+
 
 interface TableContainerHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 

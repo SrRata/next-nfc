@@ -1,3 +1,4 @@
+import { profileEnd } from "console";
 import {
   color,
   educationLevel,
@@ -7,31 +8,44 @@ import {
   studentState,
 } from "./data-type";
 
-export const levelBadgeColor: Record<
-  educationLevel,
-  { label: string; color: color }
-> = {
-  preparatoria: {
-    label: "Preparatoria",
-    color: "blue",
-  },
-  elemental: {
-    label: "Básica elemental",
-    color: "orange",
-  },
-  media: {
-    label: "Básica media",
-    color: "yellow",
-  },
-  superior: {
-    label: "Básica superior",
-    color: "green",
-  },
-  bachillerato: {
-    label: "Bachillerato",
-    color: "purple",
-  },
-};
+  export const levelBadgeColor: Record<
+    educationLevel,
+    { label: string; color: color }
+  > = {
+    preparatoria: {
+      label: "Preparatoria",
+      color: "blue",
+    },
+    elemental: {
+      label: "Básica elemental",
+      color: "orange",
+    },
+    media: {
+      label: "Básica media",
+      color: "yellow",
+    },
+    superior: {
+      label: "Básica superior",
+      color: "green",
+    },
+    bachillerato: {
+      label: "Bachillerato",
+      color: "purple",
+    },
+    'bachillerato técnico': {
+      label: "Bachillerato tecnico",
+      color: "blue"
+    },
+    default: {
+      label: "Sin nivel",
+      color: "gray"
+    }
+  };
+
+  export const getLevelBadge = (level: string | null | undefined) => {
+    const key = level?.toLowerCase() || "default";
+    return levelBadgeColor[key as keyof typeof levelBadgeColor] || levelBadgeColor.default;
+  };
 
 export const sectionBadgeColor: Record<
   section,
@@ -45,6 +59,12 @@ export const sectionBadgeColor: Record<
     label: "Vespertina",
     color: "yellow",
   },
+  default: { label: "Sin Sección", color: "gray" },
+};
+
+export const getSectionBadge = (section: string | null | undefined) => {
+  const key = section?.toLowerCase() || "default";
+  return sectionBadgeColor[key as keyof typeof sectionBadgeColor] || sectionBadgeColor.default;
 };
 
 interface BadgeConfig {
@@ -60,7 +80,7 @@ export const getActiveBadgeColor = (isActive: boolean): BadgeConfig => {
 };
 
 export const stateBadgeColor: Record<
-  studentState,
+  string,
   { label: string; color: color }
 > = {
   presente: {
@@ -73,11 +93,21 @@ export const stateBadgeColor: Record<
   },
   atrasado: {
     label: "Atrasado",
-    color: "orange",
+    color: "yellow",
   },
+  default: {
+    label: "Null",
+    color: "gray"
+  }
 };
 
-export const roleBadgeColor: Record<role, { label: string; color: color }> = {
+export const getStateBadge = (state: string | null | undefined) => {
+  const key = state?.toLowerCase() || "default";
+  return stateBadgeColor[key as keyof typeof stateBadgeColor] || stateBadgeColor.default;
+};
+
+
+export const roleBadgeColor: Record<string, { label: string; color: color }> = {
   admin: {
     label: "Administrador",
     color: "purple",
@@ -90,16 +120,25 @@ export const roleBadgeColor: Record<role, { label: string; color: color }> = {
     label: "Usuario",
     color: "green",
   },
+  default: {
+    label: "Sin rol",
+    color: "gray"
+  }
+};
+
+export const getRoleBadge = (role: string | null | undefined) => {
+  const key = role?.toLowerCase() || "default";
+  return roleBadgeColor[key as keyof typeof roleBadgeColor] || roleBadgeColor.default;
 };
 
 export const colorBadgeColor: Record<gender, { label: string; color: color }> =
-  {
-    hombre: {
-      label: "Hombre",
-      color: "blue",
-    },
-    mujer: {
-      label: "Mujer",
-      color: "purple",
-    },
-  };
+{
+  hombre: {
+    label: "Hombre",
+    color: "blue",
+  },
+  mujer: {
+    label: "Mujer",
+    color: "purple",
+  },
+};

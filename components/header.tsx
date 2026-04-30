@@ -27,7 +27,7 @@ interface PageTitleProps {
 export function PageTitle({ title, description }: PageTitleProps) {
   return (
     <div>
-      <h1 className="text-2xl font-bold text-black-primary">{title}</h1>
+      <h1 className="text-2xl font-bold capitalize text-black-primary">{title}</h1>
       {description && (
         <p className="text-sm font-semibold text-black-secondary">
           {description}

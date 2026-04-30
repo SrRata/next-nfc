@@ -11,123 +11,127 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { roles } from "@/lib/constants/data-type";
+import { Spinner } from "@/components/ui/spinner";
+import { educationLevels, roles, sections } from "@/lib/constants/data-type";
+import { useCreateCourse } from "@/lib/hooks/fetch/courses";
+import { useProfessors } from "@/lib/hooks/fetch/system/professor";
 import { useCreateUser } from "@/lib/hooks/fetch/users";
-import { useState } from "react";
+import React, { useState } from "react";
 
-interface DeleteCurseModalProps {
+interface CreateCourseModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
+export function CreateCourseModal({ isOpen, onClose }: CreateCourseModalProps) {
+    const [section, setSection] = useState("");
+    const [level, setLevel] = useState("");
+    const [tutorId, setTutorId] = useState<string | null>(null);
 
-export function CreateCourseModal({ isOpen, onClose }: DeleteCurseModalProps) {
+    // Usar el hook de CURSOS, no de usuarios
+    const { data: professors, isLoading: loadingProfs } = useProfessors();
+    const { mutate: createCourse, isPending } = useCreateCourse();
 
-    const { createUser, loading, error } = useCreateUser();
-    const [role, setRole] = useState<string>("");
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     const formData = new FormData(e.currentTarget);
+    //     const data = Object.fromEntries(formData.entries());
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    //     // Aseguramos que los valores de los Select entren al data
+    //     const payload = { ...data, section, level };
+
+    //     createCourse(payload, {
+    //         onSuccess: () => onClose(),
+    //         onError: (err) => console.error(err.message)
+    //     });
+    // }
+
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const data = {
-            ...Object.fromEntries(formData),
-            role: role
+        const data = Object.fromEntries(formData.entries());
+
+        // CORRECCIÓN: Usa 'tutorId' que es como llamaste a tu estado arriba
+        const payload = {
+            ...data,
+            section,
+            level,
+            professorId: tutorId === "none" ? null : tutorId
         };
 
-        const success = await createUser(data);
-        if (success) onClose();
+        createCourse(payload, {
+            onSuccess: () => {
+                onClose();
+                setTutorId(null); // Limpiamos el estado correcto
+            },
+            onError: (err) => {
+                console.error("Error al crear curso:", err.message);
+            }
+        });
     };
+
+
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="w-full max-w-200" showCloseButton={false}>
+            <DialogContent className="w-full max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Editar usuario</DialogTitle>
+                    <DialogTitle>Crear Nuevo Curso</DialogTitle>
                 </DialogHeader>
-
-                <form id="create-user-form" onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
-
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <Label>Nombre *</Label>
-                        <Input
-                            name="firstName"
-                            className="capitalize"
-                            required
-                            placeholder="Ej. Juan Miguel"
-                        />
+                        <Label>Nombre del Curso</Label>
+                        <Input name="courseName" placeholder="Ej. Décimo EGB" required />
                     </div>
 
                     <div>
-                        <Label>Apellido *</Label>
-                        <Input
-                            name="lastName"
-                            className="capitalize"
-                            required
-                            placeholder="Ej. Alvarez Flores"
-                        />
-                    </div>
-
-
-                    <div className="col-span-full">
-                        <Label>Correo</Label>
-                        <Input
-                            name="email"
-                            type="email"
-                            required
-                            placeholder="Ej. usuario@correo.com"
-                        />
+                        <Label>Sección</Label>
+                        <Select onValueChange={setSection} value={section} required>
+                            <SelectTrigger><SelectValue placeholder="Seleccione" /></SelectTrigger>
+                            <SelectContent>
+                                {sections.map((e) => (
+                                    <SelectItem key={e} value={e}>{e}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div>
-                        <Label>Cedula *</Label>
-                        <Input
-                            name="cdl"
-                            required
-                            placeholder="Ej. 1719690487"
-                        />
-                    </div>
-
-
-                    <div>
-                        <Label>Contacto</Label>
-                        <Input
-                            name="phoneNumber"
-                            required
-                            placeholder="Ej. 0929405265"
-                        />
+                        <Label>Nivel Educativo</Label>
+                        <Select onValueChange={setLevel} value={level} required>
+                            <SelectTrigger><SelectValue placeholder="Seleccione" /></SelectTrigger>
+                            <SelectContent>
+                                {educationLevels.map((e) => (
+                                    <SelectItem key={e} value={e}>{e}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div>
-                        <Label>Rol</Label>
-
-                        <Select
-                            onValueChange={setRole}
-                            required
-                        >
-                            <SelectTrigger className="capitalize">
-                                <SelectValue placeholder="Seleccione" />
+                        <Label>Tutor (Opcional)</Label>
+                        <Select onValueChange={setTutorId} value={tutorId || ""}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Sin asignar tutor" />
                             </SelectTrigger>
-                            <SelectContent position="popper">
-                                {roles.map((r) => (
-                                    <SelectItem key={r} value={r} className="capitalize">
-                                        {r}
+                            <SelectContent>
+                                <SelectItem value="none">Ninguno</SelectItem>
+                                {professors?.map((p) => (
+                                    <SelectItem key={p.id} value={p.id.toString()}>
+                                        {p.firstName} {p.lastName}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
                     </div>
 
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+                        <Button type="submit" disabled={isPending}>
+                            {isPending && <Spinner />} Crear Curso
+                        </Button>
+                    </DialogFooter>
                 </form>
-
-                <DialogFooter>
-                    <Button variant="outline" onClick={onClose} size="lg" disabled={loading}>
-                        Cancelar
-                    </Button>
-                    <Button type="submit" form="create-user-form" size="lg" disabled={loading} onClick={() => {
-                        onClose();
-                    }}>
-                        {loading ? "Guardando..." : "Crear Usuario"}
-                    </Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     );

@@ -11,88 +11,96 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { roles } from "@/lib/constants/data-type";
 import { useCreateUser } from "@/lib/hooks/fetch/users";
-import { useState } from "react";
+import React, { useState } from "react";
 
-interface DeleteUserModalProps {
+interface CreateUserModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-export function CreateUserModal({ isOpen, onClose }: DeleteUserModalProps) {
+export function CreateUserModal({ isOpen, onClose }: CreateUserModalProps) {
 
-    const { createUser, loading, error } = useCreateUser();
-    const [role, setRole] = useState<string>("");
+    const [role, setRole] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+
+    const { mutate: createUser, isPending, error } = useCreateUser();
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         const formData = new FormData(e.currentTarget);
-        const data = {
-            ...Object.fromEntries(formData),
-            role: role
-        };
+        const data = Object.fromEntries(formData.entries())
 
-        const success = await createUser(data);
-        if (success) onClose();
-    };
+        createUser(data as any, {
+            onSuccess: () => {
+                onClose();
+            },
+            onError: (err) => {
+                console.error(err.message)
+                //aqui en futuro se puede colocar algun toast
+            }
+        })
+    }
+
+
+
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="w-full max-w-200" showCloseButton={false}>
-                <DialogHeader>
-                    <DialogTitle>Editar usuario</DialogTitle>
-                </DialogHeader>
-
-                <form id="create-user-form" onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
+                <DialogTitle className="sr-only">Crear Usuario</DialogTitle>
+                <form onSubmit={handleSubmit}>
 
                     <div>
-                        <Label>Nombre *</Label>
+                        <Label>Nombres</Label>
                         <Input
                             name="firstName"
-                            className="capitalize"
-                            required
+                            type="text"
                             placeholder="Ej. Juan Miguel"
+                            required
                         />
                     </div>
 
                     <div>
-                        <Label>Apellido *</Label>
+                        <Label>Apellidos</Label>
                         <Input
                             name="lastName"
-                            className="capitalize"
+                            type="text"
+                            placeholder="Ej. Juan Miguel"
                             required
-                            placeholder="Ej. Alvarez Flores"
                         />
                     </div>
 
-
-                    <div className="col-span-full">
-                        <Label>Correo</Label>
+                    <div>
+                        <Label>Correo electronico</Label>
                         <Input
                             name="email"
                             type="email"
-                            required
                             placeholder="Ej. usuario@correo.com"
+                            required
                         />
                     </div>
 
                     <div>
-                        <Label>Cedula *</Label>
+                        <Label>Cdl</Label>
                         <Input
                             name="cdl"
+                            type="text"
+                            placeholder="01"
                             required
-                            placeholder="Ej. 1719690487"
+                            maxLength={10}
                         />
                     </div>
 
-
                     <div>
-                        <Label>Contacto</Label>
+                        <Label>contacto</Label>
                         <Input
                             name="phoneNumber"
-                            required
-                            placeholder="Ej. 0929405265"
+                            type="text"
+                            placeholder="09"
+                            maxLength={10}
                         />
                     </div>
 
@@ -101,6 +109,8 @@ export function CreateUserModal({ isOpen, onClose }: DeleteUserModalProps) {
 
                         <Select
                             onValueChange={setRole}
+                            value={role}
+                            name="role"
                             required
                         >
                             <SelectTrigger className="capitalize">
@@ -116,18 +126,28 @@ export function CreateUserModal({ isOpen, onClose }: DeleteUserModalProps) {
                         </Select>
                     </div>
 
+
+                    <div className="flex items-center gap-3">
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onClose()}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="submit"
+                            size="sm"
+                            disabled={isPending}
+                        >
+                            {isPending && <Spinner />}
+                            Crear usuario
+                        </Button>
+                    </div>
+
                 </form>
 
-                <DialogFooter>
-                    <Button variant="outline" onClick={onClose} size="lg" disabled={loading}>
-                        Cancelar
-                    </Button>
-                    <Button type="submit" form="create-user-form" size="lg" disabled={loading} onClick={() => {
-                        onClose();
-                    }}>
-                        {loading ? "Guardando..." : "Crear Usuario"}
-                    </Button>
-                </DialogFooter>
+
             </DialogContent>
         </Dialog>
     );

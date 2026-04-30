@@ -1,21 +1,7 @@
 "use client"
 
-import React, { useState } from "react";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react"; // Importa los iconos
-import { cn } from "@/lib/utils";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-} from "@/components/ui/command";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
 import {
     Dialog,
     DialogContent,
@@ -26,171 +12,149 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { educationLevels, sections } from "@/lib/constants/data-type";
-import { Course } from "@/lib/hooks/fetch/courses";
-import { useProfessors } from "@/lib/hooks/fetch/professor";
+import { Course, useCreateCourse, useUpdateCourse } from "@/lib/hooks/fetch/courses";
+import { useProfessors, Professor } from "@/lib/hooks/fetch/system/professor";
 
-interface EditCourseModalProps {
+interface CreateCourseModalProps {
     isOpen: boolean;
     onClose: () => void;
-    course: Course | null | undefined;
+    course?: Course | null; // El curso a editar (si existe)
 }
 
-export function EditCourseModal({ isOpen, onClose, course }: EditCourseModalProps) {
-    const [openPopover, setOpenPopover] = useState(false);
-    const { professors, loading } = useProfessors();
-    
-    // Estado para el ID del tutor seleccionado
-    const [tutorId, setTutorId] = useState<string>(course?.id?.toString() || "");
+export function EditCourseModal({ isOpen, onClose, course }: CreateCourseModalProps) {
+    // 1. Estados para los campos controlados
+    const [section, setSection] = useState("");
+    const [level, setLevel] = useState("");
+    const [tutorId, setTutorId] = useState<string>("none");
+
+    // 2. Hooks de Datos
+    const { data: professors, isLoading: loadingProfs } = useProfessors();
+    const { mutate: createCourse, isPending: isCreating } = useCreateCourse();
+    const { mutate: updateCourse, isPending: isUpdating } = useUpdateCourse();
+
+    // 3. Sincronizar estados cuando el modal se abre o cambia el curso
+    useEffect(() => {
+        if (isOpen) {
+            if (course) {
+                setSection(course.section || "");
+                setLevel(course.level || "");
+                // Importante: Usamos professor_id para marcar el Select
+                setTutorId(course.professor_id ? course.professor_id.toString() : "none");
+            } else {
+                // Resetear para creación
+                setSection("");
+                setLevel("");
+                setTutorId("none");
+            }
+        }
+    }, [course, isOpen]);
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+
+        // 1. Preparamos los datos del curso
+        const courseData = {
+            courseName: data.courseName,
+            section: section,
+            level: level,
+            professorId: tutorId === "none" ? null : tutorId,
+        };
+
+        // 2. Decidimos si editar o crear
+        if (course) {
+            // Para editar, enviamos el objeto { id, data } que espera tu hook
+            updateCourse({
+                id: course.id.toString(),
+                data: courseData
+            }, {
+                onSuccess: () => onClose(),
+                onError: (err) => alert(err.message)
+            });
+        } else {
+            // Para crear, enviamos solo los datos
+            createCourse(courseData, {
+                onSuccess: () => onClose(),
+                onError: (err) => alert(err.message)
+            });
+        }
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="w-full max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Editar curso: {course?.courseName}</DialogTitle>
+                    <DialogTitle>{course ? "Editar Curso" : "Crear Nuevo Curso"}</DialogTitle>
                 </DialogHeader>
 
-                {course && (
-                    <form className="grid grid-cols-2 gap-6 py-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Nombre del Curso */}
+                    <div>
+                        <Label>Nombre del Curso</Label>
+                        <Input
+                            name="courseName"
+                            defaultValue={course?.courseName || ""}
+                            placeholder="Ej. Décimo EGB"
+                            required
+                        />
+                    </div>
 
-                        <div>
-                            <Label>Nombre *</Label>
-                            <Input
-                                name="firstName"
-                                className="capitalize"
-                                defaultValue={course.courseName}
-                                required
-                                placeholder="Ej. 1 bachillerato"
-                            />
-                        </div>
+                    {/* Selección de Sección */}
+                    <div>
+                        <Label>Sección</Label>
+                        <Select onValueChange={setSection} value={section} required>
+                            <SelectTrigger><SelectValue placeholder="Seleccione sección" /></SelectTrigger>
+                            <SelectContent>
+                                {sections.map((s) => (
+                                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                        <div>
-                            <Label>Paralelo *</Label>
-                            <Input
-                                name="lastName"
-                                className="capitalize"
-                                defaultValue={course.parallel}
-                                required
-                                placeholder="Ej. A"
-                            />
-                        </div>
+                    {/* Selección de Nivel */}
+                    <div>
+                        <Label>Nivel Educativo</Label>
+                        <Select onValueChange={setLevel} value={level} required>
+                            <SelectTrigger><SelectValue placeholder="Seleccione nivel" /></SelectTrigger>
+                            <SelectContent>
+                                {educationLevels.map((l) => (
+                                    <SelectItem key={l} value={l}>{l}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
+                    {/* Selección de Tutor (ID) */}
+                    <div>
+                        <Label>Tutor (Opcional)</Label>
+                        <Select onValueChange={setTutorId} value={tutorId}>
+                            <SelectTrigger>
+                                <SelectValue placeholder={loadingProfs ? "Cargando..." : "Sin asignar tutor"} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">Ninguno (Vacío)</SelectItem>
+                                {professors?.map((p: Professor) => (
+                                    <SelectItem key={p.id} value={p.id.toString()}>
+                                        {p.firstName} {p.lastName}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
 
-                        <div>
-                            <Label>Seccion</Label>
-
-                            <Select
-                                required
-                                defaultValue={course.section}
-                            >
-                                <SelectTrigger className="capitalize">
-                                    <SelectValue placeholder="Seleccione" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    {sections.map((s) => (
-                                        <SelectItem key={s} value={s} className="capitalize">
-                                            {s}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        {/* <div>
-                            <Label>Tutor</Label>
-
-                            <Select
-                                required
-                                defaultValue={course.section}
-                            >
-                                <SelectTrigger className="capitalize">
-                                    <SelectValue placeholder="Seleccione" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    {professors.map((p) => (
-                                        <SelectItem key={p.id} value={p.id.toString()} className="capitalize">
-                                            {p.fullName}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div> */}
-
-                        <div>
-                            <Label>Nivel educativo</Label>
-
-                            <Select
-                                required
-                                defaultValue={course.level}
-                            >
-                                <SelectTrigger className="capitalize">
-                                    <SelectValue placeholder="Seleccione" />
-                                </SelectTrigger>
-                                <SelectContent position="popper">
-                                    {educationLevels.map((l) => (
-                                        <SelectItem key={l} value={l} className="capitalize">
-                                            {l}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Label>Tutor (Buscador)</Label>
-                            <Popover open={openPopover} onOpenChange={setOpenPopover}>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        role="combobox"
-                                        aria-expanded={openPopover}
-                                        className="w-full justify-between font-normal"
-                                        disabled={loading}
-                                    >
-                                        {loading ? (
-                                            <Loader2 className="h-4 w-4 animate-spin" />
-                                        ) : tutorId 
-                                            ? professors.find((p) => p.id.toString() === tutorId)?.fullName 
-                                            : "Seleccionar profesor..."}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-75 p-0" align="start">
-                                    <Command>
-                                        <CommandInput placeholder="Buscar profesor..." />
-                                        <CommandEmpty>No se encontró al profesor.</CommandEmpty>
-                                        <CommandGroup className="max-h-64 overflow-y-auto">
-                                            {professors.map((p) => (
-                                                <CommandItem
-                                                    key={p.id}
-                                                    value={p.fullName} // Esto es lo que el buscador filtra
-                                                    onSelect={() => {
-                                                        setTutorId(p.id.toString());
-                                                        setOpenPopover(false);
-                                                    }}
-                                                >
-                                                    <Check
-                                                        className={cn(
-                                                            "mr-2 h-4 w-4",
-                                                            tutorId === p.id.toString() ? "opacity-100" : "opacity-0"
-                                                        )}
-                                                    />
-                                                    {p.fullName}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-
-                    </form>
-                )}
-
-                <DialogFooter>
-                    <Button variant="outline" onClick={onClose}>Cancelar</Button>
-                    <Button onClick={() => console.log("Datos:", tutorId)}>Guardar cambios</Button>
-                </DialogFooter>
+                    <DialogFooter>
+                        <Button type="button" variant="outline" onClick={onClose}>
+                            Cancelar
+                        </Button>
+                        <Button type="submit" disabled={isCreating || isUpdating}>
+                            {(isCreating || isUpdating) && <Spinner className="mr-2" />}
+                            {course ? "Guardar Cambios" : "Crear Curso"}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

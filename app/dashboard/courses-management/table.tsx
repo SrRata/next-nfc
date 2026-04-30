@@ -2,123 +2,111 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
-import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontalIcon, Pen, Trash } from "lucide-react";
 import {
   getActiveBadgeColor,
-  levelBadgeColor,
-  sectionBadgeColor,
 } from "@/lib/constants/get-badge-color";
 import { useModal } from "@/lib/hooks/use-modal";
-import { Course, getCourses } from "@/lib/hooks/fetch/courses";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DeleteCourseModal } from "./delete-course-modal";
 import { CreateCourseModal } from "./create-course-modal";
 import { EditCourseModal } from "./edit-course-modal";
+import { Course } from "@/lib/hooks/fetch/courses";
+import { useEffect, useState } from "react";
+import { course } from "@/types/courses";
+import axios from "axios";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontalIcon } from "lucide-react";
+
 
 export function CoursesTable() {
 
   const { modal, openModal, closeModal } = useModal<Course>();
-  const { courses, loading, error } = getCourses()
 
+  const [courses, setCourses] = useState<course[]>([])
+  const [isLoading, setIsLoading] = useState(true);
 
-  const columns: ColumnDef<Course>[] = [
-    {
-      accessorKey: "tutorName",
-      header: "Tutor docente",
-      cell: ({ row }) => {
-        return row.original.tutorName ? (
-          <DataUser name={row.original.tutorName} />
-        ) : (
-          <span className="normal-case font-semibold">Asignar un tutor</span>
-
-        )
+  useEffect(() => {
+    async function loadCourses() {
+      try {
+        const response = await axios.get('/api/coursesc');
+        if (response.data.success) {
+          setCourses(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      } finally {
+        setIsLoading(false);
       }
-    },
+    }
+    loadCourses();
+  }, []);
+
+
+    const handleDelete = async (id: number) => {
+      try {
+        await axios.delete(`/api/coursesc/${id}`)
+        setCourses((prev) => prev.filter((student) => student.id !== id));
+        toast.success(`Curso eliminado con exito`)
+      } catch (error) {
+        console.error('Error delete level', error)
+        toast.error(`No se pudo eliminar el curso`)
+      }
+    }
+
+  const columns: ColumnDef<course>[] = [
     {
-      accessorKey: "courseName",
+      accessorKey: "course_name",
       header: "Curso",
     },
     {
-      accessorKey: "parallel",
-      header: "Paralelo"
+      accessorKey: "educational_level_name",
+      header: "Nivel",
     },
     {
-      accessorKey: "totalStudents",
-      header: "N. estudiantes"
-    },
-    {
-      accessorKey: "section",
+      accessorKey: "section_name",
       header: "Sección",
-      cell: ({ row }) => {
-        const section = row.original.section;
-        return (
-          <Badge color={sectionBadgeColor[section].color}>
-            {sectionBadgeColor[section].label}
-          </Badge>
-        );
-      },
     },
     {
-      header: "Nivel educativo",
-      accessorKey: "level",
-      cell: ({ row }) => {
-        const level = row.original.level;
-        return (
-          <Badge color={levelBadgeColor[level].color}>
-            {levelBadgeColor[level].label}
-          </Badge>
-        );
-      },
-    },
-    {
-      accessorKey: "isActive",
-      header: "Estado",
-      cell: ({ row }) => {
-
-        const state = getActiveBadgeColor(row.original.isActive);
-        return (
-          <Badge color={state.color} circle>
-            {state.label}
-          </Badge>
-        );
-      },
+      accessorKey: "professor_name",
+      header: "Tutor",
+      cell: ({ row }) => (
+        row.original.porfessor_name || "Asignar tutor" //solcionar problema por alguna razon solo renderiza sasignar un tutor
+      )
     },
     {
       header: "Acciones",
       cell: ({ row }) => (
-        <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8">
-                <MoreHorizontalIcon />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => openModal("edit", row.original)}>Editar</DropdownMenuItem>
-              <DropdownMenuItem >Desactivar</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={() => openModal("delete", row.original)}>
-                Borrar
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="size-8">
+              <MoreHorizontalIcon />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem >Editar</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
+              Borrar
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       ),
     },
-  ];
+
+  ]
+
 
   return (
     <>
       <DataTable
         legend="Cursos registrados"
         columns={columns}
-        isLoading={loading}
         data={courses ?? []}
-        buttonCTA="Crear curso"
+        isLoading={isLoading}
+        buttonCTA="Nuevo curso"
         buttonAction={() => openModal("create")}
       />
 

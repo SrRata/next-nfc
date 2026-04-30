@@ -6,41 +6,58 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { deleteStudent, Student } from "@/lib/hooks/fetch/students";
+import { Spinner } from "@/components/ui/spinner";
+import { Student, useDeleteUser } from "@/lib/hooks/fetch/students";
 import { formatFullName } from "@/lib/hooks/format-full-name";
+import React from "react";
 
-interface DeleteStudentModalProps {
+interface DeleteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   student: Student | null | undefined;
 }
 
-export function DeleteStudentModal({ isOpen, onClose, student }: DeleteStudentModalProps) {
+export function DeleteStudentModal({ isOpen, onClose, student }: DeleteUserModalProps) {
+
+  const [lastStudent, setLastStudent] = React.useState<Student | null>(null);
+
+  React.useEffect(() => {
+    if (student) setLastStudent(student);
+  }, [student]);
+
+  const displayStudent = student || lastStudent;
+
+  const { mutate: deleteStudent, isPending } = useDeleteUser();
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-140" showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>Eliminar estudiante</DialogTitle>
+          <DialogTitle>Eliminar usuario</DialogTitle>
         </DialogHeader>
 
-        {student && (
-          <p className="font-medium text-black-primary">
+        {
+          displayStudent && <p className="font-medium text-black-primary">
             ¿Seguro que deseas eliminar al estudiante{" "}
             <span className="font-semibold capitalize">
-              {formatFullName(student.firstName, student.lastName)}
+              {formatFullName(displayStudent.firstName, displayStudent.lastName)}
             </span>{" "}
             del registro?
           </p>
-        )}
+        }
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose} size="lg">
             Cancelar
           </Button>
-          <Button variant="destructive" size="lg" onClick={() => {
-            student?.id && deleteStudent(student.id)
-            onClose();
-          }}>
+          <Button variant="destructive" size="lg"
+            onClick={() => {
+              deleteStudent(student?.id)
+              onClose();
+            }}  
+            disabled={isPending}
+          >
+            {isPending && <Spinner />}
             Eliminar
           </Button>
         </DialogFooter>

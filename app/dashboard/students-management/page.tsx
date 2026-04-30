@@ -7,9 +7,9 @@ import { FiltersStudentsManagement } from "./filters";
 export default function StudentsPage() {
   return (
     <>
-      <Suspense fallback={<FiltersSkeleton />}>
+      {/* <Suspense fallback={<FiltersSkeleton />}>
         <FiltersStudentsManagement />
-      </Suspense>
+      </Suspense> */}
 
       <Suspense fallback={<TableSkeleton />}>
         <TableStudentsManagement />
