@@ -1,3 +1,4 @@
+import AttendanceNotifications from "@/components/AttendanceNotifications";
 import { InfoCard } from "@/components/info-card";
 import { LinkCard } from "@/components/link-card";
 
@@ -16,6 +17,8 @@ import {
   Clipboard,
   Book,
   ChartArea,
+  Calendar1,
+  CalendarClockIcon,
 } from "lucide-react";
 
 export default function HomePageAdmin() {
@@ -76,11 +79,11 @@ export default function HomePageAdmin() {
         icon={Clipboard}
       />
       <LinkCard
-        title="Configuración"
-        description="Gestione los parametros del sistema como horarios y margenes de espera para los registros."
+        title="Horarios"
+        description="Gestione los horarios con margenes de espera para los registros de asistencia."
         href="/dashboard/settings"
-        ctaText="Ir a configuraciones"
-        icon={Settings}
+        ctaText="Ir a horarios"
+        icon={CalendarClockIcon}
       />
 
       <NotificationContainer>

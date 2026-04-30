@@ -14,13 +14,14 @@ import {
   IconInnerShadowTop,
   IconListDetails,
   IconReport,
+  IconSchool,
   IconSearch,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
+// import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -33,68 +34,71 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Logo } from "./ui/logo"
+import { title } from "process"
+import { Grid, LogOut, Nfc } from "lucide-react"
+import { SidebarLink, SidebarNav } from "./sidebar"
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
-    {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-  ],
-}
+import { SystemNav } from "@/lib/navigation"
+import { Button } from "./ui/button"
+import { useRouter } from "next/navigation"
+import axios from "axios"
+import { Libre_Barcode_128 } from "next/font/google"
+
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const router = useRouter();
+
+  const logout = async () => {
+    try {
+      await axios.post('/api/auth/logout');
+      router.refresh();
+      window.location.href = '/login';
+    } catch (error: any) {
+      console.error(error.response?.data);
+    }
+  };
+
+
+  const [user, setUser] = React.useState<{ role: string } | null>(null);
+
+  React.useEffect(() => {
+    axios.get('/api/profile').then(res => setUser(res.data));
+  }, []);
+
+
+  if (!user) return null;  // cambiar por mostrar el esqueleto
+
+  const filteredNav = SystemNav.filter((link) =>
+    link.roles.includes(user.role)
+  );
+
+
   return (
-    <Sidebar collapsible="icon" {...props} className="border-none">
+
+    <Sidebar className="border-none p-5" collapsible="icon">
+
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5"
-            >
-              <a href="#">
-                <IconInnerShadowTop className="size-8!" strokeWidth={1.5} />
-                <span className="text-base font-semibold">Acme Inc.</span>
-              </a>
-              {/* <Logo/> */}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <Logo />
       </SidebarHeader>
+
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto"/>
+        <SidebarNav>
+
+          {filteredNav.map((link) => (
+            <SidebarLink
+              key={link.href}
+              href={link.href}
+              text={link.text}
+              icon={link.icon}
+            />
+          ))}
+
+        </SidebarNav>
       </SidebarContent>
+
       <SidebarFooter>
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   )

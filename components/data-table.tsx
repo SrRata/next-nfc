@@ -23,9 +23,10 @@ import {
   PaginationState, // Importamos el tipo para TS
 } from "@tanstack/react-table";
 import { TablePagination } from "./ui/table-pagination";
-import { FileExclamationPoint } from "lucide-react";
+import { FileExclamationPoint} from "lucide-react";
 import { IconShape } from "./ui/icon-shape";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface DataTableProps {
   legend: string;
@@ -37,6 +38,8 @@ interface DataTableProps {
   noPagination?: boolean;
   pageSize?: number;
   isLoading?: boolean;
+  linkCTA?: string;
+  linkhref?: string
 }
 
 export function DataTable({
@@ -49,6 +52,8 @@ export function DataTable({
   noPagination = false,
   pageSize = 10,
   isLoading = false,
+  linkCTA,
+  linkhref = "#",
 }: DataTableProps) {
   const tableContainerRef = useRef<HTMLDivElement>(null);
 
@@ -96,6 +101,13 @@ export function DataTable({
             {buttonCTA}
           </Button>
         )}
+        {
+          linkCTA && (
+            <Button variant="outline" className="p-0">
+              <Link className="size-full px-6 py-4" href={linkhref}>{linkCTA}</Link>
+            </Button>
+          )
+        }
       </TableContainerHeader>
 
       <Table>

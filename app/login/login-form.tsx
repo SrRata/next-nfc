@@ -33,12 +33,11 @@ export function LoginForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(credentials);
-    const response = await axios.post('/api/auth', credentials);
+    const response = await axios.post('/api/auth/login', credentials);
 
     if (response.status === 200) {
       router.push('/dashboard')
     }
-
 
     console.log(response);
   }

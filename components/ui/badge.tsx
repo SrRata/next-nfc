@@ -28,7 +28,7 @@ const badgeStyles: Record<color, Record<BadgeVariant, string>> = {
   gray: {
     solid: "bg-black-secondary text-white",
     soft: "bg-gray text-black-primary",
-    outline: "border border-gray text-black-secondary bg-transparent",
+    outline: "border border-slate-300 text-black-secondary bg-transparent",
   },
   orange: {
     solid: "bg-orange-primary text-white",

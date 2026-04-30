@@ -12,8 +12,7 @@ const avatarVariants = [
 ];
 
 function getInitials(text: string): string {
-  // Si el texto es nulo, vacío o solo espacios, devolvemos "ST" (Sin Tutor) o "?"
-  if (!text || !text.trim()) return "ST";
+  if (!text || !text.trim()) return "U";
 
   const words = text.trim().split(/\s+/);
   if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
@@ -27,7 +26,6 @@ function getInitials(text: string): string {
 
 function stringToHash(str: string): number {
   let hash = 0;
-  // Usamos un string vacío si llega undefined o null para evitar errores
   const safeStr = str || "";
   for (let i = 0; i < safeStr.length; i++) {
     hash = safeStr.charCodeAt(i) + ((hash << 5) - hash);
@@ -61,8 +59,7 @@ export function Avatar({
   className,
   variant = "auto",
 }: AvatarProps) {
-  // 1. Normalizamos el nombre: si es null/undefined, usamos "Sin Tutor"
-  const safeName = name?.trim() ? name : "Sin Tutor";
+  const safeName = name?.trim() ? name : "Usuario";
 
   // 2. Obtenemos la variante basada en el nombre seguro
   const selectedVariant =

@@ -1,3 +1,4 @@
+import { profileEnd } from "console";
 import {
   color,
   educationLevel,
@@ -79,7 +80,7 @@ export const getActiveBadgeColor = (isActive: boolean): BadgeConfig => {
 };
 
 export const stateBadgeColor: Record<
-  studentState,
+  string,
   { label: string; color: color }
 > = {
   presente: {
@@ -92,7 +93,7 @@ export const stateBadgeColor: Record<
   },
   atrasado: {
     label: "Atrasado",
-    color: "orange",
+    color: "yellow",
   },
   default: {
     label: "Null",
@@ -105,7 +106,8 @@ export const getStateBadge = (state: string | null | undefined) => {
   return stateBadgeColor[key as keyof typeof stateBadgeColor] || stateBadgeColor.default;
 };
 
-export const roleBadgeColor: Record<role, { label: string; color: color }> = {
+
+export const roleBadgeColor: Record<string, { label: string; color: color }> = {
   admin: {
     label: "Administrador",
     color: "purple",
