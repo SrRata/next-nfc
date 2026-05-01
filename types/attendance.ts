@@ -1,3 +1,5 @@
+import { color } from "@/lib/constants/data-type";
+
 export type AttendanceIdentifier =
   | { student_id: number; nfc_uid?: never }
   | { nfc_uid: string; student_id?: never };
@@ -22,6 +24,7 @@ export interface Schedule {
   section_name: string;
   educational_level_id: number;
   section_id: number;
+  section_color: color;
 }
 
 

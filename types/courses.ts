@@ -1,3 +1,5 @@
+import { color } from "@/lib/constants/data-type";
+
 export interface course {
     id: number;
     course_name: string;
@@ -8,6 +10,9 @@ export interface course {
     section_name: string;
     professor_id: number | null;
     porfessor_name: string | null;
+    total_students: number;
+    educational_level_color: color;
+    section_color: color;
 }
 
 

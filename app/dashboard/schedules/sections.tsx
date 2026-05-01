@@ -10,10 +10,11 @@ import { Separator } from "@/components/ui/separator";
 import { Section } from "@/types/section";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { section } from "@/lib/constants/data-type";
+import { color, section } from "@/lib/constants/data-type";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { IconLayersIntersect, IconMoodPuzzled, IconTrash } from "@tabler/icons-react";
+import { ColorPicker } from "@/components/color-picker";
 
 
 interface SectionsManagementProps {
@@ -25,6 +26,8 @@ interface SectionsManagementProps {
 export default function SectionsManagement({ sections, setSections, loadSections }: SectionsManagementProps) {
 
     const [isOpenForm, setIsOpenForm] = useState(false);
+    const [selectedColor, setSelectedColor] = useState<color>("gray");
+
 
     const [formDataSection, setFormDataSection] = useState({
         name: "",
@@ -42,6 +45,7 @@ export default function SectionsManagement({ sections, setSections, loadSections
 
         const payload = {
             name: formDataSection.name,
+            color: selectedColor,
         }
 
         const loadingToast = toast.loading('Creando sección...');
@@ -129,6 +133,8 @@ export default function SectionsManagement({ sections, setSections, loadSections
                         />
                     </div>
 
+                    <ColorPicker selected={selectedColor} onChange={setSelectedColor}/>
+
                     <div className="flex items-center gap-3 justify-end col-span-full">
                         <Button
                             onClick={() => setIsOpenForm(false)}
@@ -167,7 +173,7 @@ export default function SectionsManagement({ sections, setSections, loadSections
                         {sections.map((e) => (
                             <div key={e.id} className="bg-gray border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer rounded-primary p-6 flex items-center justify-between">
                                 <div className="flex items-center justify-between gap-5">
-                                    <Badge color="purple">&nbsp;</Badge>
+                                    <Badge color={e.color} variant="solid">&nbsp;</Badge>
                                     <div>
                                         <p className="font-bold text-black-primary capitalize">{e.name}</p>
                                         <p className="font-medium text-black-secondary text-sm">ID {e.id} . 2 horario(s)</p>

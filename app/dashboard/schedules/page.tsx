@@ -79,7 +79,7 @@ export default function SettingsPage() {
     return (
         <>
 
-            <div className="col-span-full grid md:grid-cols-4 gap-6">
+            <div className="col-span-full grid md:grid-cols-4 gap-6 items-start">
 
                 {isLoadingEducationalLevels ?
                     (<div className="bg-gray-200 rounded-primary p-6 h-30 animate-pulse space-y-7"></div>)

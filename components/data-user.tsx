@@ -5,15 +5,16 @@ interface DataUserProps {
   id?: string;
   section?: string;
   course?: string;
+  lic?: boolean
 }
 
-export function DataUser({ name, id, section, course }: DataUserProps) {
+export function DataUser({ name, id, section, course, lic = false }: DataUserProps) {
   return (
     <div className="flex items-center gap-3 min-w-0">
       <Avatar name={name} />
 
       <div className="flex flex-col min-w-0">
-        <span className="font-semibold truncate capitalize">{name}</span>
+        <span className="font-semibold truncate capitalize">{lic && "Lic. "} {name}</span>
 
         {(id || section) && (
           <span className="text-sm font-medium text-black-secondary truncate">

@@ -325,7 +325,7 @@ export default function SchedulesManagement({ schedules, educationalLevels, setS
                             }}
                         >
                             <SelectTrigger className="capitalize">
-                                <SelectValue placeholder="Sin asignar curso" />
+                                <SelectValue placeholder="Sin asignar nivel educativo" />
                             </SelectTrigger>
                             <SelectContent>
                                 {educationalLevels?.map((e) => (
@@ -475,7 +475,7 @@ export default function SchedulesManagement({ schedules, educationalLevels, setS
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="font-bold text-black-primary">
-                                                {e.educational_level_name} · {e.section_name}
+                                                {e.educational_level_name} · <Badge color={e.section_color}>{e.section_name}</Badge>
                                             </p>
 
                                             <p className="font-medium text-black-secondary text-sm">

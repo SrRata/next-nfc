@@ -5,6 +5,23 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET() {
   try {
     const [rows]: any = await db.query(
+      // `SELECT
+      //    c.id,
+      //    c.course_name,
+      //    c.is_active,
+      //    el.id   AS educational_level_id,
+      //    el.name AS educational_level_name,
+      //    s.id    AS section_id,
+      //    s.name  AS section_name,
+      //    u.id    AS professor_id,
+      //    CONCAT(u.first_name, ' ', u.last_name) AS professor_name
+      //  FROM courses c
+      //  JOIN educational_levels el ON el.id = c.educational_level_id
+      //  JOIN sections s            ON s.id  = c.section_id
+      //  LEFT JOIN users u          ON u.id  = c.professor_id
+      //  WHERE c.is_active = TRUE
+      //  ORDER BY el.name ASC, s.name ASC, c.course_name ASC`
+
       `SELECT
          c.id,
          c.course_name,
@@ -13,14 +30,23 @@ export async function GET() {
          el.name AS educational_level_name,
          s.id    AS section_id,
          s.name  AS section_name,
+         s.color AS section_color,
          u.id    AS professor_id,
-         CONCAT(u.first_name, ' ', u.last_name) AS professor_name
+         CONCAT(u.first_name, ' ', u.last_name) AS professor_name,
+         COUNT(st.id) AS total_students -- Contamos los IDs de la tabla estudiantes
        FROM courses c
        JOIN educational_levels el ON el.id = c.educational_level_id
        JOIN sections s            ON s.id  = c.section_id
        LEFT JOIN users u          ON u.id  = c.professor_id
+       LEFT JOIN students st      ON st.course_id = c.id -- Unión con la tabla de estudiantes
        WHERE c.is_active = TRUE
+       GROUP BY 
+         c.id, 
+         el.id, 
+         s.id, 
+         u.id -- Agrupamos para que el COUNT funcione por cada curso
        ORDER BY el.name ASC, s.name ASC, c.course_name ASC`
+
     );
 
     return NextResponse.json({ success: true, data: rows });

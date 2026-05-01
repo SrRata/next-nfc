@@ -14,6 +14,7 @@ export async function GET() {
          el.id   AS educational_level_id,
          el.name AS educational_level_name,
          s.id    AS section_id,
+         s.color AS section_color,
          s.name  AS section_name
        FROM schedules sc
        JOIN educational_levels el ON el.id = sc.educational_level_id

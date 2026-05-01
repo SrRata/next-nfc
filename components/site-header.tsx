@@ -301,50 +301,6 @@ export function SiteHeader() {
     }
   }, [input]);
 
-  // const handleSendMessage = async () => {
-  //   if (!input.trim() || isLoading) return;
-
-  //   const userMessage = input.trim();
-  //   const newMessages = [...messages, { role: 'user' as const, content: userMessage }];
-  //   setMessages(newMessages);
-  //   setInput("");
-  //   setIsLoading(true);
-
-  //   if (textareaRef.current) textareaRef.current.style.height = "auto";
-
-  //   try {
-  //     const context = getPageContext();
-  //     const systemPrompt = `Eres un asistente inteligente llamado 'CEMEN' para un panel de administración. 
-  //     Contexto de la página actual: "${context}".
-  //     Información del usuario: ${user.firstName} ${user.lastName} (${user.role}).
-  //     Responde a las preguntas del usuario considerando este contexto. Sé breve, profesional y útil.`;
-
-  //     const history = messages.map(msg => ({
-  //       role: msg.role === 'user' ? 'user' : 'model',
-  //       parts: [{ text: msg.content }]
-  //     }));
-
-  //     const result = await ai.models.generateContent({
-  //       model: CHAT_MODEL,
-  //       contents: [
-  //         ...history,
-  //         { role: 'user', parts: [{ text: userMessage }] }
-  //       ],
-  //       config: {
-  //         systemInstruction: systemPrompt,
-  //       }
-  //     });
-
-  //     const responseText = result.text || "Lo siento, no pude procesar tu solicitud.";
-  //     setMessages(prev => [...prev, { role: 'assistant', content: responseText }]);
-  //   } catch (error) {
-  //     console.error("AI Error:", error);
-  //     setMessages(prev => [...prev, { role: 'assistant', content: "Hubo un error al conectar con la inteligencia artificial." }]);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -443,28 +399,6 @@ export function SiteHeader() {
               className="chat-sheet shadow-2xl border-l border-slate-100 p-0 flex flex-col w-[400px] sm:w-[500px] [&>button]:hidden"
               side="right"
             >
-              {/* <SheetHeader className="p-4 border-b border-slate-50 flex flex-row items-center justify-between space-y-0">
-                <SheetTitle className="sr-only">Chat con Asistente</SheetTitle>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="font-medium text-slate-500 bg-slate-50">IA Asistente</Badge>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleNewChat}
-                    className="text-xs text-slate-400 hover:text-[#FF0080] flex gap-1 h-8"
-                  >
-                    <IconEdit className="size-3.5" />
-                    Nueva
-                  </Button>
-                </div>
-
-                <SheetClose asChild>
-                  <Button variant="ghost" size="icon" className="text-slate-400 h-8 w-8">
-                    <IconArrowBarToRight className="size-4.5" />
-                  </Button>
-                </SheetClose>
-              </SheetHeader> */}
-
               <SheetHeader className="p-6 pb-2 border-b border-slate-50">
                 <SheetTitle className="sr-only">Chat</SheetTitle>
                 <div className="flex items-center justify-between">
@@ -486,6 +420,7 @@ export function SiteHeader() {
                       <IconArrowBarToRight className="size-7" />
                     </Button>
                   </SheetClose>
+
                 </div>
               </SheetHeader>
 
@@ -531,35 +466,6 @@ export function SiteHeader() {
                 <div ref={scrollRef} />
               </div>
 
-              {/* <div className="p-4 bg-white border-t border-slate-100">
-                <div className="relative">
-                  <Textarea
-                    ref={textareaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage();
-                      }
-                    }}
-                    disabled={isLoading}
-                    className="min-h-[60px] max-h-[200px] w-full resize-none border-slate-200 bg-slate-50/50 p-3 pr-12 rounded-xl text-sm focus:bg-white focus:ring-1 focus:ring-[#38bdf8] transition-all"
-                    placeholder="Escribe tu pregunta..."
-                  />
-                  <div className="absolute bottom-2.5 right-2.5">
-                    <Button
-                      onClick={handleSendMessage}
-                      disabled={!input.trim() || isLoading}
-                      size="icon"
-                      className="size-8 rounded-lg bg-black hover:bg-slate-800"
-                    >
-                      <ArrowBigRightDash className="size-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div> */}
-
               <div className="p-6 bg-white border-t border-slate-100">
                 <div className="relative group">
                   <Textarea
@@ -589,13 +495,13 @@ export function SiteHeader() {
               </div>
             </SheetContent>
           </Sheet>
-
+{/* 
           <div className="relative">
             <div className="bg-red-primary absolute top-0 right-0 rounded-full size-3"></div>
             <Button type="button" className="p-2" variant="outline">
               <Inbox className="size-7" />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </header>

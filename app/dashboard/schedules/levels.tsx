@@ -15,6 +15,8 @@ import { getActiveBadgeColor } from "@/lib/constants/get-badge-color";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { IconSchool, IconTrash } from "@tabler/icons-react";
+import { ColorPicker } from "@/components/color-picker";
+import { color } from "@/lib/constants/data-type";
 
 interface LevelsManagementProps {
     educationalLevels: educationalLevel[];
@@ -27,6 +29,7 @@ interface LevelsManagementProps {
 export default function LevelsManagement({ educationalLevels, setEducationLevels, loadEducationalLevels }: LevelsManagementProps) {
 
     const [isOpenForm, setIsOpenForm] = useState(false);
+    const [selectedColor, setSelectedColor] = useState<color>("gray");
 
     const [formDataLevel, setFormDataLevel] = useState({
         name: "",
@@ -134,6 +137,8 @@ export default function LevelsManagement({ educationalLevels, setEducationLevels
                             placeholder="Ej: Educación Básica, Bachillerato ..."
                         />
                     </div>
+
+                    <ColorPicker selected={selectedColor} onChange={setSelectedColor}/>
 
                     <div className="flex items-center gap-3 justify-end col-span-full">
                         <Button

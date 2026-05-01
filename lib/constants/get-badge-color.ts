@@ -142,3 +142,22 @@ export const colorBadgeColor: Record<gender, { label: string; color: color }> =
     color: "purple",
   },
 };
+
+
+
+
+
+
+
+
+// Este objeto traduce tu tipo 'color' a clases reales de Tailwind
+export const colorMap: Record<color, string> = {
+  green: "bg-green-500",
+  red: "bg-red-500",
+  yellow: "bg-yellow-500",
+  blue: "bg-blue-500",
+  gray: "bg-gray-500",
+  orange: "bg-orange-500",
+  sky: "bg-sky-500",
+  purple: "bg-purple-500",
+};
