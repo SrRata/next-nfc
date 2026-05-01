@@ -2,6 +2,7 @@ import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IconShape } from "./ui/icon-shape";
 import { color } from "@/lib/constants/data-type";
+import { NumberTicker } from "./ui/number-ticker";
 
 type AlertColor = "red" | "green" | "neutral";
 type InfoCardVariant = "default" | "compact";
@@ -15,6 +16,7 @@ interface InfoCardProps {
   value: string | number;
   alert?: string;
   alertColor?: color;
+  numberTiker?: boolean
 }
 
 
@@ -27,6 +29,7 @@ export function InfoCard({
   value,
   alert,
   alertColor = "gray",
+  numberTiker = false
 }: InfoCardProps) {
   const isCompact = variant === "compact";
 
@@ -43,9 +46,7 @@ export function InfoCard({
       <div className={cn("flex flex-col gap-2")}>
         <h3 className="text-black-secondary font-semibold">{title}</h3>
 
-        <p className="text-black-primary font-bold text-3xl capitalize">
-          {value}
-        </p>
+        {numberTiker ? (<NumberTicker value={Number(value)} className="text-black-primary font-bold text-3xl capitalize" />): (<p className="text-black-primary font-bold text-3xl capitalize">{value}</p>)}
 
         {isCompact && alert && (
           <p className={cn("font-semibold", alertColor === "gray" ? "text-black-secondary" : `text-${alertColor}-primary`)}>

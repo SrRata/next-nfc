@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-blue-primary text-white-primary hover:bg-blue-primary/90",
         destructive:
-          "bg-red-primary text-white-primary hover:bg-red-primary/90 focus-visible:ring-red-primary/20 dark:bg-red-primary/60 dark:focus-visible:ring-red-primary/40",
+          "bg-red-primary/20 text-red-primary hover:bg-red-primary/30 focus-visible:ring-red-primary/20 dark:bg-red-primary/60 dark:focus-visible:ring-red-primary/40",
         outline:
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-[1.1rem] font-bold text-blue-primary flex items-center gap-2 whitespace-nowrap transition-colors hover:opacity-80 [&>svg]:w-5 [&>svg]:h-5",
       },
       size: {
-        default: "px-6 py-4",
+        default: "px-6 py-3",
         xs: "h-6 gap-1 px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
         sm: "h-8 gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 px-6 has-[>svg]:px-4",
