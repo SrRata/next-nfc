@@ -50,13 +50,8 @@ import { cn } from "@/lib/utils"
 import { useSidebar } from "@/components/ui/sidebar"
 
 interface LogoProps {
-<<<<<<< HEAD
   className?: string;
-  variant?: "Docente" | "Admin"| "Usuario"
-=======
-  className?: string
-  variant?: "Docente" | "Admin"
->>>>>>> main
+  variant?: "Docente" | "Admin" | "Usuario";
 }
 
 export function Logo({ className, variant }: LogoProps) {

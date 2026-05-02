@@ -1,7 +1,8 @@
 import { InfoCard } from "@/components/info-card"
-import { HelpCircle } from "lucide-react"
+import { HelpCircle, UserPenIcon, UserSearch } from "lucide-react"
 import { RoleCard } from "@/components/help_section/role_card"
 import { CogIcon, UserCogIcon} from "lucide-react"
+import { userAgent } from "next/server"
 
 export default function HelpPage() {
   return (
@@ -24,27 +25,23 @@ export default function HelpPage() {
         iconColor="blue"
         icon={UserCogIcon}
         title="Administrador"
-        description="Encargado de gestionar y controlar la plataforma y los usuarios."
+        description="Encargado de gestionar y controlar la plataforma y los usuarios, solucionar problemas técnicos y configurar los ajustes del sistema."
+        href="#"
         />
-        <InfoCard
-        variant="compact"
-        icon={HelpCircle}
-        colorIcon="blue"
-        title="Estamos aquí para ayudarte"
-        value="Contacto "
-        alert="Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos."
-        alertColor="blue"
+        <RoleCard 
+        iconColor="orange"
+        icon={UserPenIcon}
+        title="Profesor"
+        description="Responsable de gestionar sus cursos, registrar la asistencia y revisar el historial de sus estudiantes asignados."
+        href="#"  
         />
-        <InfoCard
-        variant="compact"
-        icon={HelpCircle}
-        colorIcon="blue"
-        title="Estamos aquí para ayudarte"
-        value="Contacto "
-        alert="Si tienes alguna pregunta o necesitas asistencia, no dudes en contactarnos."
-        alertColor="blue"
+        <RoleCard 
+        iconColor="red"
+        icon={UserSearch}
+        title="Representante"
+        description="Padre de familia o representante legal que accede a la plataforma para revisar el historial de asistencia y cursos registrados de su representado."
+        href="#"
         />
-
       </div>
     </div>
     </>
