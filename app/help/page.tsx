@@ -1,8 +1,10 @@
 import { InfoCard } from "@/components/info-card"
-import { HelpCircle, UserPenIcon, UserSearch } from "lucide-react"
+import { HelpCircle, UserCog, UserPenIcon, UserSearch } from "lucide-react"
 import { RoleCard } from "@/components/help_section/role_card"
 import { CogIcon, UserCogIcon} from "lucide-react"
 import { userAgent } from "next/server"
+import { HelpManual } from "@/components/help_section/help-manual"
+
 
 export default function HelpPage() {
   return (
@@ -26,7 +28,7 @@ export default function HelpPage() {
         icon={UserCogIcon}
         title="Administrador"
         description="Encargado de gestionar y controlar la plataforma y los usuarios, solucionar problemas técnicos y configurar los ajustes del sistema."
-        href="#"
+        href="/help/admin-manual"
         />
         <RoleCard 
         iconColor="orange"
@@ -44,6 +46,9 @@ export default function HelpPage() {
         />
       </div>
     </div>
+
+
+
     </>
   )
 }

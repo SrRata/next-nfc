@@ -1,6 +1,6 @@
 "use client";
 
-import { AppSidebar } from "@/components/app-sidebar"
+import { HelpSidebar } from "@/components/help_section/help-sidebar"
 import { ChartAreaInteractive } from "@/components/chart-area-interactive"
 import { DataTable } from "@/components/data-table"
 import { SectionCards } from "@/components/section-cards"
@@ -14,7 +14,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 
 import { Toaster } from 'sonner';
 
-export default function DashboardLayout({
+export default function HelpLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -27,7 +27,7 @@ export default function DashboardLayout({
           } as React.CSSProperties
         }
       >
-        <AppSidebar variant="sidebar" />
+        <HelpSidebar variant="sidebar" />
         <SidebarInset>
           <div className="flex flex-1 flex-col">
             <main className="@container/main flex flex-1 flex-col gap-2">
