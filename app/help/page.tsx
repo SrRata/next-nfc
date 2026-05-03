@@ -3,7 +3,7 @@ import { HelpCircle, UserCog, UserPenIcon, UserSearch } from "lucide-react"
 import { RoleCard } from "@/components/help_section/role_card"
 import { CogIcon, UserCogIcon} from "lucide-react"
 import { userAgent } from "next/server"
-import { HelpManual } from "@/components/help_section/help-manual"
+import { HelpTitle } from "@/components/help_section/help-title"
 
 
 export default function HelpPage() {
@@ -11,9 +11,11 @@ export default function HelpPage() {
     <>
     <div className="col-span-full">
       <div className="py-20 px-25 flex flex-col gap-10 bg-blue-primary rounded-primary text-center ">
-        <h1 className="text-7xl font-bold text-white-primary">
-          Manual de Usuario
-        </h1>
+        <HelpTitle 
+          icon={HelpCircle}
+          iconColor="blue"
+          title="Manual de Usuario"
+        />
         <p className="text-white-primary font-bold text-3xl">
           !Estamos aquí para ayudarte!
         </p>

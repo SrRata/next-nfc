@@ -7,20 +7,20 @@ import { color } from "@/lib/constants/data-type";
 interface HelpPageProps {
     title: string;
     icon?: LucideIcon;
-    iconColor?: color;
+    iconColor: color;
 
 }
 
-export function HelpManual({ icon: Icon, iconColor, title }: HelpPageProps) {
+export function HelpTitle({ icon: Icon, iconColor, title }: HelpPageProps) {
   return (
     <> 
     <div className="col-span-full">
 
-        <div className="py- flex gap-1 bg-white-primary rounded-primary items-center justify-center">
+        <div className="py-5 flex gap-6 bg-blue-primary rounded-primary items-center justify-center">
             <div>
-                {Icon && <Icon size={40} color={iconColor} />}
+                {Icon && <Icon size={40} color="white" />}
             </div>
-            <h2 className="text-4xl font-bold text-black-primary">
+            <h2 className="text-4xl font-bold text-white-primary">
                 {title}
             </h2>
 
