@@ -20,7 +20,7 @@ interface Props {
     params: Promise<{
         action: 'create' | 'edit';
         id: string;
-    }>;
+    }>; 
 }
 
 export default function CourseEditPage({ params }: Props) {
