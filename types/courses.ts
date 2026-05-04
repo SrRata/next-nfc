@@ -9,7 +9,7 @@ export interface course {
     section_id: number,
     section_name: string;
     professor_id: number | null;
-    porfessor_name: string | null;
+    professor_name: string | null;
     total_students: number;
     educational_level_color: color;
     section_color: color;

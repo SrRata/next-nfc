@@ -3,8 +3,6 @@
 import { ColumnDef, getCoreRowModel } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { DataUser } from "@/components/data-user";
-import { Badge } from "@/components/ui/badge";
-import { getActiveBadgeColor, getLevelBadge, getSectionBadge } from "@/lib/constants/get-badge-color";
 import { formatFullName } from "@/lib/hooks/format-full-name";
 import { useModal } from "@/lib/hooks/use-modal";
 import { student } from "@/types/users";
@@ -20,12 +18,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function TableStudentsManagement() {
+    const router = useRouter();
 
   const [students, setStudents] = useState<student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { modal, openModal, closeModal } = useModal<student>();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   useEffect(() => {
@@ -102,18 +101,6 @@ export default function TableStudentsManagement() {
         row.original.nfc_uid || "Sin UID asignada"
       )
     },
-    // {
-    //   accessorKey: "is_active",
-    //   header: "Estado",
-    //   cell: ({ row }) => {
-    //     const state = row.original.is_active;
-    //     return (
-    //       <Badge color={getActiveBadgeColor(state).color} circle>
-    //         {getActiveBadgeColor(state).label}
-    //       </Badge>
-    //     );
-    //   },
-    // },
     {
       header: "Acciones",
       cell: ({ row }) => (
@@ -125,8 +112,7 @@ export default function TableStudentsManagement() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem >Editar</DropdownMenuItem>
-            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push('/dashboard/students-management/edit/' + row.original.id)} >Editar</DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
               Borrar
             </DropdownMenuItem>
@@ -140,39 +126,26 @@ export default function TableStudentsManagement() {
     data: students,
     columns,
     state: {
-      columnFilters, //Pasar el estado
+      columnFilters, 
     },
-    onColumnFiltersChange: setColumnFilters, // 3. Función para actualizarlo
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), // 4. IMPORTANTE: Esto procesa el filtro
+    getFilteredRowModel: getFilteredRowModel(), 
   });
 
   return (
     <>
-
-      {/* <div className="flex items-center py-4">
-        <input
-          placeholder="Busca por nombre o CDL...."
-          value={(table.getColumn("student")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("student")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm px-3 py-2 border rounded-md"
-        />
-      </div> */}
 
       <DataTable
         legend="Estudiantes registrados"
         columns={columns}
         isLoading={isLoading}
         data={students ? table.getRowModel().rows.map(row => row.original) : []}
-        linkCTA="Nuevo Estudiante"
-        linkhref="./students-management/create"
+        buttonCTA="Nuevo estudiante"
+        buttonAction={() => router.push('/dashboard/students-management/create/0')}
+
       />
 
-      {/* <CreateStudentModal isOpen={modal.type === "create"} onClose={closeModal} /> */}
-      {/* <EditStudentModal isOpen={modal.type === "edit"} onClose={closeModal} student={modal.data} /> */}
-      {/* <DeleteStudentModal isOpen={modal.type === "delete"} onClose={closeModal} student={modal.data} /> */}
     </>
   );
 }

@@ -104,10 +104,10 @@ export default function ProfilePage() {
         </div>
         <Button>Editar información</Button>
       </div>
-      <Alert
+      {/* <Alert
         variant="info"
         description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor aspernatur, odio aliquid voluptates aliquam placeat debitis rerum doloribus qui, dolorem ullam nam! Non porro molestiae asperiores, fugiat voluptatem voluptates incidunt?"
-      />
+      /> */}
     </>
   );
 }

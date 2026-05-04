@@ -40,3 +40,9 @@ export interface user {
     phone_number: string;
     cdl: string
 }
+
+export interface professor {
+    id: number,
+    first_name: string,
+    last_name: string,
+}
