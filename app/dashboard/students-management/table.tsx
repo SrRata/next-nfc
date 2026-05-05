@@ -19,9 +19,12 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { IconTrash } from "@tabler/icons-react";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function TableStudentsManagement() {
-    const router = useRouter();
+  const router = useRouter();
 
   const [students, setStudents] = useState<student[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +47,11 @@ export default function TableStudentsManagement() {
     loadStudents();
   }, []);
 
+  const [processing, setProcessing] = useState(false)
+
+
   const handleDelete = async (id: number) => {
+    setProcessing(true);
     try {
       await axios.delete(`/api/students/${id}`)
       setStudents((prev) => prev.filter((student) => student.id !== id));
@@ -52,6 +59,9 @@ export default function TableStudentsManagement() {
     } catch (error) {
       console.error('Error delete level', error)
       toast.error(`No se pudo eliminar el estudiante`)
+    } finally {
+      setProcessing(false);
+      setOpenDialog(false);
     }
   }
 
@@ -113,7 +123,7 @@ export default function TableStudentsManagement() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => router.push('/dashboard/students-management/edit/' + row.original.id)} >Editar</DropdownMenuItem>
-            <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
+            <DropdownMenuItem variant="destructive" onClick={() => handleOpenDelete(row.original)}>
               Borrar
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -122,15 +132,24 @@ export default function TableStudentsManagement() {
     },
   ];
 
+  const [selectedItem, setSelectedItem] = useState<student | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  function handleOpenDelete(item: any) {
+    setSelectedItem(item);
+    setOpenDialog(true);
+  }
+
+
   const table = useReactTable({
     data: students,
     columns,
     state: {
-      columnFilters, 
+      columnFilters,
     },
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), 
+    getFilteredRowModel: getFilteredRowModel(),
   });
 
   return (
@@ -146,6 +165,25 @@ export default function TableStudentsManagement() {
 
       />
 
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogHeader className="sr-only">
+          <DialogTitle>Borrar estudiante</DialogTitle>
+          <DialogDescription>
+            Este modal borra el estudiante seleccionado
+          </DialogDescription>
+        </DialogHeader>
+        <DialogContent showCloseButton={false} className="flex flex-col gap-5 items-center w-full max-w-130">
+          <div className="bg-red-secondary size-15 rounded-primary grid place-items-center">
+            <IconTrash className="text-red-primary size-10" />
+          </div>
+          <p className="text-center text-black-primary font-bold text-xl">¿Borrar el estudiante seleccionado?</p>
+          <p className="text-center text-black-secondary font-medium">Esta acción eliminará este estudiante de manera permanente. Deseas continuar.</p>
+          <div className="grid grid-cols-2 w-full gap-5">
+            <Button variant="outline" onClick={() => setOpenDialog(false)} disabled={processing} >Cancelar</Button>
+            <Button variant="destructive" disabled={processing} onClick={() => selectedItem && handleDelete(selectedItem.id)}>{processing && <Spinner />} {processing ? "Borrando..." : "Borrar"}</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

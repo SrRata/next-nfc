@@ -6,25 +6,22 @@ import { DataUser } from "@/components/data-user";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontalIcon, Pen, Trash } from "lucide-react";
-import {
-    getActiveBadgeColor,
-    roleBadgeColor,
-} from "@/lib/constants/get-badge-color";
-import { useModal } from "@/lib/hooks/use-modal";
+import { getActiveBadgeColor, roleBadgeColor } from "@/lib/constants/get-badge-color";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { formatFullName } from "@/lib/hooks/format-full-name";
-import { User, useUpdateUserStatus, useUsers } from "@/lib/hooks/fetch/users";
-import { DeleteUserModal } from "./delete-user-modal";
-import { EditUserModal } from "./edit-user-modal";
-import { CreateUserModal } from "./create-user-modal";
 import { useEffect, useState } from "react";
 import { user } from "@/types/users";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { IconTrash } from "@tabler/icons-react";
+import { Spinner } from "@/components/ui/spinner";
+
 
 export function UsersTable() {
+    const router = useRouter();
 
-    const { modal, openModal, closeModal } = useModal<User>();
 
     const [isLoading, setIsLoading] = useState(true)
     const [users, setUsers] = useState<user[]>([])
@@ -45,16 +42,32 @@ export function UsersTable() {
         loadUsers();
     }, []);
 
-      const handleDelete = async (id: number) => {
+    const [processing, setProcessing] = useState(false)
+
+
+    const handleDelete = async (id: number) => {
+        setProcessing(true);
         try {
-          await axios.delete(`/api/usersc/${id}`)
-          setUsers((prev) => prev.filter((student) => student.id !== id));
-          toast.success(`Usuario eliminado con exito`)
+            await axios.delete(`/api/usersc/${id}`)
+            setUsers((prev) => prev.filter((student) => student.id !== id));
+            toast.success(`Usuario eliminado con exito`)
         } catch (error) {
-          console.error('Error delete level', error)
-          toast.error(`No se pudo eliminar el usuario`)
+            console.error('Error delete level', error)
+            toast.error(`No se pudo eliminar el usuario`)
+        } finally {
+            setProcessing(false);
+            setOpenDialog(false);
         }
-      }
+    }
+
+    const [selectedItem, setSelectedItem] = useState<user | null>(null);
+    const [openDialog, setOpenDialog] = useState(false);
+
+    function handleOpenDelete(item: any) {
+        setSelectedItem(item);
+        setOpenDialog(true);
+    }
+
 
     const columns: ColumnDef<user>[] = [
         {
@@ -100,9 +113,9 @@ export function UsersTable() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem >Editar</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push('/dashboard/courses-management/edit/' + row.original.id)}>Editar</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive" onClick={() => handleDelete(row.original.id)}>
+                        <DropdownMenuItem variant="destructive" onClick={() => handleOpenDelete(row.original)}>
                             Borrar
                         </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -118,13 +131,31 @@ export function UsersTable() {
                 columns={columns}
                 data={users ?? []}
                 isLoading={isLoading}
-                buttonCTA="Nuevo usuario"
-                buttonAction={() => openModal("create")}
+                buttonCTA="Nuevo estudiante"
+                buttonAction={() => router.push('/dashboard/users-management/create/0')}
             />
 
-            <EditUserModal isOpen={modal.type === "edit"} onClose={closeModal} user={modal.data} />
-            <CreateUserModal isOpen={modal.type === "create"} onClose={closeModal} />
-            <DeleteUserModal isOpen={modal.type === "delete"} onClose={closeModal} user={modal.data} />
+
+            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                <DialogHeader className="sr-only">
+                    <DialogTitle>Borrar usuario</DialogTitle>
+                    <DialogDescription>
+                        Este modal borra el usuario seleccionado
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogContent showCloseButton={false} className="flex flex-col gap-5 items-center w-full max-w-130">
+                    <div className="bg-red-secondary size-15 rounded-primary grid place-items-center">
+                        <IconTrash className="text-red-primary size-10" />
+                    </div>
+                    <p className="text-center text-black-primary font-bold text-xl">¿Borrar el usuario seleccionado?</p>
+                    <p className="text-center text-black-secondary font-medium">Esto eliminará este usuario. Los estudiantes relacionados a este podria afrontar problemas de registros.</p>
+                    <div className="grid grid-cols-2 w-full gap-5">
+                        <Button variant="outline" onClick={() => setOpenDialog(false)} disabled={processing} >Cancelar</Button>
+                        <Button variant="destructive" disabled={processing} onClick={() => selectedItem && handleDelete(selectedItem.id)}>{processing && <Spinner />} {processing ? "Borrando..." : "Borrar"}</Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
         </>
 
     );

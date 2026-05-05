@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTokenPayload, requireAdmin } from "@/lib/auth/middleware";
 import { db } from "@/lib/hooks/db";
 import bcrypt from "bcryptjs";
-
+import { Resend } from "resend";
+import crypto from "crypto";
 
 // GET /api/users
 // Admin ve todos | Profesor solo se ve a sí mismo | Usuario (padre) solo se ve a sí mismo
@@ -116,7 +117,51 @@ export async function POST(req: NextRequest) {
             ]
         );
 
+
+        const token = crypto.randomBytes(32).toString("hex");
+
+        await conn.query(
+            `INSERT INTO user_invites (user_id, token, expires_at)
+   VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 DAY))`,
+            [result.insertId, token]
+        );
+
         await conn.commit();
+
+
+
+        const resend = new Resend(process.env.RESEND_API_KEY);
+
+        const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/login/invite?token=${token}`;
+
+        try {
+            await resend.emails.send({
+                from: "Sistema <siaenfc@jlmbgroup.com>",
+                to: email,
+                subject: "Bienvenido al sistema",
+                html: `
+  <div style="font-family: Arial; text-align: center;">
+    <h2>Bienvenido ${first_name}</h2>
+    <p>Tu cuenta ha sido creada.</p>
+    <a href="${inviteLink}" 
+       style="
+         display:inline-block;
+         padding:12px 20px;
+         background:#4f46e5;
+         color:white;
+         text-decoration:none;
+         border-radius:6px;
+         margin-top:10px;
+       ">
+       Activar cuenta
+    </a>
+  </div>
+`
+            });
+        } catch (error) {
+            console.error("Error enviando email:", error);
+            // opcional: guardar log o reintentar luego
+        }
 
         return NextResponse.json(
             {

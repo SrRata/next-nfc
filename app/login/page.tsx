@@ -2,6 +2,7 @@ import { IconShape } from "@/components/ui/icon-shape";
 import { GraduationCap, Shield } from "lucide-react";
 import { Metadata } from "next";
 import { LoginForm } from "./login-form";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -40,6 +41,12 @@ export default function LoginPage() {
         </div>
         <LoginForm />
       </div>
+                      <Toaster
+                  richColors
+                  position="top-right"      
+                  theme="light"
+                  duration={6000}
+                />
     </div>
   );
 }

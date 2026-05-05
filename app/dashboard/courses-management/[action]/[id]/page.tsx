@@ -137,37 +137,6 @@ export default function CourseEditPage({ params }: Props) {
     };
 
 
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-
-    //     const loadingToast = toast.loading('Creando curso...');
-
-    //     setProcessing(true)
-
-    //     const payload = {
-    //         course_name: formData.course_name,
-    //         educational_level_id: educationalLevelId,
-    //         section_id: sectionId,
-    //         professor_id: teacherId ? teacherId : null,
-    //     }
-
-    //     // console.log(payload) //DEBUG
-
-    //     try {
-    //         await axios.post('/api/coursesc', payload)
-    //         toast.success('Curso creado con exito', {
-    //             id: loadingToast,
-    //         })
-    //     } catch (error) {
-    //         console.error('Error create course', error)
-    //         toast.error('No se pudo crear el curso', {
-    //             id: loadingToast,
-    //         })
-    //     } finally {
-    //         setProcessing(false)
-    //     }
-    // }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const isEdit = action === 'edit';

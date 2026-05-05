@@ -3,8 +3,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
-
-import { Course } from "@/lib/hooks/fetch/courses";
 import { useEffect, useState } from "react";
 import { course } from "@/types/courses";
 import axios from "axios";
@@ -16,8 +14,6 @@ import { DataUser } from "@/components/data-user";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { IconTrash, IconUserCircle } from "@tabler/icons-react";
 import { Spinner } from "@/components/ui/spinner";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Professor } from "@/lib/hooks/fetch/system/professor";
 import { professor } from "@/types/users";
 import { useRouter } from "next/navigation";
 
@@ -32,9 +28,9 @@ export function CoursesTable({ courses, setCourses }: Props) {
 
   const handleDelete = async (id: number) => {
     const loadingToast = toast.loading('Eliminando curso...');
+    setProcessing(true);
 
     try {
-      setProcessing(true);
       await axios.delete(`/api/coursesc/${id}`)
       setCourses((prev) => prev.filter((student) => student.id !== id));
       setOpenDialog(false);

@@ -180,6 +180,16 @@ CREATE TABLE special_day_schedules (
 
 
 
+CREATE TABLE user_invites (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  token VARCHAR(255) UNIQUE NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 
 
 Datos de prueba para probar funcionalidad de registro de asistencia.

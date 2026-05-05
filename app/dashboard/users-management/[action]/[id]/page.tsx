@@ -4,13 +4,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { course } from "@/types/courses";
 import { IconBinaryTree2, IconIdBadge2, IconNfc, IconRefresh, IconSchool } from "@tabler/icons-react";
 import axios from "axios";
+import { fi } from "date-fns/locale";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner"
+
 
 
 interface Props {
@@ -25,129 +27,68 @@ export default function CreateStudentsPage({ params }: Props) {
 
     const { action, id } = use(params);
 
-    const [courses, setCourses] = useState<course[]>([]);
-    const [isLoadingCourses, setIsLoadingCourses] = useState(true);
-
-    async function loadCourses() {
-        try {
-            const response = await axios.get('/api/coursesc');
-            if (response.data.success) {
-                setCourses(response.data.data);
-            }
-
-        } catch (error) {
-            console.error('Error fetching courses:', error)
-
-        } finally {
-            setIsLoadingCourses(false)
-        }
-    }
-
-    useEffect(() => {
-        loadCourses();
-    }, []);
+    const [processing, setProcessing] = useState(false);
 
 
-    const [courseId, setCourseId] = useState<string>("");
-
-
-    const [formDataStudent, setFormDataStudent] = useState({
-        studentFirstName: "",
-        studentLastName: "",
-        stuedntCdl: "",
-        studentPhoneNumber: "",
-        studentEmail: "",
-        nfcUid: "",
+    const [formData, setFormData] = useState({
+        first_name: "",
+        last_name: "",
+        cdl: "",
+        phone_number: "",
+        email: "",
     })
 
-    const handleChangeStudent = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormDataStudent({
-            ...formDataStudent,
+    const handleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
             [e.target.id]: e.target.value,
         });
-        // console.log(formDataStudent) //DEBUG
-    };
-
-    const [formDataParent, setFormDataParent] = useState({
-        parentFirstName: "",
-        parentLastName: "",
-        parentCdl: "",
-        parentPhoneNumber: "",
-        parentEmail: "",
-    })
-
-    const handleChangeParent = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormDataParent({
-            ...formDataParent,
-            [e.target.id]: e.target.value
-        });
-        // console.log(formDataParent)  //DEBUG
+        // console.log(formData) //DEBUG
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        const isEdit = action === 'edit';
+        const loadingToast = toast.loading(isEdit ? 'Actualizando usuario...' : 'Creando usuario...');
+        setProcessing(true);
 
         const payload = {
-            first_name: formDataStudent.studentFirstName,
-            last_name: formDataStudent.studentLastName,
-            cdl: formDataStudent.stuedntCdl,
-            email: formDataStudent.studentEmail,
-            course_id: courseId,
-            nfc_uid: formDataStudent.nfcUid,
-            phone_number: formDataStudent.studentPhoneNumber,
-            ...(formDataParent.parentCdl && {
-                parent: {
-                    first_name: formDataParent.parentFirstName,
-                    last_name: formDataParent.parentLastName,
-                    cdl: formDataParent.parentCdl,
-                    email: formDataParent.parentEmail,
-                    username: formDataParent.parentEmail.split('@')[0],
-                    password: formDataParent.parentCdl,
-                    phone_number: formDataParent.parentPhoneNumber
-                }
-            })
-        }
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            username: `user_${formData.cdl}`,
+            password: formData.cdl,
+            cdl: formData.cdl,
+            phone_number: formData.phone_number,
+            email: formData.email,
+            role: role
+        };
 
         try {
-            await axios.post('/api/students', payload)
-            toast.success(`El estudiante ${formDataStudent.studentFirstName} fue creado con exito`)
+            if (isEdit) {
+                await axios.put(`/api/usersc/${id}`, payload); // Usar PUT para editar
+                toast.success('Usuario actualizado con éxito', { id: loadingToast });
+            } else {
+                await axios.post('/api/usersc', payload);
+                toast.success('Usuario creado con éxito', { id: loadingToast });
+            }
         } catch (error) {
-            await console.error('Error create student', error)
-            toast.success(`Error al ${formDataStudent.studentFirstName} no pudo ser creado`)
+            toast.error('Error al procesar la solicitud', { id: loadingToast });
+        } finally {
+            setProcessing(false);
         }
-    }
+    };
+
+    const [role, setRole] = useState('');
+
 
     return (
 
         <>
-            <div className="grid grid-cols-3 gap-6 mx-auto max-w-[900px] col-span-full">
-                <form
-                    onSubmit={handleSubmit}
-                    className="col-span-full grid grid-cols-3 gap-7">
+            <form className="grid grid-cols-3 gap-6 mx-auto max-w-[900px] items-start col-span-full w-full" onSubmit={handleSubmit}>
 
-                    <div className="col-span-full flex justify-between my-2">
+                <div
 
-                        <div>
-                            <h3 className="text-4xl text-blue-primary font-extrabold">Nuevo Registro</h3>
-                            <p className="font-medium text-black-secondary">Inscripción de un nuevo estudiante en el sistema institucional.</p>
-                        </div>
-
-                        <div className="flex gap-2 items-center">
-                            <Link href="./">
-                                <Button
-                                    variant="outline"
-                                >
-                                    Cancelar registro
-                                </Button>
-                            </Link>
-
-                            <Button type="submit">
-                                Registrar nuevo estudiante
-                            </Button>
-
-                        </div>
-
-                    </div>
+                    className="col-span-2">
 
                     <div className="bg-white-primary col-span-2 row-span-2 rounded-primary p-7 border border-gray-200">
 
@@ -155,28 +96,24 @@ export default function CreateStudentsPage({ params }: Props) {
                             <div className="col-span-full flex justify-between items-center">
                                 <div className="flex items-center gap-2 col-span-full">
                                     <IconIdBadge2 className="text-blue-primary" />
-                                    <h5 className="font-bold text-xl text-blue-primary">Detalles del estudiante</h5>
+                                    <h5 className="font-bold text-xl text-blue-primary">Detalles del usuario</h5>
                                 </div>
-
-                                <Badge color="blue">
-                                    Requerido
-                                </Badge>
 
                             </div>
 
                             <div>
                                 <Label
                                     htmlFor="studentFirstName"
-                                >Nombre del estudiante <span className="text-red-500">*</span></Label>
+                                >Nombres completos <span className="text-red-500">*</span></Label>
                                 <Input
                                     minLength={2}
                                     maxLength={255}
                                     required
                                     placeholder="Nombres completos"
-                                    id="studentFirstName"
+                                    id="first_name"
                                     type="text"
-                                    value={formDataStudent.studentFirstName || ""}
-                                    onChange={handleChangeStudent}
+                                    value={formData.first_name || ""}
+                                    onChange={handleChangeForm}
                                 />
 
                             </div>
@@ -184,16 +121,16 @@ export default function CreateStudentsPage({ params }: Props) {
                             <div>
                                 <Label
                                     htmlFor="studentLastName"
-                                >Apellido del estudiante <span className="text-red-500">*</span></Label>
+                                >Apellidos completos <span className="text-red-500">*</span></Label>
                                 <Input
                                     required
                                     minLength={2}
                                     maxLength={255}
                                     placeholder="Apelldios completos"
-                                    id="studentLastName"
+                                    id="last_name"
                                     type="text"
-                                    value={formDataStudent.studentLastName || ""}
-                                    onChange={handleChangeStudent}
+                                    value={formData.last_name || ""}
+                                    onChange={handleChangeForm}
                                 />
                             </div>
 
@@ -206,10 +143,10 @@ export default function CreateStudentsPage({ params }: Props) {
                                     minLength={10}
                                     required
                                     placeholder="17xxxxxxx-x"
-                                    id="stuedntCdl"
+                                    id="cdl"
                                     type="text"
-                                    value={formDataStudent.stuedntCdl || ""}
-                                    onChange={handleChangeStudent}
+                                    value={formData.cdl || ""}
+                                    onChange={handleChangeForm}
                                 />
                             </div>
 
@@ -221,10 +158,10 @@ export default function CreateStudentsPage({ params }: Props) {
                                     maxLength={10}
                                     minLength={10}
                                     placeholder="+593 9..."
-                                    id="studentPhoneNumber"
+                                    id="phone_number"
                                     type="text"
-                                    value={formDataStudent.studentPhoneNumber || ""}
-                                    onChange={handleChangeStudent}
+                                    value={formData.phone_number || ""}
+                                    onChange={handleChangeForm}
                                 />
                             </div>
 
@@ -237,180 +174,64 @@ export default function CreateStudentsPage({ params }: Props) {
                                     maxLength={255}
                                     type="email"
                                     placeholder="estudiante@ejemplo.com"
-                                    id="studentEmail"
-                                    value={formDataStudent.studentEmail || ""}
-                                    onChange={handleChangeStudent}
+                                    id="email"
+                                    value={formData.email || ""}
+                                    onChange={handleChangeForm}
                                 />
                             </div>
                         </div>
 
                     </div>
 
-                    <div className="bg-white-primary rounded-primary p-7 space-y-7 border border-gray-200">
+                </div>
 
-                        <div className="col-span-full flex justify-between items-center">
-
-                            <div className="flex items-center gap-2 col-span-full">
-                                <IconSchool className="text-blue-primary" />
-                                <h5 className="font-bold text-xl text-blue-primary">Información de registro</h5>
-                            </div>
-
+                <RadioGroup
+                    value={role}          
+                    onValueChange={setRole}
+                >
+                    <Label htmlFor="admin">
+                        <div className="border border-gray-200 rounded-primary p-7 bg-white-primary has-data-checked:border-gray-500 w-full ">
+                            <p>
+                                Administrador
+                            </p>
+                            <RadioGroupItem value="admin" id="admin" className="sr-only" />
                         </div>
+                    </Label>
+                    <Label htmlFor="profesor">
+                        <div className="border border-gray-200 rounded-primary p-7 bg-white-primary has-data-checked:border-gray-500 w-full ">
+                            <p>
+                                Profesor
+                            </p>
+                            <RadioGroupItem value="profesor" id="profesor" className="sr-only" />
+                        </div>
+                    </Label>
+                    <Label htmlFor="usuario">
+                        <div className="border border-gray-200 rounded-primary p-7 bg-white-primary has-data-checked:border-gray-500 w-full ">
+                            <p>
+                                Usuario
+                            </p>
+                            <RadioGroupItem value="usuario" id="usuario" className="sr-only" />
+                        </div>
+                    </Label>
 
-                        <Label>Curso / Nivel <span className="text-red-500">*</span></Label>
-                        <Select
-                            required
-                            value={courseId}
-                            onValueChange={(value) => {
-                                setCourseId(value)
-                                // console.log(courseId) //DEBUG
-                            }}
+                </RadioGroup>
+
+
+                <div className="flex gap-2 items-center col-span-full justify-end">
+                    <Link href="./">
+                        <Button
+                            variant="outline"
                         >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Sin asignar curso" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {courses?.map((c) => (
-                                    <SelectItem key={c.id} value={c.id.toString()}>
-                                        {c.course_name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                            Cancelar registro
+                        </Button>
+                    </Link>
 
+                    <Button type="submit">
+                        Registrar nuevo estudiante
+                    </Button>
 
-
-                    <div className="bg-blue-primary rounded-primary p-7">
-
-                        <div className="flex items-center gap-2 mb-6">
-                            <IconNfc className="size-10 text-white-primary" />
-                            <p className="text-white-primary font-bold text-xl">Hardware NFC</p>
-                        </div>
-                        <div className="w-full">
-                            <Label
-                                className="text-white-primary uppercase"
-                                htmlFor="nfcUid"
-                            >Código de identificación digital</Label>
-                            <div className="flex items-center gap-2">
-                                <Input
-                                    type="text"
-                                    maxLength={50}
-                                    required
-                                    placeholder="00 : 00 : 00 : 00"
-                                    id="nfcUid"
-                                    value={formDataStudent.nfcUid || ""}
-                                    onChange={handleChangeStudent}
-                                />
-                                <Button
-                                    type="button"
-                                    className="size-fit bg-white-primary border-white hover:bg-white-primary/80"
-                                    onClick={() => setFormDataStudent(prev => ({ ...prev, nfcUid: "" }))}
-                                >
-                                    <IconRefresh className="size-7 text-blue-primary" />
-                                </Button>
-                            </div>
-                        </div>
-
-                        <p className="font-medium text-white/80 mt-8">Mantenga la tarjeta cerca del lector para vinculación automática.</p>
-
-                    </div>
-
-                    <div className="bg-white-primary border border-gray-200 col-span-full rounded-primary p-7 grid grid-cols-6 gap-7">
-
-                        <div className="col-span-full flex justify-between items-center">
-
-                            <div className="flex items-center gap-2 col-span-full">
-                                <IconBinaryTree2 className="text-blue-primary" />
-                                <h5 className="font-bold text-xl text-blue-primary">Información de registro</h5>
-                            </div>
-                            <Badge color="gray">
-                                Opcional
-                            </Badge>
-
-                        </div>
-
-
-                        <div className="col-span-2">
-                            <Label
-                                htmlFor="parentFirstName"
-                            >Nombre del representante</Label>
-                            <Input
-                                minLength={2}
-                                maxLength={255}
-                                type="text"
-                                placeholder="Nombres completos"
-                                id="parentFirstName"
-                                value={formDataParent.parentFirstName || ""}
-                                onChange={handleChangeParent}
-                            />
-                        </div>
-
-                        <div className="col-span-2">
-                            <Label
-                                htmlFor="parentLastName"
-                            >Apellido del representante</Label>
-                            <Input
-                                minLength={2}
-                                maxLength={255}
-                                type="text"
-                                placeholder="Apellidos completos"
-                                id="parentLastName"
-                                value={formDataParent.parentLastName || ""}
-                                onChange={handleChangeParent}
-                            />
-                        </div>
-
-                        <div className="col-span-2">
-                            <Label
-                                htmlFor="parentCdl"
-                            >Cédula / Identificación</Label>
-                            <Input
-                                minLength={10}
-                                maxLength={10}
-                                type="text"
-                                placeholder="17xxxxxxx-x"
-                                id="parentCdl"
-                                value={formDataParent.parentCdl || ""}
-                                onChange={handleChangeParent}
-                            />
-                        </div>
-
-                        <div className="col-span-3">
-                            <Label
-                                htmlFor="parentPhoneNumber"
-                            >Télefono de contacto</Label>
-                            <Input
-                                type="text"
-                                maxLength={10}
-                                minLength={10}
-                                placeholder="+593 9..."
-                                id="parentPhoneNumber"
-                                value={formDataParent.parentPhoneNumber || ""}
-                                onChange={handleChangeParent}
-                            />
-                        </div>
-
-                        <div className="col-span-3">
-                            <Label
-                                htmlFor="parentEmail"
-                            >Correo Electrónico</Label>
-                            <Input
-                                maxLength={255}
-                                type="email"
-                                placeholder="representante@ejemplo.com"
-                                id="parentEmail"
-                                value={formDataParent.parentEmail || ""}
-                                onChange={handleChangeParent}
-                            />
-                        </div>
-
-
-                    </div>
-
-                </form>
-
-            </div>
+                </div>
+            </form>
 
         </>
     );
