@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function InvitePage() {
+// 1. Este componente maneja la lógica y usa el hook
+function InviteHandler() {
   const params = useSearchParams();
   const router = useRouter();
 
@@ -29,4 +30,13 @@ export default function InvitePage() {
   }, [params, router]);
 
   return <p>Activando cuenta...</p>;
+}
+
+// 2. La página principal solo envuelve al manejador en Suspense
+export default function InvitePage() {
+  return (
+    <Suspense fallback={<p>Cargando...</p>}>
+      <InviteHandler />
+    </Suspense>
+  );
 }
