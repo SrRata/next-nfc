@@ -11,11 +11,9 @@ export default function HelpPage() {
     <>
     <div className="col-span-full">
       <div className="py-20 px-25 flex flex-col gap-10 bg-blue-primary rounded-primary text-center ">
-        <HelpTitle 
-          icon={HelpCircle}
-          iconColor="blue"
-          title="Manual de Usuario"
-        />
+        <h1 className="font-bold text-6xl text-white-primary">
+          Manual de Usuario
+        </h1>
         <p className="text-white-primary font-bold text-3xl">
           !Estamos aquí para ayudarte!
         </p>
