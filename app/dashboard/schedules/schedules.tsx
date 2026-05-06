@@ -475,10 +475,10 @@ export default function SchedulesManagement({ schedules, educationalLevels, setS
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="font-bold text-black-primary">
-                                                {e.educational_level_name} · <Badge color={e.section_color}>{e.section_name}</Badge>
+                                                <Badge color={e.educational_level_color}>{e.educational_level_name}</Badge> <span className="text-xl">·</span> <Badge color={e.section_color}>{e.section_name}</Badge>
                                             </p>
 
-                                            <p className="font-medium text-black-secondary text-sm">
+                                            <p className="font-medium text-black-secondary text-sm mt-2">
                                                 Duración: {scheduleData?.durationText}
                                             </p>
                                         </div>

@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const onlyActive = searchParams.get("active") !== "false";
 
     const [rows]: any = await db.query(
-      `SELECT id, name, is_active FROM educational_levels
+      `SELECT id, name, is_active, color FROM educational_levels
        ${onlyActive ? "WHERE is_active = TRUE" : ""}
        ORDER BY name ASC`
     );
@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const conn = await db.getConnection();
   try {
-    const { name } = await req.json();
+    const body = await req.json();
+    const { name, color } = body;
+
 
     if (!name?.trim()) {
       return NextResponse.json(
@@ -34,11 +36,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const finalColor = color || "gray";
+
     await conn.beginTransaction();
 
     const [result]: any = await conn.query(
-      `INSERT INTO educational_levels (name, is_active) VALUES (?, TRUE)`,
-      [name.trim()]
+      `INSERT INTO educational_levels (name, is_active, color) VALUES (?, ?, ?)`,
+      [name.trim(), true, finalColor]
     );
 
     await conn.commit();

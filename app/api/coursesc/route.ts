@@ -28,6 +28,7 @@ export async function GET() {
          c.is_active,
          el.id   AS educational_level_id,
          el.name AS educational_level_name,
+         el.color AS educational_level_color,
          s.id    AS section_id,
          s.name  AS section_name,
          s.color AS section_color,

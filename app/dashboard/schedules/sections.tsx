@@ -188,6 +188,8 @@ export default function SectionsManagement({ sections, setSections, loadSections
                                 </div>
                             </div>
                         ))}
+
+                        
                         <div
                             onClick={() => setIsOpenForm(true)}
                             className="group bg-gray border-3 border-dotted border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer rounded-primary p-6 flex items-center justify-center ">

@@ -12,6 +12,7 @@ export async function GET() {
          sc.entry_tolerance,
          sc.exit_tolerance,
          el.id   AS educational_level_id,
+         el.color AS educational_level_color,
          el.name AS educational_level_name,
          s.id    AS section_id,
          s.color AS section_color,

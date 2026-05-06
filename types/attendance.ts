@@ -21,6 +21,7 @@ export interface Schedule {
   //si falla algo con los hoarios cquitar esto ...
 
   educational_level_name: string;
+  educational_level_color: color;
   section_name: string;
   educational_level_id: number;
   section_id: number;

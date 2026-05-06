@@ -58,6 +58,9 @@ export function CoursesTable({ courses, setCourses }: Props) {
     {
       accessorKey: "educational_level_name",
       header: "NIVEL",
+      cell: ({ row }) => (
+        <Badge color={row.original.educational_level_color}>{row.original.educational_level_name}</Badge>
+      )
     },
     {
       accessorKey: "section_name",

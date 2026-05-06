@@ -13,6 +13,7 @@ import { Section } from "@/types/section"
 import { professor } from "@/types/users"
 import { IconAlertCircle, IconRosetteDiscountCheck, IconTextPlus, IconUserCircle } from "@tabler/icons-react"
 import axios from "axios"
+import { useRouter } from "next/navigation"
 import { use, useEffect, useState } from "react"
 import { toast } from "sonner"
 
@@ -20,12 +21,14 @@ interface Props {
     params: Promise<{
         action: 'create' | 'edit';
         id: string;
-    }>; 
+    }>;
 }
 
 export default function CourseEditPage({ params }: Props) {
 
     const { action, id } = use(params);
+
+    const router = useRouter();
 
 
     // Dialog 
@@ -257,7 +260,7 @@ export default function CourseEditPage({ params }: Props) {
 
 
                     <div className="flex items-center gap-3 justify-end col-span-full">
-                        <Button variant="outline" disabled={processing} type="button">Cancelar</Button>
+                        <Button variant="outline" disabled={processing} type="button" onClick={() => router.push('/dashboard/courses-management')}>Cancelar</Button>
                         <Button disabled={processing} type="submit"> {processing && <Spinner />} {processing ? 'Registrando...' : 'Registrar curso'}</Button>
                     </div>
 

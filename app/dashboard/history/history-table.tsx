@@ -66,13 +66,21 @@ export function HistoryTable() {
       accessorKey: "exit_time",
       header: "Salida",
       cell: ({ row }) => (
-        row.original.exit_time ? (<p className="font-bold text-[12px]">
+        // row.original.exit_time ? (<p className="font-bold text-[12px]">
+        //   {formatTime12h(row.original.exit_time)}
+        // </p>) : (
+        //   <Badge color="yellow">Pendiente</Badge>
+        // )
+
+        <p className="font-bold text-[12px]">
           {formatTime12h(row.original.exit_time)}
-        </p>) : (
-          <Badge color="yellow">Pendiente</Badge>
-        )
+        </p>
       )
     },
+    {
+      accessorKey: "observation",
+      header: "Observación",
+    }
     // {
     //   accessorKey: "observation",
     //   header: "Observación",

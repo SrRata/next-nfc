@@ -49,9 +49,10 @@ export default function LevelsManagement({ educationalLevels, setEducationLevels
 
         const payload = {
             name: formDataLevel.name,
+            color: selectedColor,
         }
 
-        console.log(payload) //Debug    
+        // console.log(payload) //Debug    
 
         try {
             const response = await axios.post('/api/educational-levels', payload)
@@ -138,7 +139,7 @@ export default function LevelsManagement({ educationalLevels, setEducationLevels
                         />
                     </div>
 
-                    <ColorPicker selected={selectedColor} onChange={setSelectedColor}/>
+                    <ColorPicker selected={selectedColor} onChange={setSelectedColor} />
 
                     <div className="flex items-center gap-3 justify-end col-span-full">
                         <Button
@@ -179,7 +180,7 @@ export default function LevelsManagement({ educationalLevels, setEducationLevels
 
                                 <div key={e.id} className="bg-gray border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer rounded-primary p-6 flex items-center justify-between">
                                     <div className="flex items-center justify-between gap-5">
-                                        <Badge color="red">&nbsp;</Badge>
+                                        <Badge color={e.color} variant="solid">&nbsp;</Badge>
                                         <div>
                                             <p className="font-bold text-black-primary">{e.name}</p>
                                             <p className="font-medium text-black-secondary text-sm">ID {e.id} . 1 horario(s)</p>
