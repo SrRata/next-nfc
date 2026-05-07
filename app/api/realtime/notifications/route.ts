@@ -28,7 +28,7 @@ LIMIT 5
        `,
 
       [studentId, today]
-    );
+    ) as any[];
   } else if (courseId) {
     // Profesor: últimos 5 de su curso
     [rows] = await db.query(
@@ -43,7 +43,7 @@ LIMIT 5
 ) DESC
        LIMIT 5`,
       [courseId, today]
-    );
+    ) as any[];
   } else {
     // Admin: últimos 5 del colegio
     [rows] = await db.query(
@@ -59,7 +59,7 @@ LIMIT 5
 ) DESC
        LIMIT 5`,
       [today]
-    );
+    ) as any[];
   }
 
   return NextResponse.json({ records: rows, as_of: new Date().toISOString() });
