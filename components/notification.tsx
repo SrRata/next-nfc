@@ -38,7 +38,7 @@ export function NotificationContainer({
   return (
     <div
       className={cn(
-        "bg-white-primary p-6 rounded-primary col-span-3 flex flex-col gap-8",
+        "bg-white-primary p-6 rounded-primary col-span-3 flex flex-col gap-8 border border-gray-200",
         className,
       )}
     >

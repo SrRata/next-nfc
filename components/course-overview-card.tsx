@@ -36,7 +36,7 @@ export function CourseOverviewCard({
   return (
     <section
       className={cn(
-        "bg-white-primary rounded-primary overflow-hidden md:col-span-2 md:row-span-2",
+        "bg-white-primary rounded-primary overflow-hidden md:col-span-2 md:row-span-2 border border-gray-200",
         className,
       )}
     >

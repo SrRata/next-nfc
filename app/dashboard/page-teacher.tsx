@@ -17,14 +17,18 @@ import {
   NotificationHeader,
   NotificationItem,
 } from "@/components/notification";
+import { NotificationsRealtime } from "@/components/ui/notificationswhitpolling";
 
 import { Users, Book, ChartArea, History, UserMinus } from "lucide-react";
+import { usePolling } from "@/hooks/usePolling";
+import { Metrics } from "@/types/metrics";
 
 export default function HomePageTeacher() {
+
+  const { data: metrics, loading: mLoading } = usePolling<Metrics>('/api/realtime/metrics?course_id=36');
+
   return (
     <>
-      <AttendanceNotifications />
-
       <InfoCard
         icon={Users}
         colorIcon="purple"
@@ -51,11 +55,11 @@ export default function HomePageTeacher() {
         />
 
         <CourseOverviewStats isActive>
-          <AttendanceStatCard present={24} total={30} />
-          <AbsenceStatCard absences={2} late={4} />
+          <AttendanceStatCard present={metrics?.total_present ?? 0} total={metrics?.total_students ?? 0} />
+          <AbsenceStatCard late={metrics?.total_late ?? 0} absences={(metrics?.total_students ?? 0) - (metrics?.total_present ?? 0)} />
         </CourseOverviewStats>
 
-        <LastRegister lastStudent="Luis Matailo" createdAt={new Date()} href="/dashboard/students?course=id" />
+        <LastRegister href="/dashboard/students?course=id" />
       </CourseOverviewCard>
 
       <LinkCard
@@ -71,7 +75,7 @@ export default function HomePageTeacher() {
         icon={History}
       />
 
-      <NotificationContainer>
+      {/* <NotificationContainer>
         <NotificationHeader
           title="Actividad reciente en mis cursos asignados."
           description="Ultimos 5 registros de actividad."
@@ -113,7 +117,11 @@ export default function HomePageTeacher() {
           course="3ro de informatica - vespertina"
           variant="info"
         />
-      </NotificationContainer>
+      </NotificationContainer> */}
+
+      <NotificationsRealtime
+        notificationsUrl="/api/realtime/notifications?course_id=36"
+      />
     </>
   );
 }

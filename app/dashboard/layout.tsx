@@ -33,7 +33,7 @@ export default function DashboardLayout({
           <SiteHeader />
           <div className="flex flex-1 flex-col">
             <main className="@container/main flex flex-1 flex-col gap-2">
-              <section className="max-w-max-width mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              <section className="max-w-max-width mx-auto p-6 grid md:grid-cols-3 gap-6 w-full">
                 {children}
                 <Toaster
                   richColors

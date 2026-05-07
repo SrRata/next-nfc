@@ -26,7 +26,7 @@ export function LinkCard({
   return (
     <div
       className={cn(
-        "bg-white-primary p-6 rounded-primary flex flex-col gap-5 justify-between",
+        "bg-white-primary p-6 rounded-primary flex flex-col gap-5 justify-between border border-gray-200",
         className,
       )}
     >

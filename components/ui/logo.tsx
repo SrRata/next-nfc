@@ -83,7 +83,7 @@ export function Logo({ className, variant }: LogoProps) {
         )}
       >
         <h2 className="text-blue-primary font-bold text-2xl leading-tight whitespace-nowrap">
-          siaeNFC
+          WARDEN NFC
         </h2>
 
         {variant && (

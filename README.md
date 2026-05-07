@@ -169,14 +169,7 @@ CREATE TABLE special_day_schedules (
     UNIQUE KEY uq_sds (date, section_id, educational_level_id)
 );
 
-1. educational_levels   → sin dependencias
-2. sections             → sin dependencias
-3. schedules            → depende de 1 y 2
-4. users                → sin dependencias
-5. courses              → depende de 1, 2 y 4
-6. students             → depende de 5
-7. relationships        → depende de 4 y 6
-8. student_summaries    → depende de 6
+
 
 
 
@@ -189,7 +182,14 @@ CREATE TABLE user_invites (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
+1. educational_levels   → sin dependencias
+2. sections             → sin dependencias
+3. schedules            → depende de 1 y 2
+4. users                → sin dependencias
+5. courses              → depende de 1, 2 y 4
+6. students             → depende de 5
+7. relationships        → depende de 4 y 6
+8. student_summaries    → depende de 6
 
 
 Datos de prueba para probar funcionalidad de registro de asistencia.

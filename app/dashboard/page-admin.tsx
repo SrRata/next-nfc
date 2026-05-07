@@ -7,7 +7,11 @@ import {
   NotificationHeader,
   NotificationItem,
 } from "@/components/notification";
+import { RealtimeDashboard } from "@/components/realtime";
 import { SystemStatusCard } from "@/components/system-status-card";
+import { NotificationsRealtime } from "@/components/ui/notificationswhitpolling";
+import { Metrics } from "@/types/metrics";
+import axios from "axios";
 
 import {
   Users,
@@ -20,36 +24,53 @@ import {
   Calendar1,
   CalendarClockIcon,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+
+
 
 export default function HomePageAdmin() {
+
   return (
     <>
+      {/* <RealtimeDashboard
+        metricsUrl="/api/realtime/metrics"
+        notificationsUrl="/api/realtime/notifications"
+      />
+
+      <RealtimeDashboard
+        metricsUrl={`/api/realtime/metrics?course_id=36`}
+        studentListUrl={`/api/realtime/student-list?course_id=36`}
+        notificationsUrl={`/api/realtime/notifications?course_id=36`}
+      />
+
+      <RealtimeDashboard
+        // metricsUrl={`/api/realtime/metrics?course_id=36`}
+        notificationsUrl={`/api/realtime/notifications?student_id=48`}
+      /> */}
 
       <InfoCard
         icon={Book}
         colorIcon="blue"
         title="Mis cursos"
-        value="6 cursos"
+        // value={metrics?.total_courses ? metrics.total_courses + "Cursos" : "--"}
+        value="--"
       />
       <InfoCard
         icon={Users}
         colorIcon="purple"
         title="Estudiantes totales"
-        value="24 estudiantes"
+        // value={metrics?.total_students ? metrics.total_students + " Estudiantes" : "--"}
+        value="--"
+
       />
       <InfoCard
-        icon={ChartArea}
-        colorIcon="green"
-        title="Asistencia hoy"
-        value="92.4%"
+        icon={Users}
+        colorIcon="yellow"
+        title="Usuarios totales"
+        // value={metrics?.total_users ? metrics.total_users + " Usuarios" : "--"}
+        value="--"
       />
 
-      <SystemStatusCard
-        isOnline
-        course="3ro Informatica Vespertina"
-        attendance={95}
-        lastReading={new Date()}
-      />
       <LinkCard
         title="Gestión de estudiantes"
         description="Administre el registro de nuevos o existentes estudiantes, edición de perfiles y asignación de tags NFC."
@@ -64,6 +85,12 @@ export default function HomePageAdmin() {
         ctaText="Gestionar usuarios"
         icon={UserLock}
       />
+
+      {/* <SystemStatusCard
+        attendance={90}
+        metricsUrl="/api/realtime/metrics"
+      /> */}
+
       <LinkCard
         title="Historial de asistencias"
         description="Consulta registros históricos de entradas y salidas de todos los estudiantes."
@@ -71,6 +98,8 @@ export default function HomePageAdmin() {
         ctaText="Visualizar historial"
         icon={History}
       />
+
+
       <LinkCard
         title="Reportes y estadísticas"
         description="Genere reportes PDF/Exel y visualice estadísticas de puntualidad y ausentismo."
@@ -86,7 +115,7 @@ export default function HomePageAdmin() {
         icon={CalendarClockIcon}
       />
 
-      <NotificationContainer>
+      {/* <NotificationContainer>
         <NotificationHeader
           title="Actividad reciente en mis cursos asignados."
           description="Ultimos 5 registros de actividad."
@@ -128,7 +157,11 @@ export default function HomePageAdmin() {
           course="3ro de informatica - vespertina"
           variant="info"
         />
-      </NotificationContainer>
+      </NotificationContainer> */}
+
+      <NotificationsRealtime
+        notificationsUrl="/api/realtime/notifications"
+      />
     </>
   );
 }

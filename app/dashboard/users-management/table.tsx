@@ -73,7 +73,7 @@ export function UsersTable() {
         {
             header: "Nombre",
             cell: ({ row }) => (
-                <DataUser name={formatFullName(row.original.first_name, row.original.last_name)} id={row.original.id.toString()} />
+                <DataUser name={formatFullName(row.original.first_name, row.original.last_name)} id={row.original.cdl.toString()} />
             ),
         },
         {
@@ -90,17 +90,6 @@ export function UsersTable() {
         {
             accessorKey: "email",
             header: "Email"
-        },
-        {
-            header: "Estado",
-            cell: ({ row }) => {
-                const state = row.original.is_active
-                return (
-                    <Badge color={getActiveBadgeColor(state).color} circle>
-                        {getActiveBadgeColor(state).label}
-                    </Badge>
-                )
-            }
         },
         {
             header: "Acciones",

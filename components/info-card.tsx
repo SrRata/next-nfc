@@ -36,7 +36,7 @@ export function InfoCard({
   return (
     <div
       className={cn(
-        "bg-white-primary rounded-primary p-6 gap-4 relative",
+        "bg-white-primary rounded-primary p-6 gap-4 relative border gray-200",
         isCompact ? "flex items-center" : "flex flex-col",
         className,
       )}
@@ -46,7 +46,7 @@ export function InfoCard({
       <div className={cn("flex flex-col gap-2")}>
         <h3 className="text-black-secondary font-semibold">{title}</h3>
 
-        {numberTiker ? (<NumberTicker value={Number(value)} className="text-black-primary font-bold text-3xl capitalize" />): (<p className="text-black-primary font-bold text-3xl capitalize">{value}</p>)}
+        {numberTiker ? (<NumberTicker value={Number(value)} className="text-black-primary font-bold text-3xl" />): (<p className="text-black-primary font-bold text-3xl">{value}</p>)}
 
         {isCompact && alert && (
           <p className={cn("font-semibold absolute top-5 right-5", alertColor === "gray" ? "text-black-secondary" : `text-${alertColor}-primary`)}>
