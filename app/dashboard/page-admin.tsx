@@ -86,10 +86,9 @@ export default function HomePageAdmin() {
         icon={UserLock}
       />
 
-      {/* <SystemStatusCard
-        attendance={90}
+      <SystemStatusCard
         metricsUrl="/api/realtime/metrics"
-      /> */}
+      />
 
       <LinkCard
         title="Historial de asistencias"

@@ -6,7 +6,6 @@ import { Metrics } from "@/types/metrics";
 import { usePolling } from "@/hooks/usePolling";
 
 interface SystemStatusCardProps {
-  attendance: number;
   metricsUrl: string;
 }
 
@@ -14,7 +13,6 @@ interface SystemStatusCardProps {
 
 
 export function SystemStatusCard({
-  attendance,
   metricsUrl
 }: SystemStatusCardProps) {
 
