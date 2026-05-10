@@ -22,6 +22,9 @@ export function SystemStatusCard({
 
   return (
     <div className="bg-blue-primary rounded-primary p-8 overflow-hidden relative flex flex-col justify-between">
+      
+      
+
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-xl text-white-primary/80">

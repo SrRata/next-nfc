@@ -1,3 +1,5 @@
+import { color } from "@/lib/constants/data-type";
+
 export interface student {
     id: number;
     first_name: string;
@@ -11,6 +13,7 @@ export interface student {
     course_name: string | null;
     educational_level_name: string | null;
     section_name: string | null;
+    section_color: color;
     total_attendances: number;
     total_absences: number;
     parent_id: number | null;

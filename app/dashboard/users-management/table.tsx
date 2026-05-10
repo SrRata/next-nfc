@@ -19,28 +19,15 @@ import { IconTrash } from "@tabler/icons-react";
 import { Spinner } from "@/components/ui/spinner";
 
 
-export function UsersTable() {
+interface Props {
+    users: user[]
+    setUsers: React.Dispatch<React.SetStateAction<user[]>>
+    isLoading: boolean
+}
+
+
+export function UsersTable({ users, setUsers, isLoading }: Props) {
     const router = useRouter();
-
-
-    const [isLoading, setIsLoading] = useState(true)
-    const [users, setUsers] = useState<user[]>([])
-
-    useEffect(() => {
-        async function loadUsers() {
-            try {
-                const response = await axios.get('/api/usersc');
-                if (response.data.success) {
-                    setUsers(response.data.data);
-                }
-            } catch (error) {
-                console.error('Error fetching courses:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        loadUsers();
-    }, []);
 
     const [processing, setProcessing] = useState(false)
 
@@ -89,7 +76,17 @@ export function UsersTable() {
         },
         {
             accessorKey: "email",
-            header: "Email"
+            header: "Email",
+            cell: ({ row }) => (
+                row.original.email ? row.original.email : "--"
+            )
+        },
+        {
+            accessorKey: "phone_number",
+            header: "Telefono",
+            cell: ({ row }) => (
+                row.original.phone_number ? row.original.phone_number : "--"
+            )
         },
         {
             header: "Acciones",
@@ -102,8 +99,7 @@ export function UsersTable() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => router.push('/dashboard/courses-management/edit/' + row.original.id)}>Editar</DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => router.push('/dashboard/users-management/edit/' + row.original.id)}>Editar</DropdownMenuItem>
                         <DropdownMenuItem variant="destructive" onClick={() => handleOpenDelete(row.original)}>
                             Borrar
                         </DropdownMenuItem>
@@ -120,7 +116,7 @@ export function UsersTable() {
                 columns={columns}
                 data={users ?? []}
                 isLoading={isLoading}
-                buttonCTA="Nuevo estudiante"
+                buttonCTA="Nuevo usuario"
                 buttonAction={() => router.push('/dashboard/users-management/create/0')}
             />
 

@@ -10,7 +10,7 @@ import {
 import { RealtimeDashboard } from "@/components/realtime";
 import { SystemStatusCard } from "@/components/system-status-card";
 import { NotificationsRealtime } from "@/components/ui/notificationswhitpolling";
-import { Metrics } from "@/types/metrics";
+import { Metrics, MetricsAdmin } from "@/types/metrics";
 import axios from "axios";
 
 import {
@@ -30,46 +30,66 @@ import { useEffect, useState } from "react";
 
 export default function HomePageAdmin() {
 
+  const [metrics, setMetrics] = useState<MetricsAdmin | null>(null);
+  const [loadingMetricsAdmin, setLoadingMetricsAdmin] = useState(true);
+
+   async function loadAdminMetrics() {
+    try {
+      const response = await axios.get('/api/metrics/admin');
+      if (response.data.success) {
+        setMetrics(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching metrics:', error)
+    } finally {
+      setLoadingMetricsAdmin(false)
+    }
+  }
+
+  useEffect(() => {
+    loadAdminMetrics();
+  }, [])
+
+
+
   return (
     <>
       {/* <RealtimeDashboard
         metricsUrl="/api/realtime/metrics"
         notificationsUrl="/api/realtime/notifications"
-      />
+      /> */}
 
-      <RealtimeDashboard
+      {/* <RealtimeDashboard
         metricsUrl={`/api/realtime/metrics?course_id=36`}
         studentListUrl={`/api/realtime/student-list?course_id=36`}
         notificationsUrl={`/api/realtime/notifications?course_id=36`}
-      />
-
-      <RealtimeDashboard
-        // metricsUrl={`/api/realtime/metrics?course_id=36`}
-        notificationsUrl={`/api/realtime/notifications?student_id=48`}
       /> */}
+
+      {/* <RealtimeDashboard
+        // metricsUrl={`/api/realtime/metrics?course_id=36`}
+        notificationsUrl={`/api/realtime/notifications?student_id=48`} */}
+      {/* /> */}
 
       <InfoCard
         icon={Book}
         colorIcon="blue"
         title="Mis cursos"
-        // value={metrics?.total_courses ? metrics.total_courses + "Cursos" : "--"}
-        value="--"
+        value={metrics?.total_courses ? metrics.total_courses + " Cursos" : "--"}
+
       />
       <InfoCard
         icon={Users}
         colorIcon="purple"
         title="Estudiantes totales"
-        // value={metrics?.total_students ? metrics.total_students + " Estudiantes" : "--"}
-        value="--"
+        value={metrics?.total_students ? metrics.total_students + " Estudiantes" : "--"}
 
       />
       <InfoCard
         icon={Users}
         colorIcon="yellow"
         title="Usuarios totales"
-        // value={metrics?.total_users ? metrics.total_users + " Usuarios" : "--"}
-        value="--"
-      />
+        value={metrics?.total_users ? metrics.total_users + " Usuarios" : "--"}
+/>
 
       <LinkCard
         title="Gestión de estudiantes"
@@ -113,50 +133,6 @@ export default function HomePageAdmin() {
         ctaText="Ir a horarios"
         icon={CalendarClockIcon}
       />
-
-      {/* <NotificationContainer>
-        <NotificationHeader
-          title="Actividad reciente en mis cursos asignados."
-          description="Ultimos 5 registros de actividad."
-          href="/dashboard/history"
-          hrefLabel="Ver todo"
-        />
-        <NotificationItem
-          name="Luis Matailo"
-          message="registro una entrada puntutal"
-          createdAt={new Date(Date.now() - 3 * 60 * 1000)}
-          course="3ro de informatica - vespertina"
-          variant="success"
-        />
-        <NotificationItem
-          name="Luis Matailo"
-          message="registro una entrada puntutal"
-          createdAt={new Date()}
-          course="3ro de informatica - vespertina"
-          variant="warning"
-        />
-        <NotificationItem
-          name="Luis Matailo"
-          message="registro una entrada puntutal"
-          createdAt={new Date()}
-          course="3ro de informatica - vespertina"
-          variant="danger"
-        />
-        <NotificationItem
-          name="Luis Matailo"
-          message="registro una entrada puntutal"
-          createdAt={new Date()}
-          course="3ro de informatica - vespertina"
-          variant="info"
-        />
-        <NotificationItem
-          name="Luis Matailo"
-          message="registro una entrada puntutal"
-          createdAt={new Date()}
-          course="3ro de informatica - vespertina"
-          variant="info"
-        />
-      </NotificationContainer> */}
 
       <NotificationsRealtime
         notificationsUrl="/api/realtime/notifications"

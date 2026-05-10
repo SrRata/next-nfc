@@ -7,6 +7,7 @@ import {
   NotificationHeader,
   NotificationItem,
 } from "@/components/notification";
+import { IconNotificationOff } from "@tabler/icons-react";
 
 interface NotifRecord {
   id: number;
@@ -53,7 +54,7 @@ export function NotificationsRealtime({
   notificationsUrl,
   title = "Actividad reciente",
   description = "Últimos registros del día",
-  href = "/dashboard/asistencia",
+  href = "/dashboard/history",
   hrefLabel = "Ver todo",
 }: Props) {
   const { data, loading } = usePolling<{ records: NotifRecord[] }>(
@@ -71,16 +72,16 @@ export function NotificationsRealtime({
         hrefLabel={hrefLabel}
       />
 
-      {loading && (
-        <p style={{ fontSize: 13, color: "var(--color-text-tertiary)" }}>
-          Cargando...
-        </p>
-      )}
-
       {!loading && records.length === 0 && (
-        <p style={{ fontSize: 13, color: "var(--color-text-tertiary)" }}>
-          Sin registros hoy todavía
-        </p>
+
+
+        <div className="flex flex-col p-5 gap-3 items-center justify-center">
+          <div className="size-20 rounded-primary grid place-items-center bg-purple-secondary mb-5">
+            <IconNotificationOff className="size-15 text-purple-primary" />
+          </div>
+          <p className="text-black-primary font-bold text-3xl">¡Todo limpio!</p>
+          <p className="text-black-secondary font-medium max-w-md text-center mb-5">Tu bandeja de entrada está vacía por ahora. Relájate y disfruta del silencio.</p>
+        </div>
       )}
 
       {records.map((r) => (

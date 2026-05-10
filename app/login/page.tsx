@@ -5,7 +5,7 @@ import { LoginForm } from "./login-form";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "Login",
+  title: "Login - WARDEN NFC",
 };
 
 export default function LoginPage() {
@@ -41,12 +41,12 @@ export default function LoginPage() {
         </div>
         <LoginForm />
       </div>
-                      <Toaster
-                  richColors
-                  position="top-right"      
-                  theme="light"
-                  duration={6000}
-                />
+      <Toaster
+        richColors
+        position="top-right"
+        theme="light"
+        duration={6000}
+      />
     </div>
   );
 }

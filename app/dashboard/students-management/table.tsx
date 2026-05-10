@@ -22,31 +22,19 @@ import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { IconTrash } from "@tabler/icons-react";
 import { Spinner } from "@/components/ui/spinner";
+import { Badge } from "@/components/ui/badge";
 
-export default function TableStudentsManagement() {
+interface Props {
+  students: student[]
+  setStudents: React.Dispatch<React.SetStateAction<student[]>>
+  isLoading: boolean
+}
+
+
+export default function TableStudentsManagement({ students, setStudents, isLoading }: Props) {
   const router = useRouter();
 
-  const [students, setStudents] = useState<student[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  useEffect(() => {
-    async function loadStudents() {
-      try {
-        const response = await axios.get('/api/students');
-
-        if (response.data.success) {
-          setStudents(response.data.data);
-        }
-      } catch (error) {
-        console.error('Error fetching students:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadStudents();
-  }, []);
-
   const [processing, setProcessing] = useState(false)
 
 
@@ -93,22 +81,26 @@ export default function TableStudentsManagement() {
     {
       accessorKey: "section_name",
       header: "Seccion",
-      cell: ({ row }) => (
-        row.original.section_name || "Asignar seccion"
-      )
+      // cell: ({ row }) => (
+      //   // row.original.section_name || "Asignar seccion"
+      // )
+
+      cell: ({ row }) => {
+        return row.original.section_name ? (<Badge color={row.original.section_color}>{row.original.section_name}</Badge>) : "--"
+      }
     },
     {
       accessorKey: "parent_name",
       header: "Representante",
       cell: ({ row }) => (
-        row.original.parent_name || "Asignar representante"
+        row.original.parent_name || "--"
       )
     },
     {
       accessorKey: "nfc_uid",
       header: "UID",
       cell: ({ row }) => (
-        row.original.nfc_uid || "Sin UID asignada"
+        row.original.nfc_uid || "--"
       )
     },
     {

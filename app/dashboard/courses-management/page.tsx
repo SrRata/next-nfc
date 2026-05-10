@@ -7,6 +7,7 @@ import { InfoCard } from "@/components/info-card";
 import { Book, BookOpen, School, Text, Users, UserX } from "lucide-react";
 import { course } from "@/types/courses";
 import axios from "axios";
+import { MetricsAdmin } from "@/types/metrics";
 
 export default function CoursesManagementPage() {
 
@@ -43,7 +44,7 @@ export default function CoursesManagementPage() {
         icon={Users}
         colorIcon="yellow"
         title="Total alumnos asignados"
-        value={totalStudents}
+        value={totalStudents ? totalStudents : "--"}
         variant="compact"
       />
 
@@ -51,7 +52,7 @@ export default function CoursesManagementPage() {
         icon={BookOpen}
         colorIcon="purple"
         title="Total cursos"
-        value={totalCourses}
+        value={totalCourses ? totalCourses : "--"}
         variant="compact"
       />
 
@@ -59,13 +60,13 @@ export default function CoursesManagementPage() {
         icon={UserX}
         colorIcon="red"
         title="Cursos sin profesores"
-        value={coursesWithoutProfessor}
+        value={coursesWithoutProfessor ? coursesWithoutProfessor : "--"}
         alert="! Asignar profesores"
         alertColor="red"
         variant="compact"
       />
       <Suspense fallback={<TableSkeleton />}>
-        <CoursesTable courses={courses} setCourses={setCourses} />
+        <CoursesTable courses={courses} setCourses={setCourses} isLoading={isLoading}/>
       </Suspense>
     </>
   );

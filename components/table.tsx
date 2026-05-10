@@ -27,7 +27,7 @@ export const TableContainer = forwardRef<HTMLDivElement, TableContainerProps>(
         ref={ref} // 3. ¡Importante! Asignamos la ref al div
         {...props}
         className={cn(
-          "bg-white-primary rounded-primary col-span-full p-6",
+          "bg-white-primary rounded-primary col-span-full p-6 border border-gray-200",
           className,
         )}
       />

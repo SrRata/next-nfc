@@ -18,6 +18,7 @@ export async function GET() {
          c.course_name,
          el.name         AS educational_level_name,
          sec.name        AS section_name,
+         sec.color       AS section_color,
          ss.total_attendances,
          ss.total_absences,
          u.id                                   AS parent_id,

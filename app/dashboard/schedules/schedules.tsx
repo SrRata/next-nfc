@@ -287,7 +287,7 @@ export default function SchedulesManagement({ schedules, educationalLevels, setS
 
     return (
         <>
-            <div className="space-y-6 p-6 rounded-primary bg-white-primary md:col-span-2 md:row-span-3">
+            <div className="space-y-6 p-6 rounded-primary bg-white-primary col-span-full md:col-span-2 md:row-span-3">
 
                 <div className="flex items-center justify-between col-span-full">
                     <div>

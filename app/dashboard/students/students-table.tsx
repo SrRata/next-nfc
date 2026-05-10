@@ -1,63 +1,76 @@
 "use client";
 
-import { Badge} from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { DataUser } from "@/components/data-user";
 
 import { ColumnDef } from "@tanstack/react-table";
 
 import { InternalLink } from "@/components/ui/link";
-import { ExternalLink } from "lucide-react";
-
-type Data = {
-  id: string;
-  name: string;
-  course: string;
-  section: string;
-  isActive: boolean;
-};
-
-import data from "./data.json";
 import { DataTable } from "@/components/data-table";
-import { getActiveBadgeColor, stateBadgeColor } from "@/lib/constants/get-badge-color";
+import { usePolling } from "@/hooks/usePolling";
+import { Student } from "./page";
+import { useExportStudents } from "@/hooks/Useexportstudents";
 
-export function StudentsTable() {
-  const columns: ColumnDef<Data>[] = [
+
+interface Props {
+  isLoading: boolean
+  data: Student[]
+}
+
+export function StudentsTable({ data, isLoading }: Props) {
+
+  const { exportToPdf, exportToExcel, exportingPdf, exportingExcel } =
+    useExportStudents(data);
+
+  const columns: ColumnDef<Student>[] = [
     {
       accessorKey: "name",
       header: "Estudiante",
       cell: ({ row }) => (
-        <DataUser name={row.original.name} section={row.original.section} />
+        <DataUser name={row.original.first_name + " " + row.original.last_name} />
       ),
     },
     {
-      accessorKey: "course",
-      header: "Curso",
+      header: "Estado",
+      cell: ({ row }) => (
+        <Badge
+          color={
+            row.original.status === "presente"
+              ? "green"
+              : row.original.status === "atrasado"
+                ? "yellow"
+                : "gray"
+          }
+        >
+          {row.original.status}
+        </Badge>
+
+      )
     },
     {
-      accessorKey: "state",
-      header: "Asistencia hoy",
-      cell: ({ row }) => {
-        const state = row.original.isActive;
-
-        return (
-          <Badge color={getActiveBadgeColor(state).color} circle>
-            {getActiveBadgeColor(state).label}
-          </Badge>
-        );
-      },
+      header: "Entrada",
+      cell: ({ row }) => (
+        <p>{row.original.entry_time ? row.original.entry_time : "..."}</p>
+      )
+    },
+    {
+      header: "Salida",
+      cell: ({ row }) => (
+        <p>{row.original.exit_time ? row.original.exit_time : "..."}</p>
+      )
     },
     {
       header: "Acciones",
       cell: ({ row }) => (
         <InternalLink href={`./history/${row.original.id}`}>
           Ver historial
-          <ExternalLink />
         </InternalLink>
       ),
     },
+
   ];
 
   return (
-    <DataTable legend="Listado de estudiantes" columns={columns} data={data} />
+    <DataTable legend="Listado de estudiantes" columns={columns} data={data} noPagination isLoading={isLoading} buttonCTA="Exportar exel" buttonAction={exportToExcel} />
   );
 }

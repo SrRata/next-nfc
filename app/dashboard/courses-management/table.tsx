@@ -20,11 +20,13 @@ import { useRouter } from "next/navigation";
 interface Props {
   courses: course[]
   setCourses: React.Dispatch<React.SetStateAction<course[]>>
+  isLoading: boolean
 }
 
-export function CoursesTable({ courses, setCourses }: Props) {
+export function CoursesTable({ courses, setCourses, isLoading }: Props) {
   const router = useRouter();
   const [processing, setProcessing] = useState(false)
+
 
   const handleDelete = async (id: number) => {
     const loadingToast = toast.loading('Eliminando curso...');
@@ -50,39 +52,39 @@ export function CoursesTable({ courses, setCourses }: Props) {
   const columns: ColumnDef<course>[] = [
     {
       accessorKey: "course_name",
-      header: "NOMBRE DEL CURSO",
+      header: "Curso",
       cell: ({ row }) => (
-        <p className="font-bold ">{row.original.course_name}</p>
+        row.original.course_name
       )
     },
     {
       accessorKey: "educational_level_name",
-      header: "NIVEL",
+      header: "Nivel educativo",
       cell: ({ row }) => (
         <Badge color={row.original.educational_level_color}>{row.original.educational_level_name}</Badge>
       )
     },
     {
       accessorKey: "section_name",
-      header: "SECCIÓN",
+      header: "Sección",
       cell: ({ row }) => (
         <Badge color={row.original.section_color}>{row.original.section_name}</Badge>
       )
     },
     {
       accessorKey: "professor_name",
-      header: "TUTOR",
-      cell: ({ row }) => row.original.professor_name ? <DataUser lic name={row.original.professor_name} /> : <DataUser name="Sin Tutor" />
+      header: "Tutor",
+      cell: ({ row }) => row.original.professor_name ? <DataUser lic name={row.original.professor_name} /> : "..."
     },
     {
       accessorKey: "total_students",
-      header: "ESTUDIANTES",
+      header: "N. estudiantes",
       cell: ({ row }) => (
-        <p className="font-bold text-lg">{row.original.total_students}</p>
+        row.original.total_students
       )
     },
     {
-      header: "ACCIONES",
+      header: "Acciones",
       cell: ({ row }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -142,6 +144,7 @@ export function CoursesTable({ courses, setCourses }: Props) {
       <DataTable
         legend="Cursos registrados"
         columns={columns}
+        isLoading={isLoading}
         data={courses ?? []}
         buttonCTA="Nuevo curso"
         buttonAction={() => router.push('/dashboard/courses-management/create/0')}

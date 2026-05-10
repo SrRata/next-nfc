@@ -14,29 +14,25 @@ import axios from "axios";
 import { formatDate, formatTime, formatTime12h } from "@/lib/format-time";
 import { IconAlertCircle, IconAlertCircleFilled } from "@tabler/icons-react";
 
-export function HistoryTable() {
 
-  const [AttendanceRecords, setAttendanceRecords] = useState<AttendanceRecords[]>([])
-  const [isLoading, setIsLoading] = useState(true);
+interface Props {
+  attendanceRecords: AttendanceRecords[]
+  setAttendanceRecords: React.Dispatch<React.SetStateAction<AttendanceRecords[]>>
+  isLoading: boolean
+}
 
-  useEffect(() => {
-    async function loadAttendanceRecords() {
-      try {
-        const response = await axios.get('/api/attendance-records');
 
-        if (response.data.success) {
-          setAttendanceRecords(response.data.data)
-        }
-      } catch (error) {
-        console.error('Error fetching attendance records:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadAttendanceRecords();
-  }, [])
+export function HistoryTable({attendanceRecords, setAttendanceRecords, isLoading}: Props) {
 
   const columns: ColumnDef<AttendanceRecords>[] = [
+
+    {
+      accessorKey: "student_id",
+      header: "Estudiante",
+      cell: ({ row }) => (
+        <DataUser name={`${row.original.student_first_name} ${row.original.student_last_name}`} section={`${row.original.course_name} - ${row.original.section_name}`} />
+      ),
+    },
     {
       accessorKey: "date",
       header: "Fecha",
@@ -47,66 +43,30 @@ export function HistoryTable() {
       )
     },
     {
-      accessorKey: "student_id",
-      header: "Estudiante",
-      cell: ({ row }) => (
-        <DataUser name={`${row.original.student_first_name} ${row.original.student_last_name}`} section={`${row.original.course_name} - ${row.original.section_name}`} />
-      ),
-    },
-    {
       accessorKey: "entry_time",
       header: "Entrada",
       cell: ({ row }) => (
-        <p className="font-bold text-[12px]">
-          {formatTime12h(row.original.entry_time)}
-        </p>
+          row.original.entry_time ? formatTime12h(row.original.entry_time) : "..."
       )
     },
     {
       accessorKey: "exit_time",
       header: "Salida",
       cell: ({ row }) => (
-        // row.original.exit_time ? (<p className="font-bold text-[12px]">
-        //   {formatTime12h(row.original.exit_time)}
-        // </p>) : (
-        //   <Badge color="yellow">Pendiente</Badge>
-        // )
-
-        <p className="font-bold text-[12px]">
-          {formatTime12h(row.original.exit_time)}
-        </p>
+          row.original.exit_time ? formatTime12h(row.original.exit_time) : "..."
       )
     },
     {
       accessorKey: "observation",
       header: "Observación",
     }
-    // {
-    //   accessorKey: "observation",
-    //   header: "Observación",
-    //   cell: ({ row }) => {
-    //     const state = row.original.observation;
-
-    //     return (
-    //       row.original.exit_time ? (
-    //         <p>Salida aun no registrada</p>
-    //       ) : (<div className="flex items-center gap-3">
-    //         <IconAlertCircleFilled className="text-yellow-500" />
-    //         <p className="text-black-secondary">Salida aun no registrada</p>
-    //       </div>)
-    //     );
-    //   },
-    // },
-    // {
-    //   accessorKey: "observation",
-    //   header: "Observacion"
-    // }
   ];
 
   return (
     <DataTable
       legend="Registros Encontrados"
       columns={columns}
-      data={AttendanceRecords ? AttendanceRecords : []} />
+      isLoading={isLoading}
+      data={attendanceRecords ? attendanceRecords : []} />
   );
 }

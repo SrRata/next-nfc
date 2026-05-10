@@ -18,7 +18,7 @@ import Link from "next/link";
 
 
 export const metadata: Metadata = {
-  title: "SIAE",
+  title: "WARDEN NFC",
 };
 
 export default function Home() {

@@ -36,7 +36,7 @@ export function InfoCard({
   return (
     <div
       className={cn(
-        "bg-white-primary rounded-primary p-6 gap-4 relative border gray-200",
+        "bg-white-primary rounded-primary p-6 gap-4 relative border gray-200 col-span-1",
         isCompact ? "flex items-center" : "flex flex-col",
         className,
       )}
