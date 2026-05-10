@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { TableSkeleton } from "@/components/table";
 import { UsersTable } from "./table";
-import { Users } from "lucide-react";
+import { GraduationCap, Shield, ShieldCheck, User, Users } from "lucide-react";
 import { InfoCard } from "@/components/info-card";
 import { MetricsAdmin } from "@/types/metrics";
 import axios from "axios";
@@ -40,7 +40,7 @@ export default function UserPage() {
     <>
 
       <InfoCard
-        icon={Users}
+        icon={ShieldCheck}
         colorIcon="purple"
         title="Total administradores"
         value={total_admins? total_admins : "--"}
@@ -48,7 +48,7 @@ export default function UserPage() {
       />
 
       <InfoCard
-        icon={Users}
+        icon={GraduationCap}
         colorIcon="blue"
         title="Total profesores"
         value={total_teachers ? total_teachers : "--"}
@@ -56,7 +56,7 @@ export default function UserPage() {
       />
 
       <InfoCard
-        icon={Users}
+        icon={User}
         colorIcon="green"
         title="Total representantes"
         value={total_users? total_users : "--"}

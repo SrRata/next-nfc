@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { TableSkeleton } from "@/components/table";
 import TableStudentsManagement from "./table";
-import { Users, UserX } from "lucide-react";
+import { CircleDashed, IdCard, Users, UserX } from "lucide-react";
 import { InfoCard } from "@/components/info-card";
 import axios from "axios";
 import { MetricsAdmin } from "@/types/metrics";
@@ -48,7 +48,7 @@ export default function StudentsPage() {
       />
 
       <InfoCard
-        icon={Users}
+        icon={CircleDashed}
         colorIcon="red"
         title="Alumnos sin representante"
         variant="compact"
@@ -57,7 +57,7 @@ export default function StudentsPage() {
 
 
       <InfoCard
-        icon={Users}
+        icon={IdCard}
         colorIcon="purple"
         title="Alumnos con tarjeta"
         variant="compact"

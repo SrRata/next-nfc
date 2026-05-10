@@ -291,13 +291,6 @@ export function NavUser() {
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link href="/dashboard/profile" className="flex gap-2 items-center text-[11px] font-medium size-full">
-                  <IconInbox className="size-5" />
-                  Notificaciones
-                </Link>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem>
-                <Link href="/dashboard/profile" className="flex gap-2 items-center text-[11px] font-medium size-full">
                   <User className="size-5" />
                   Perfil
                 </Link>
