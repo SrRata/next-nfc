@@ -172,7 +172,7 @@ export default function HomePageTeacher() {
         icon={ChartArea}
         colorIcon="green"
         title="Asistencia hoy"
-        value={`${attendancePercentage}%`}
+        value={attendancePercentage ? `${attendancePercentage}%` : "--"}
       />
 
       <CourseOverviewCard>

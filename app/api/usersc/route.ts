@@ -4,6 +4,10 @@ import { db } from "@/lib/hooks/db";
 import bcrypt from "bcryptjs";
 import { Resend } from "resend";
 import crypto from "crypto";
+import {
+    sendWhatsAppMessage,
+    normalizePhone
+} from "@/lib/whatsapp";
 
 // GET /api/users
 // Admin ve todos | Profesor solo se ve a sí mismo | Usuario (padre) solo se ve a sí mismo
@@ -51,6 +55,8 @@ export async function GET(req: NextRequest) {
         );
     }
 }
+
+
 
 // POST /api/users — solo admin
 export async function POST(req: NextRequest) {
@@ -120,6 +126,7 @@ export async function POST(req: NextRequest) {
 
         const token = crypto.randomBytes(32).toString("hex");
 
+
         await conn.query(
             `INSERT INTO user_invites (user_id, token, expires_at)
    VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 DAY))`,
@@ -128,11 +135,24 @@ export async function POST(req: NextRequest) {
 
         await conn.commit();
 
+        const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/login/invite?token=${token}`;
 
+
+        if (phone_number) {
+
+            const normalizedPhone =
+                normalizePhone(phone_number);
+
+
+            await sendWhatsAppMessage(
+                normalizedPhone,
+                `Hola ${first_name}, bienvenido al sistema.\n\nTu cuenta ha sido creada correctamente.\n\nActiva tu cuenta aquí:\n\n${inviteLink}`
+            );
+        }
 
         const resend = new Resend(process.env.RESEND_API_KEY);
 
-        const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/login/invite?token=${token}`;
+
 
         try {
             await resend.emails.send({
@@ -159,7 +179,8 @@ export async function POST(req: NextRequest) {
 `
             });
         } catch (error) {
-            console.error("Error enviando email:", error);
+            console.error("ERROR RESEND:");
+            console.error(error);
             // opcional: guardar log o reintentar luego
         }
 

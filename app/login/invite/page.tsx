@@ -9,7 +9,7 @@ function InviteHandler() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = params.get("token");
+    const token = params.get("miTokenName");
 
     if (!token) {
       router.push("/error");
