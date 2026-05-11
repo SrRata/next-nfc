@@ -203,7 +203,7 @@ export default function HomePageTeacher() {
 
 
       <NotificationsRealtime
-        notificationsUrl={`api/realtime/notifications?course_id=${user.id}`}
+        notificationsUrl={`api/realtime/notifications?course_id=${course?.id}`}
       />
     </>
   );

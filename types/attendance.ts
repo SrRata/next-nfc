@@ -51,3 +51,44 @@ export interface AttendanceRecords {
   educational_level_id: number;
   educational_level_name: string
 } 
+
+
+
+
+
+
+export interface MonthData {
+  month: string;
+  present: number;
+  late: number;
+}
+
+export interface Summary {
+  totalStudents?: number;
+  totalPresent: number;
+  totalAbsent: number;
+  totalLate: number;
+  attendanceRate: number;
+}
+
+export interface AdminProfesorResponse {
+  course?: { id: number; name: string };
+  summary: Summary;
+  byMonth: MonthData[];
+}
+
+export interface ChildData {
+  student: { id: number; name: string; course: string };
+  summary: Summary;
+  byMonth: MonthData[];
+}
+
+export interface UsuarioResponse {
+  children: ChildData[];
+}
+
+export type AttendanceResponse = AdminProfesorResponse | UsuarioResponse;
+
+export function isUsuarioResponse(r: AttendanceResponse): r is UsuarioResponse {
+  return "children" in r;
+}
