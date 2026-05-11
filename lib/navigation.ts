@@ -72,7 +72,7 @@ export const SystemNav: NavItem[] = [
     href: "/dashboard/students",
     icon: Users,
     text: "Mis alumnos",
-    roles: ['profesor', 'usuario', 'admin'],
+    roles: ['profesor'],
 
   },
   {
@@ -86,7 +86,7 @@ export const SystemNav: NavItem[] = [
     href: "/dashboard/reports",
     icon: Clipboard,
     text: "Reportes de cursos",
-    roles: ['profesor', 'admin', 'usuario'],
+    roles: ['profesor', 'admin'],
 
   },
   {

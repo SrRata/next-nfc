@@ -1,10 +1,5 @@
-
-
-
 "use client"
 
-import { Nfc } from "lucide-react"
-import { IconShape } from "./icon-shape"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/components/ui/sidebar"
 import Image from "next/image"
@@ -26,15 +21,19 @@ export function Logo({ className, variant }: LogoProps) {
         className
       )}
     >
-      {/* ICONO SIEMPRE VISIBLE */}
-      {/* <IconShape
-        icon={Nfc}
-        color="blue"
-        shape="rounded"
-        className="w-11 h-11 shrink-0"
-      /> */}
 
-      <img src="/wardennfclogo.png" alt="wardennfclogo" className="h-12 w-20" />
+      <Image
+        src="/wardennfclogo.png"
+        alt="wardennfclogo"
+        width={80}
+        height={48}
+        className={cn(
+          "transition-all duration-200 object-contain shrink-0",
+          isCollapsed
+            ? "w-10 h-10"
+            : "w-20 h-12"
+        )}
+      />
 
       <div
         className={cn(
@@ -56,4 +55,4 @@ export function Logo({ className, variant }: LogoProps) {
       </div>
     </div>
   )
-} 
+}

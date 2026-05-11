@@ -10,7 +10,6 @@ interface CourseOverviewCardProps {
 
 interface CourseOverviewHeaderProps {
   courseName: string;
-  schedule: string;
   description?: string;
 }
 
@@ -47,14 +46,10 @@ export function CourseOverviewCard({
 
 export function CourseOverviewHeader({
   courseName,
-  schedule,
   description = "Datos relevantes de su curso asignado.",
 }: CourseOverviewHeaderProps) {
   return (
     <header className="bg-blue-primary text-white-primary px-6 py-10 flex flex-col gap-2 relative">
-      <p className="opacity-80 text-sm font-medium">
-        Clases en curso: {schedule}
-      </p>
 
       <h2 className="text-3xl font-semibold">{courseName}</h2>
 

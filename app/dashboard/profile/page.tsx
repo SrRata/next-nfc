@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 export default function ProfilePage() {
 
   const [user, setUser] = useState({
+    id: '',
     firstName: '',
     lastName: '',
     role: '',
@@ -22,7 +23,7 @@ export default function ProfilePage() {
     phone: ''
   })
 
-  console.log(user)
+  // console.log(user)
 
   const getProfile = async () => {
     try {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verify } from "jsonwebtoken";
+import { decode } from "punycode";
 
 interface JwtPayload {
   role: string;
@@ -10,6 +11,7 @@ interface JwtPayload {
   exp: number;
   cdl: string;
   email: string;
+  id: string;
   phone: string;
 }
 
@@ -40,6 +42,7 @@ export async function GET(): Promise<NextResponse> {
       cdl: decoded.cdl,
       email: decoded.email,
       phone: decoded.phone,
+      id: decoded.id
       
     });
   } catch {

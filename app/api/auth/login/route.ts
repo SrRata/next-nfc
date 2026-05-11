@@ -30,7 +30,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // ✅ Comparación segura con bcrypt
     const passwordMatch = await bcrypt.compare(password, dbUser.password);
 
     if (!passwordMatch) {
