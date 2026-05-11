@@ -2,9 +2,9 @@
 
 // 1. Importar TooltipProps y los tipos específicos de contenido
 import { TooltipProps } from "recharts"
-import { 
-  ValueType, 
-  NameType 
+import {
+  ValueType,
+  NameType
 } from "recharts/types/component/DefaultTooltipContent"
 
 // 2. Definir CustomTooltipProps asegurando que payload y label estén presentes
@@ -17,16 +17,19 @@ interface CustomTooltipProps extends TooltipProps<ValueType, NameType> {
 }
 
 const labelMap = {
+  on_time: "Puntuales",
+  late: "Atrasados",
+  absent: "Ausentes",
   assists: "Asistencias",
   absences: "Inasistencias",
-  attendanceRate: "Tasa de asistencia"  
+  attendanceRate: "Tasa de asistencia"
 }
 
 export function ChartTooltip({
   active,
   payload,
   label,
-  unit = "%"
+  unit = ""
 }: CustomTooltipProps) {
   // 3. Verificación de seguridad (Type Guard)
   if (!active || !payload || payload.length === 0) {
@@ -55,7 +58,7 @@ export function ChartTooltip({
                 </span>
               </div>
               <span className="font-medium text-gray-900">
-                {Number(entry.value).toFixed(2)}{unit}
+                {Number(entry.value)}{unit}
               </span>
             </div>
           )

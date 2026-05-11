@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { TooltipProvider } from "@/components/ui/tooltip"
 
 import { Toaster } from 'sonner';
+import { Metadata } from "next";
 
 export default function DashboardLayout({
   children,

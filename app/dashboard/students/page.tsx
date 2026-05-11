@@ -7,11 +7,8 @@ import { Percent, UserMinus, Users, FileSpreadsheet, FileText, Loader2 } from "l
 import { StudentsTable } from "./students-table";
 import { Suspense, useEffect, useState } from "react";
 import { TableSkeleton } from "@/components/table";
-import { RealtimeDashboard } from "@/components/realtime";
 import { usePolling } from "@/hooks/usePolling";
 import { useExportStudents } from "@/hooks/Useexportstudents";
-import { PDFViewer } from "@react-pdf/renderer";
-import { StudentsPdfDocument } from "@/components/Studentspdfdocument ";
 import axios from "axios";
 
 interface Course {

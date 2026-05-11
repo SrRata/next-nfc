@@ -174,7 +174,7 @@ export default function ChangePasswordPage() {
   // Cargar perfil desde el JWT (incluye phone)
   useEffect(() => {
     axios
-      .get("//dashboard/profile")
+      .get("/api/profile")
       .then(({ data }) =>
         setProfile({
           email: data.email ?? "",

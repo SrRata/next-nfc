@@ -11,7 +11,9 @@
 // }
 
 
+
 "use client"; // Importante: estás usando hooks
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import HomePageAdmin from "./page-admin";

@@ -68,7 +68,7 @@ export default function EditProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const profileRes = await axios.get("//apidashboard/profile");
+        const profileRes = await axios.get("/api/profile");
         const id = profileRes.data.id;
         setUserId(id);
 

@@ -1,27 +1,46 @@
+"use client"
 
 import { Chart } from "@/components/chart";
-import data from "./data-chart.json"
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export function ReportChart() {
+interface Props {
+  endpoint: string
+}
+
+export function ReportChart({endpoint}: Props) {
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const getSectionsChart = async () => {
+    try {
+      const response = await axios.get(endpoint);
+      setChartData(response.data.data);
+    } catch (error) {
+      console.error("Error cargando datos", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getSectionsChart();
+  }, []);
+
+  if (loading) return <div>Cargando...</div>;
+
   return (
     <Chart
-      title="Comparativa de Asistencia"
-      description="Matutina vs Vespertina"
-      data={data}
-      areas={[
-        {
-          dataKey: "matutina",
-          name: "Matutina",
-          stroke: "#0F49BD",
-          fill: "#0F49BD",
-        },
-        {
-          dataKey: "vespertina",
-          name: "Vespertina",
-          stroke: "#F97316",
-          fill: "#F97316",
-        },
+      className="col-span-2"
+      variant="bar"
+      title="Asistencia semanal"
+      xKey="label"
+      series={[
+        { dataKey: "on_time", name: "Puntuales", color: "#10b981" },
+        { dataKey: "late", name: "Atrasados", color: "#f59e0b" },
+        { dataKey: "absent", name: "Ausentes", color: "#f43f5e" },
       ]}
+      data={chartData}
     />
   );
 }
