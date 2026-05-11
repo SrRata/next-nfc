@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { startOfWeek, addWeeks, format, eachDayOfInterval, addDays } from "date-fns";
 import { es } from "date-fns/locale";
+import { RowDataPacket } from 'mysql2';
+
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -74,8 +76,8 @@ export async function GET(req: NextRequest) {
   `;
 
   try {
-    // ✅ mysql2 devuelve [rows, fields] — siempre desestructura así
-    const [rows] = await db.query<mysql.RowDataPacket[]>(sql, params);
+    const [rows] = await db.query<RowDataPacket[]>(sql, params);
+
 
     const days       = eachDayOfInterval({ start: monday, end: friday });
     const rowsByDate = Object.fromEntries(rows.map((r) => [format(new Date(r.date), "yyyy-MM-dd"), r]));

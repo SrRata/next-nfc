@@ -23,6 +23,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
 
+  const newLocal = <Badge color="orange" className="text-[12px]">
+    <Baby className="size-7" />
+    Acceso Padres
+  </Badge>;
   return (
     <>
 
@@ -68,37 +72,16 @@ export default function Home() {
           </TextAnimate>
 
           <div className="flex flex-wrap gap-4">
-            {/* <Link href="/dashboard" target="_blanck">
-              <Button className="w-fit">
-                <ShieldUser className="size-7" />
-                Acceso Administrador
-              </Button>
-            </Link>
-            <Link href="/dashboard" target="_blanck">
-              <Button className="w-fit" variant="outline">
-                <GraduationCap className="size-7" />
-                Acceso Docente
-              </Button>
-            </Link>
-            <Link href="/dashboard" target="_blanck">
-              <Button className="w-fit" variant="outline" >
-                <Baby className="size-7" />
-                Acceso Padres
-              </Button>
-            </Link> */}
 
             <Badge color="blue" className="text-[12px]">
               <ShieldUser className="size-7" />
               Acceso Admistrador
             </Badge>
-            <Badge color="purple" className="text-[12px]">
+            {/* <Badge color="purple" className="text-[12px]">
               <GraduationCap className="size-7" />
               Acceso Docente
-            </Badge>
-            <Badge color="orange" className="text-[12px]">
-              <Baby className="size-7" />
-              Acceso Padres
-            </Badge>
+            </Badge> */}
+            {newLocal}
 
 
           </div>
