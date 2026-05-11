@@ -47,7 +47,7 @@ export default function Home() {
 
           <Link href="/login" target="_blanck">
             <Button className="rounded-full">
-              Acceder 
+              Acceder
             </Button>
           </Link>
 
@@ -59,9 +59,9 @@ export default function Home() {
 
 
 
-      <section className="grid md:grid-cols-2 max-w-350 mx-auto py-15 px-6 gap-20 relative">
+      <section className="grid md:grid-cols-2 max-w-350 mx-auto py-15 px-6 gap-20 h-screen">
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 py-20">
 
           <TextAnimate startOnView={false} animation="slideUp" by="word" className="text-5xl md:text-6xl font-extrabold tracking-tight text-blue-900 leading-tight mb-6 text-center md:text-left">
             Sistema Inteligente de Asistencia Escolar con NFC
@@ -77,11 +77,10 @@ export default function Home() {
               <ShieldUser className="size-7" />
               Acceso Admistrador
             </Badge>
-            {/* <Badge color="purple" className="text-[12px]">
+            <Badge color="purple" className="text-[12px]">
               <GraduationCap className="size-7" />
               Acceso Docente
-            </Badge> */}
-            {newLocal}
+            </Badge>
 
 
           </div>
@@ -89,54 +88,40 @@ export default function Home() {
 
           <BlurFade className="relative mt-15 w-[90%] h-[300px] md:hidden">
 
-            <div className="absolute top-0 left-8 w-full h-full rounded-3xl shadow-xl transform translate-x-4 -translate-y-8 z-10 bg-[url('https://www.hubspot.es/hs-fs/hubfs/dise%C3%B1o-one-page-website.webp?width=567&height=361&name=dise%C3%B1o-one-page-website.webp')] bg-cover"></div>
-            <div className="absolute top-0 left-4 w-full h-full rounded-3xl shadow-xl transform translate-x-2 -translate-y-4 z-20 bg-[url('https://www.komunicando.es/wp-content/uploads/2018/05/diseno-web.jpg')] bg-cover"></div>
-            <div className="absolute top-0 left-0 w-full h-full rounded-3xl shadow-xl z-30 bg-[url('https://www.opiniones.hosting/wp-content/uploads/2024/07/Hostinger-opiniones.jpg')] bg-cover"></div>
+            <div className="absolute top-0 left-8 w-full h-full rounded-3xl shadow-xl transform translate-x-4 -translate-y-8 z-10 bg-[url('/img5.webp')] bg-cover"></div>
+            <div className="absolute top-0 left-4 w-full h-full rounded-3xl shadow-xl transform translate-x-2 -translate-y-4 z-20 bg-[url('/img3.webp')] bg-cover"></div>
+            <div className="absolute top-0 left-0 w-full h-full rounded-3xl shadow-xl z-30 bg-[url('/img1.webp')] bg-cover"></div>
 
           </BlurFade>
         </div>
 
-        {/* 
-  <CardSwap
-    cardDistance={30}
-    verticalDistance={40}
-    delay={5000}
-    pauseOnHover={false}
-    width={500}
-    height={300}
-    easing="elastic"
-  >
-    <Card className=" bg-[url('https://www.hubspot.es/hs-fs/hubfs/dise%C3%B1o-one-page-website.webp?width=567&height=361&name=dise%C3%B1o-one-page-website.webp')] bg-cover shadow-2xl"></Card>
-    <Card className="bg-[url('https://www.komunicando.es/wp-content/uploads/2018/05/diseno-web.jpg')] bg-cover shadow-2xl"></Card>
-    <Card className=" bg-[url('https://www.opiniones.hosting/wp-content/uploads/2024/07/Hostinger-opiniones.jpg')] bg-cover shadow-2xl"></Card>
-  </CardSwap>
-   */}
+
+        <div className="absolute top-150 right-50 hidden md:block">
+          <CardSwap
+            cardDistance={30}
+            verticalDistance={40}
+            delay={5000}
+            pauseOnHover={false}
+            width={500}
+            height={300}
+            easing="elastic"
+          >
+            <Card className=" bg-[url('/img6.webp')] bg-cover shadow-2xl"></Card>
+            <Card className="bg-[url('/img2.webp')] bg-cover shadow-2xl"></Card>
+            <Card className=" bg-[url('/img5.webp')] bg-cover shadow-2xl"></Card>
+          </CardSwap>
+        </div>
 
 
 
-        <BlurFade className="relative w-full h-[90%]">
 
-          <div className="absolute top-0 left-8 w-full h-full rounded-3xl shadow-xl transform translate-x-4 -translate-y-8 z-10 bg-[url('https://www.hubspot.es/hs-fs/hubfs/dise%C3%B1o-one-page-website.webp?width=567&height=361&name=dise%C3%B1o-one-page-website.webp')] bg-cover"></div>
-          <div className="absolute top-0 left-4 w-full h-full rounded-3xl shadow-xl transform translate-x-2 -translate-y-4 z-20 bg-[url('https://www.komunicando.es/wp-content/uploads/2018/05/diseno-web.jpg')] bg-cover"></div>
-          <div className="absolute top-0 left-0 w-full h-full rounded-3xl shadow-xl z-30 bg-[url('https://www.opiniones.hosting/wp-content/uploads/2024/07/Hostinger-opiniones.jpg')] bg-cover"></div>
+        {/* <BlurFade className="relative w-full h-[90%]">
 
-        </BlurFade>
+          <div className="absolute top-0 left-8 w-full h-full rounded-3xl shadow-xl transform translate-x-4 -translate-y-8 z-10 bg-[url('/img6.webp')] bg-cover"></div>
+          <div className="absolute top-0 left-4 w-full h-full rounded-3xl shadow-xl transform translate-x-2 -translate-y-4 z-20 bg-[url('/img2.webp')] bg-cover"></div>
+          <div className="absolute top-0 left-0 w-full h-full rounded-3xl shadow-xl z-30 bg-[url('/img1.webp')] bg-cover"></div>
 
-        {/* <div className="bg-white p-4 rounded-2xl shadow-2xl rotate-3 transform h-140 hidden md:block">
-          <img className="rounded-2xl w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDP5bJ4gGbnW5xi3Rqzs9uvp9_8fMcw0vEUwzgLGbBQgd5wQ2JHP3x1u5eZ_Gf1cWyRmldOaZmv_hg5xXDlRxI3Ea6O50VklT6h8urwmI_TqP2-EEjVQy_CQYvLGwlg4fHDU0xRBX-m1zuJTCKun-SrngIsunWpgigsHSej9B0Sm1aG4LA8_dMY26iqcgZCqR6oOepOSM-q-UNPDKNLBiHqblfwY4MWfeqNKgiv4WXZi__lipQE8YTQxDSShEsGgA7DPE20RxN3Se-" />
-          <div className="absolute -bottom-6 -left-6 bg-blue-primary text-white p-6 rounded-2xl shadow-xl">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="bg-white-primary rounded-full size-12 grid place-content-center">
-                <Nfc className="size-8 text-blue-primary" strokeWidth={2.5} />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-widest opacity-80">Tecnología NFC</p>
-                <p className="text-xl font-bold">Registro 0.5s</p>
-              </div>
-
-            </div>
-          </div>
-        </div> */}
+        </BlurFade> */}
 
       </section >
 
@@ -357,7 +342,7 @@ export default function Home() {
 
         <div className="rounded-primary border border-blue-primary/30 p-5 flex flex-col items-center">
           <div className="bg-gray-400 size-40 rounded-full overflow-hidden mb-7">
-            <img src="https://avatars.githubusercontent.com/u/167723338?v=4" className="size-full" />
+            <img src="lu.jpeg" className="size-full" />
           </div>
           <p className="font-bold text-black-primary mb-3 text-center">Luis Miguel Matailo</p>
           <Badge color="blue">Backend</Badge>
@@ -365,7 +350,7 @@ export default function Home() {
 
         <div className="rounded-primary border border-blue-primary/30 p-5 flex flex-col items-center">
           <div className="bg-gray-400 size-40 rounded-full overflow-hidden mb-7">
-            <img src="·" className="size-full" />
+            <img src="jus.jpeg" className="size-full" />
           </div>
           <p className="font-bold text-black-primary mb-3 text-center">Justin Ariel Alvarez</p>
           <Badge color="blue">Frontend & UI/UX</Badge>
@@ -373,7 +358,7 @@ export default function Home() {
 
         <div className="rounded-primary border border-blue-primary/30 p-5 flex flex-col items-center">
           <div className="bg-gray-400 size-40 rounded-full overflow-hidden mb-7">
-            <img src="·" className="size-full" />
+            <img src="bimg.jpeg" className="size-full" />
           </div>
           <p className="font-bold text-black-primary mb-3 text-center">Bryam David Illescas</p>
           <Badge color="blue">Base de Datos</Badge>
@@ -381,7 +366,7 @@ export default function Home() {
 
         <div className="rounded-primary border border-blue-primary/30 p-5 flex flex-col items-center">
           <div className="bg-gray-400 size-40 rounded-full overflow-hidden mb-7">
-            <img src="·" className="size-full" />
+            <img src="brimg.jpeg" className="size-full" />
           </div>
           <p className="font-bold text-black-primary mb-3 text-center">Braulio Alexander Guambaña</p>
           <Badge color="blue">Hardware & NFC</Badge>
@@ -390,7 +375,7 @@ export default function Home() {
       </section>
 
 
-      <div className="bg-white w-full" id="5">
+      {/* <div className="bg-white w-full" id="5">
 
         <section className="max-w-350 mx-auto py-15 px-6">
 
@@ -405,7 +390,7 @@ export default function Home() {
 
         </section>
 
-      </div >
+      </div > */}
 
 
 
