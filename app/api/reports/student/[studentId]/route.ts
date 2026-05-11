@@ -54,8 +54,7 @@ export async function GET(
   if (!auth) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
   const { id: userId, role } = auth;
-  // const studentId = parseInt(params.studentId, 10);
-  const { studentId } = await params;
+  const { studentId } = params;
   const studentIdNumeric = parseInt(studentId, 10);
 
   if (isNaN(studentIdNumeric)) {
