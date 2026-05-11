@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
 
         try {
             await resend.emails.send({
-                from: "Sistema <siaenfc@jlmbgroup.com>",
+                from: "Warden nfc <wardenncf@jlmbgroup.com>",
                 to: email,
                 subject: "Bienvenido al sistema",
                 html: `

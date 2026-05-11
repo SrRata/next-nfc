@@ -32,6 +32,11 @@ interface PasswordErrors {
   confirm_password?: string;
 }
 
+interface Profile {
+  email: string;
+  phone: string;
+}
+
 // ---------- Validaciones ----------
 function validatePasswords(data: PasswordForm): PasswordErrors {
   const errors: PasswordErrors = {};
@@ -150,7 +155,9 @@ export default function ChangePasswordPage() {
   const [resending, setResending] = useState(false);
   const [countdown, setCountdown] = useState(0);
 
-  const [profile, setProfile] = useState<{ email: string; phone?: string } | null>(null);
+  // Inicializado con strings vacíos para evitar race condition con el render
+  const [profile, setProfile] = useState<Profile>({ email: "", phone: "" });
+
   const [sendVia, setSendVia] = useState({ email: true, whatsapp: false });
 
   const [passwordForm, setPasswordForm] = useState<PasswordForm>({
@@ -164,13 +171,20 @@ export default function ChangePasswordPage() {
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState("");
 
+  // Cargar perfil desde el JWT (incluye phone)
   useEffect(() => {
     axios
-      .get("/api/profile")
-      .then(({ data }) => setProfile({ email: data.email, phone: data.phone }))
+      .get("//dashboard/profile")
+      .then(({ data }) =>
+        setProfile({
+          email: data.email ?? "",
+          phone: data.phone ?? "",
+        })
+      )
       .catch(() => toast.error("No se pudo cargar la información del perfil"));
   }, []);
 
+  // Countdown para reenviar
   useEffect(() => {
     if (countdown <= 0) return;
     const t = setTimeout(() => setCountdown((c) => c - 1), 1000);
@@ -260,7 +274,7 @@ export default function ChangePasswordPage() {
         new_password: pendingNewPassword,
       });
       toast.success("¡Contraseña actualizada correctamente!", { id: toastId });
-      router.push("/profile");
+      router.push("/dashboard/profile");
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ?? "Código incorrecto o expirado.",
@@ -326,6 +340,8 @@ export default function ChangePasswordPage() {
           <div className="flex flex-col gap-3">
             <Label>Enviar código de verificación por</Label>
             <div className="flex flex-col gap-2">
+
+              {/* Email — siempre visible */}
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <Checkbox
                   checked={sendVia.email}
@@ -334,13 +350,14 @@ export default function ChangePasswordPage() {
                 <Mail className="size-4 text-muted-foreground" />
                 <span className="text-sm">
                   Correo electrónico
-                  {profile?.email && (
+                  {profile.email && (
                     <span className="text-muted-foreground ml-1">({profile.email})</span>
                   )}
                 </span>
               </label>
 
-              {profile?.phone && (
+              {/* WhatsApp — solo si el usuario tiene teléfono registrado */}
+              {profile.phone.length > 0 && (
                 <label className="flex items-center gap-3 cursor-pointer select-none">
                   <Checkbox
                     checked={sendVia.whatsapp}
@@ -353,6 +370,7 @@ export default function ChangePasswordPage() {
                   </span>
                 </label>
               )}
+
             </div>
           </div>
 
@@ -367,7 +385,7 @@ export default function ChangePasswordPage() {
                 "Enviar código"
               )}
             </Button>
-            <Button type="button" variant="outline" onClick={() => router.push("/profile")}>
+            <Button type="button" variant="outline" onClick={() => router.push("/dashboard/profile")}>
               <X className="size-4 mr-2" />
               Cancelar
             </Button>
@@ -385,9 +403,9 @@ export default function ChangePasswordPage() {
             </div>
             <p className="text-sm text-muted-foreground">
               Enviamos un código de 6 dígitos a{" "}
-              {sendVia.email && <strong>{profile?.email}</strong>}
+              {sendVia.email && <strong>{profile.email}</strong>}
               {sendVia.email && sendVia.whatsapp && " y a "}
-              {sendVia.whatsapp && <strong>WhatsApp ({profile?.phone})</strong>}.{" "}
+              {sendVia.whatsapp && <strong>WhatsApp ({profile.phone})</strong>}.{" "}
               Expira en 10 minutos.
             </p>
           </div>

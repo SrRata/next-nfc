@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
 
     if (send_email && user.email) {
       const { error } = await resend.emails.send({
-        from: "TuApp <noreply@tudominio.com>", // ← cambia por tu dominio verificado en Resend
+        from: "Warden nfc <wardenfc@jlmbgroup.com>",
         to: user.email,
         subject: "Código para cambiar tu contraseña",
         html: `

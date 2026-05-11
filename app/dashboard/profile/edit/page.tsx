@@ -68,7 +68,7 @@ export default function EditProfilePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const profileRes = await axios.get("/api/profile");
+        const profileRes = await axios.get("//apidashboard/profile");
         const id = profileRes.data.id;
         setUserId(id);
 
@@ -105,7 +105,7 @@ export default function EditProfilePage() {
     try {
       await axios.put(`/api/usersc/${userId}`, form);
       toast.success("Perfil actualizado correctamente");
-      router.push("/profile");
+      router.push("/dashboard/profile");
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ?? "Error al actualizar el perfil"
@@ -230,7 +230,7 @@ export default function EditProfilePage() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/profile")}
+            onClick={() => router.push("/dashboard/profile")}
           >
             <X className="size-4 mr-2" />
             Cancelar
