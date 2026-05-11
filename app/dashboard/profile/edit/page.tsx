@@ -7,6 +7,7 @@ import axios from "axios";
 import { IdCard, Loader2, Save, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface FormData {
   first_name: string;
@@ -46,8 +47,6 @@ export default function EditProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [apiError, setApiError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const [form, setForm] = useState<FormData>({
     first_name: "",
@@ -84,7 +83,7 @@ export default function EditProfilePage() {
           phone_number: u.phone_number ?? "",
         });
       } catch {
-        setApiError("No se pudo cargar la información del perfil");
+        toast.error("No se pudo cargar la información del perfil");
       } finally {
         setLoading(false);
       }
@@ -94,22 +93,21 @@ export default function EditProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setApiError("");
-    setSuccess(false);
 
     const validationErrors = validate(form);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      toast.error("Revisa los campos del formulario");
       return;
     }
 
     setSaving(true);
     try {
       await axios.put(`/api/usersc/${userId}`, form);
-      setSuccess(true);
-      setTimeout(() => router.push("/dashboard/profile"), 1500);
+      toast.success("Perfil actualizado correctamente");
+      router.push("/profile");
     } catch (error: any) {
-      setApiError(
+      toast.error(
         error.response?.data?.message ?? "Error al actualizar el perfil"
       );
     } finally {
@@ -132,18 +130,6 @@ export default function EditProfilePage() {
         <p className="text-blue-primary font-bold text-xl">Editar información</p>
       </div>
 
-      {apiError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 ">
-          {apiError}
-        </div>
-      )}
-
-      {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg px-4 py-3 ">
-          ✓ Perfil actualizado correctamente. Redirigiendo...
-        </div>
-      )}
-
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="first_name">Nombre</Label>
@@ -155,7 +141,7 @@ export default function EditProfilePage() {
             onChange={handleChange}
           />
           {errors.first_name && (
-            <p className="text-red-500 ">{errors.first_name}</p>
+            <p className="text-red-500 text-sm">{errors.first_name}</p>
           )}
         </div>
 
@@ -169,7 +155,7 @@ export default function EditProfilePage() {
             onChange={handleChange}
           />
           {errors.last_name && (
-            <p className="text-red-500 ">{errors.last_name}</p>
+            <p className="text-red-500 text-sm">{errors.last_name}</p>
           )}
         </div>
 
@@ -183,7 +169,7 @@ export default function EditProfilePage() {
             onChange={handleChange}
           />
           {errors.username && (
-            <p className="text-red-500 ">{errors.username}</p>
+            <p className="text-red-500 text-sm">{errors.username}</p>
           )}
         </div>
 
@@ -197,7 +183,7 @@ export default function EditProfilePage() {
             onChange={handleChange}
           />
           {errors.cdl && (
-            <p className="text-red-500 ">{errors.cdl}</p>
+            <p className="text-red-500 text-sm">{errors.cdl}</p>
           )}
         </div>
 
@@ -212,7 +198,7 @@ export default function EditProfilePage() {
             onChange={handleChange}
           />
           {errors.email && (
-            <p className="text-red-500 ">{errors.email}</p>
+            <p className="text-red-500 text-sm">{errors.email}</p>
           )}
         </div>
 
@@ -244,7 +230,7 @@ export default function EditProfilePage() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push("/dashboard/profile")}
+            onClick={() => router.push("/profile")}
           >
             <X className="size-4 mr-2" />
             Cancelar
