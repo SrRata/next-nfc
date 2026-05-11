@@ -42,7 +42,7 @@ function getDateRange(sp: URLSearchParams) {
   const fmt = (d: Date) => d.toISOString().split("T")[0];
   return {
     dateFrom: sp.get("dateFrom") ?? fmt(new Date(now.getFullYear(), now.getMonth(), 1)),
-    dateTo:   sp.get("dateTo")   ?? fmt(new Date(now.getFullYear(), now.getMonth() + 1, 0)),
+    dateTo: sp.get("dateTo") ?? fmt(new Date(now.getFullYear(), now.getMonth() + 1, 0)),
   };
 }
 
@@ -128,9 +128,9 @@ export async function GET(
   );
 
   const totalPresent = Number((sumRows as RowDataPacket[])[0]?.totalPresent ?? 0);
-  const totalAbsent  = Number((sumRows as RowDataPacket[])[0]?.totalAbsent  ?? 0);
-  const totalLate    = Number((lateRows as RowDataPacket[])[0].totalLate);
-  const total        = totalPresent + totalAbsent;
+  const totalAbsent = Number((sumRows as RowDataPacket[])[0]?.totalAbsent ?? 0);
+  const totalLate = Number((lateRows as RowDataPacket[])[0].totalLate);
+  const total = totalPresent + totalAbsent;
 
   // ── Desglose por mes en el rango ──────────────────────────────────────────
   const [byMonthRows] = await db.query<RowDataPacket[]>(
@@ -171,15 +171,15 @@ export async function GET(
 
   return NextResponse.json({
     student: {
-      id:      student.id,
-      name:    student.name,
-      cdl:     student.cdl,
-      email:   student.email,
-      phone:   student.phone,
-      nfcUid:  student.nfcUid,
-      course:  student.course,
+      id: student.id,
+      name: student.name,
+      cdl: student.cdl,
+      email: student.email,
+      phone: student.phone,
+      nfcUid: student.nfcUid,
+      course: student.course,
       section: student.section,
-      level:   student.level,
+      level: student.level,
     },
     summary: {
       totalPresent,
@@ -188,16 +188,16 @@ export async function GET(
       attendanceRate: total > 0 ? +((totalPresent / total) * 100).toFixed(1) : 0,
     },
     byMonth: (byMonthRows as RowDataPacket[]).map((r) => ({
-      month:   r.month,
+      month: r.month,
       present: Number(r.present),
-      late:    Number(r.late),
+      late: Number(r.late),
     })),
     recentRecords: (recentRows as RowDataPacket[]).map((r) => ({
-      date:        String(r.date).split("T")[0],
-      entryTime:   r.entryTime,
-      exitTime:    r.exitTime,
+      date: String(r.date).split("T")[0],
+      entryTime: r.entryTime,
+      exitTime: r.exitTime,
       observation: r.observation,
-      status:      r.status as "on_time" | "late" | "absent",
+      status: r.status as "on_time" | "late" | "absent",
     })),
   });
 }
