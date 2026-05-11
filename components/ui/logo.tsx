@@ -16,7 +16,7 @@ export function Logo({ className, variant }: LogoProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2.5 transition-all duration-200",
+        "flex items-center gap-1 transition-all duration-200",
         isCollapsed && "justify-center",
         className
       )}
@@ -43,7 +43,7 @@ export function Logo({ className, variant }: LogoProps) {
             : "opacity-100 w-auto translate-x-0"
         )}
       >
-        <h2 className="text-blue-primary font-bold text-2xl leading-tight whitespace-nowrap">
+        <h2 className="text-[#061e40] font-extrabold text-2xl leading-tight whitespace-nowrap">
           WARDEN NFC
         </h2>
 
