@@ -93,14 +93,6 @@ export default function HomePageTeacher() {
     (s) => s.status === "ausente"
   ).length;
 
-  // const attendancePercentage =
-  //   totalStudents > 0
-  //     ? (
-  //       ((presentStudents + lateStudents) * 100) /
-  //       totalStudents
-  //     ).toFixed(0)
-  //     : "0";
-
 
   const attendancePercentage =
     totalStudents > 0
@@ -115,6 +107,53 @@ export default function HomePageTeacher() {
       )
       : 0;
 
+
+
+  interface RiskStudent {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    total_absences: number;
+  }
+
+
+  interface RiskResponse {
+    total_at_risk: number;
+    students: RiskStudent[];
+  }
+
+  const [riskStudents, setRiskStudents] = useState<RiskStudent[]>([]);
+  const [totalRiskStudents, setTotalRiskStudents] = useState(0);
+  const [loadingRisk, setLoadingRisk] = useState(false);
+
+  const getRiskStudents = async () => {
+    try {
+      setLoadingRisk(true);
+      const response = await axios.get<RiskResponse>(
+        `/api/metrics/students-risk?course_id=${course?.id}`
+      );
+
+      setRiskStudents(response.data.students);
+
+      setTotalRiskStudents(
+        response.data.total_at_risk
+      );
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoadingRisk(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!course?.id) return;
+
+    getRiskStudents();
+
+  }, [course?.id]);
+
   return (
     <>
       <InfoCard
@@ -127,7 +166,7 @@ export default function HomePageTeacher() {
         icon={UserMinus}
         colorIcon="red"
         title="Estudiantes en alerta"
-        value="6 estudiantes"
+        value={totalRiskStudents ? totalRiskStudents + " Estudiantes" : "--"}
       />
       <InfoCard
         icon={ChartArea}
@@ -164,7 +203,7 @@ export default function HomePageTeacher() {
 
 
       <NotificationsRealtime
-        notificationsUrl="/api/realtime/notifications?course_id=36"
+        notificationsUrl={`api/realtime/notifications?course_id=${user.id}`}
       />
     </>
   );
