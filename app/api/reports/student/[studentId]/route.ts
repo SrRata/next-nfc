@@ -48,13 +48,15 @@ function getDateRange(sp: URLSearchParams) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { studentId: string } }
+  { params }: { params: { studentId: number } }
 ) {
   const auth = getTokenPayload(req);
   if (!auth) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
   const { id: userId, role } = auth;
-  const studentId = parseInt(params.studentId, 10);
+  // const studentId = parseInt(params.studentId, 10);
+  const { studentId } = await params;
+
   if (isNaN(studentId)) {
     return NextResponse.json({ error: "studentId inválido" }, { status: 400 });
   }
