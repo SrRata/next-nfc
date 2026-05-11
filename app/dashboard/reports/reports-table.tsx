@@ -3,26 +3,23 @@
 import { Badge } from "@/components/ui/badge";
 import { DataUser } from "@/components/data-user";
 import { ProgressBar } from "@/components/ui/bar";
-
 import {
   ColumnDef,
 } from "@tanstack/react-table";
-
-import data from "./data.json";
 import { DataTable } from "@/components/data-table";
+import { dataReportTableStudents } from "./page";
 
-type Data = {
-  id: string;
-  name: string;
-  course: string;
-  section: string;
-  assists: number;
-  absences: number;
-};
 
-export function ReportTable() {
+interface Props {
+  reportTableStudents:dataReportTableStudents[]
+  setReportTableStudent: React.Dispatch<React.SetStateAction<dataReportTableStudents[]>>
+  isLoading: boolean
+}
 
-  const columns: ColumnDef<Data>[] = [
+
+export function ReportTable({reportTableStudents, setReportTableStudent, isLoading} : Props) {
+
+  const columns: ColumnDef<dataReportTableStudents>[] = [
     {
       accessorKey: "name",
       header: "Estudiante",
@@ -63,6 +60,6 @@ export function ReportTable() {
   ];
 
   return (
-    <DataTable legend="Datos por cada estudiante" buttonCTA="Exportar PDf" data={data} columns={columns}/>
+    <DataTable legend="Datos por cada estudiante" data={reportTableStudents} columns={columns} isLoading={isLoading} />
   );
 }

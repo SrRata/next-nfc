@@ -38,6 +38,7 @@ export default function ProfilePage() {
     getProfile();
   }, []);
 
+
   return (
     <>
       <div className="bg-white-primary rounded-primary p-6 col-span-full grid grid-cols-3 gap-8 ">
@@ -66,14 +67,6 @@ export default function ProfilePage() {
           <p className="font-semibold text-black-primary">
             {user.username}
           </p>
-        </div>
-        <div>
-          <Label>Genero</Label>
-          <Badge>Indefinido</Badge>
-        </div>
-        <div>
-          <Label>Titulo</Label>
-          <Badge>Ninguno</Badge>
         </div>
         <div>
           <Label>Teléfono</Label>
@@ -105,10 +98,8 @@ export default function ProfilePage() {
         </div>
         <Button>Editar información</Button>
       </div>
-      {/* <Alert
-        variant="info"
-        description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor aspernatur, odio aliquid voluptates aliquam placeat debitis rerum doloribus qui, dolorem ullam nam! Non porro molestiae asperiores, fugiat voluptatem voluptates incidunt?"
-      /> */}
+
+
     </>
   );
 }

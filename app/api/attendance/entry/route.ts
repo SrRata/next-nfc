@@ -1,17 +1,14 @@
+
+
 // import { NextRequest, NextResponse } from "next/server";
-// import { isForeignKeyError } from "@/lib/db.errors";
-// import {
-//   getCurrentDateString,
-//   getCurrentTimeString,
-//   checkEntryStatus,
-// } from "@/lib/attendance/time.helper";
-// import { db } from "@/lib/hooks/db";
-// import { isWorkingDay } from "@/lib/attendance/working-days.helper";
+// import db from "@/lib/db";
+// import { getCurrentDateString, getCurrentTimeString, checkEntryStatus } from "@/lib/attendance/time.helper";
+// import { isWorkingDay }   from "@/lib/attendance/working-days.helper";
+// import { resolveSchedule } from "@/lib/attendance/schedule.helper";
 // import { createAndSendNotification } from "@/lib/notifications/notify";
 
 // export async function POST(req: NextRequest) {
 //   const conn = await db.getConnection();
-
 //   try {
 //     const body = await req.json();
 //     const { student_id, nfc_uid } = body;
@@ -23,10 +20,10 @@
 //       );
 //     }
 
+//     // ── 1. Validar día laborable ─────────────────────────────────────────────
 //     const today = getCurrentDateString();
 
-//     const workingDay = await isWorkingDay(today);
-//     if (!workingDay) {
+//     if (!(await isWorkingDay(today))) {
 //       return NextResponse.json(
 //         { error: "Hoy no es un día laborable. No se puede registrar asistencia." },
 //         { status: 422 }
@@ -35,26 +32,22 @@
 
 //     await conn.beginTransaction();
 
-//     // 1. Buscar estudiante + curso + horario en un solo JOIN
+//     // ── 2. Buscar estudiante con su curso ────────────────────────────────────
+//     // Ya no traemos el horario aquí — lo resolvemos aparte con resolveSchedule
 //     const [students]: any = await conn.query(
 //       `SELECT
 //          s.id,
 //          s.first_name,
 //          s.last_name,
 //          s.course_id,
-//          c.educational_level_id,
 //          c.section_id,
-//          sc.entry_time,
-//          sc.exit_time,
-//          sc.entry_tolerance,
-//          sc.exit_tolerance
+//          c.educational_level_id,
+//          c.course_name,
+//          c.professor_id
 //        FROM students s
 //        JOIN courses c
 //          ON s.course_id = c.id
 //          AND c.is_active = TRUE
-//        JOIN schedules sc
-//          ON sc.educational_level_id = c.educational_level_id
-//         AND sc.section_id = c.section_id
 //        WHERE (s.id = ? OR s.nfc_uid = ?)
 //          AND s.is_active = TRUE`,
 //       [student_id ?? null, nfc_uid ?? null]
@@ -63,17 +56,36 @@
 //     if (!students.length) {
 //       await conn.rollback();
 //       return NextResponse.json(
-//         { error: "Estudiante no encontrado, inactivo o sin horario asignado" },
+//         { error: "Estudiante no encontrado, inactivo o sin curso asignado" },
 //         { status: 404 }
 //       );
 //     }
 
 //     const student = students[0];
-//     // const currentTime = getCurrentTimeString();
-//     //reemplazar getCurrentTimeString() por esto durante pruebas:
-//     const currentTime = body.mock_time ?? getCurrentTimeString();
 
-//     // 2. Verificar que no haya registro de entrada hoy
+//     // ── 3. Resolver horario (especial o base) ────────────────────────────────
+//     // resolveSchedule busca primero en special_day_schedules con el score
+//     // de especificidad y si no encuentra nada cae al horario base en schedules
+//     const schedule = await resolveSchedule(
+//       conn,
+//       today,
+//       student.section_id,
+//       student.educational_level_id
+//     );
+
+//     if (!schedule) {
+//       await conn.rollback();
+//       return NextResponse.json(
+//         { error: "No hay horario configurado para este curso" },
+//         { status: 404 }
+//       );
+//     }
+
+//     const currentTime = body.mock_time && process.env.NODE_ENV === "development"
+//       ? body.mock_time
+//       : getCurrentTimeString();
+
+//     // ── 4. Verificar entrada duplicada ───────────────────────────────────────
 //     const [existing]: any = await conn.query(
 //       `SELECT id FROM attendance_records
 //        WHERE student_id = ? AND date = ?`,
@@ -88,11 +100,10 @@
 //       );
 //     }
 
-//     // 3. Validar horario y determinar estado
-//     const status = checkEntryStatus(currentTime, {
-//       entry_time: student.entry_time,
-//       entry_tolerance: student.entry_tolerance,
-//     });
+//     // ── 5. Validar horario y determinar estado ───────────────────────────────
+//     // checkEntryStatus recibe el schedule resuelto (puede ser especial o base)
+//     // por lo que la tolerancia y horas ya son las correctas para ese día
+//     const status = checkEntryStatus(currentTime, schedule);
 
 //     if (status === "Fuera de horario") {
 //       await conn.rollback();
@@ -102,16 +113,25 @@
 //       );
 //     }
 
-//     // --- Escrituras ---
+//     // ── 6. Construir observación ─────────────────────────────────────────────
+//     // Si el horario viene de special_day_schedules, lo indicamos en la observación
+//     // Ejemplos:
+//     //   "Puntual"
+//     //   "Atrasado"
+//     //   "Puntual (horario especial: Feria de ciencias)"
+//     //   "Atrasado (horario especial: Día de recuperación)"
+//     const observation = schedule.is_special
+//       ? `${status} (horario especial: ${schedule.special_reason})`
+//       : status;
 
-//     // 4. Insertar registro de asistencia
+//     // ── 7. Insertar registro de asistencia ───────────────────────────────────
 //     const [result]: any = await conn.query(
 //       `INSERT INTO attendance_records (date, student_id, entry_time, observation)
 //        VALUES (?, ?, ?, ?)`,
-//       [today, student.id, currentTime, status]
+//       [today, student.id, currentTime, observation]
 //     );
 
-//     // 5. Actualizar resumen del estudiante
+//     // ── 8. Actualizar resumen del estudiante ─────────────────────────────────
 //     await conn.query(
 //       `INSERT INTO student_summaries (student_id, total_attendances, total_absences)
 //        VALUES (?, 1, 0)
@@ -120,7 +140,7 @@
 //       [student.id]
 //     );
 
-//     // 6. Actualizar resumen diario del curso
+//     // ── 9. Actualizar resumen diario del curso ───────────────────────────────
 //     const isLate = status === "Atrasado";
 //     await conn.query(
 //       `INSERT INTO daily_course_summaries
@@ -129,36 +149,26 @@
 //        ON DUPLICATE KEY UPDATE
 //          total_present = total_present + 1,
 //          total_late    = total_late + ?`,
-//       [
-//         today,
-//         student.course_id,
-//         student.section_id,
-//         isLate ? 1 : 0,
-//         isLate ? 1 : 0,
-//       ]
+//       [today, student.course_id, student.section_id, isLate ? 1 : 0, isLate ? 1 : 0]
 //     );
 
-//     const [courseData]: any = await conn.query(
-//       `SELECT
-//      c.course_name,
-//      c.professor_id,
-//      r.parent_id
-//    FROM courses c
-//    LEFT JOIN relationships r ON r.student_id = ?
-//    WHERE c.id = ?`,
-//       [student.id, student.course_id]
+//     // ── 10. Obtener representante para notificación ──────────────────────────
+//     const [rel]: any = await conn.query(
+//       `SELECT parent_id FROM relationships WHERE student_id = ? LIMIT 1`,
+//       [student.id]
 //     );
 
+//     // ── 11. Crear y enviar notificación ──────────────────────────────────────
 //     await createAndSendNotification({
 //       conn,
-//       type: "entry",
-//       studentId: student.id,
+//       type:        "entry",
+//       studentId:   student.id,
 //       studentName: `${student.first_name} ${student.last_name}`,
-//       courseName: courseData[0]?.course_name ?? "",
-//       courseId: student.course_id,
-//       professorId: courseData[0]?.professor_id ?? null,
-//       parentId: courseData[0]?.parent_id ?? null,
-//       time: currentTime,
+//       courseName:  student.course_name,
+//       courseId:    student.course_id,
+//       professorId: student.professor_id ?? null,
+//       parentId:    rel[0]?.parent_id ?? null,
+//       time:        currentTime,
 //     });
 
 //     await conn.commit();
@@ -167,10 +177,13 @@
 //       success: true,
 //       message: `Entrada registrada: ${status}`,
 //       data: {
-//         record_id: result.insertId,
-//         student: `${student.first_name} ${student.last_name}`,
+//         record_id:  result.insertId,
+//         student:    `${student.first_name} ${student.last_name}`,
 //         entry_time: currentTime,
 //         status,
+//         // Informamos al cliente si se usó un horario especial
+//         schedule_type:   schedule.is_special ? "special" : "base",
+//         schedule_reason: schedule.is_special ? schedule.special_reason : null,
 //       },
 //     });
 
@@ -182,7 +195,6 @@
 //       { status: 500 }
 //     );
 //   } finally {
-
 //     conn.release();
 //   }
 // }
@@ -195,12 +207,21 @@
 
 
 
+
+
+
+
+
+
+
+
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 import { getCurrentDateString, getCurrentTimeString, checkEntryStatus } from "@/lib/attendance/time.helper";
-import { isWorkingDay }   from "@/lib/attendance/working-days.helper";
+import { isWorkingDay } from "@/lib/attendance/working-days.helper";
 import { resolveSchedule } from "@/lib/attendance/schedule.helper";
 import { createAndSendNotification } from "@/lib/notifications/notify";
+import { normalizePhone, sendWhatsAppMessage } from "@/lib/whatsapp";
 
 export async function POST(req: NextRequest) {
   const conn = await db.getConnection();
@@ -320,11 +341,13 @@ export async function POST(req: NextRequest) {
       : status;
 
     // ── 7. Insertar registro de asistencia ───────────────────────────────────
-    const [result]: any = await conn.query(
+    const [insertResult]: any = await conn.query(
       `INSERT INTO attendance_records (date, student_id, entry_time, observation)
-       VALUES (?, ?, ?, ?)`,
+   VALUES (?, ?, ?, ?)`,
       [today, student.id, currentTime, observation]
     );
+
+
 
     // ── 8. Actualizar resumen del estudiante ─────────────────────────────────
     await conn.query(
@@ -353,17 +376,57 @@ export async function POST(req: NextRequest) {
       [student.id]
     );
 
+    let parentPhone = null;
+    let parentName = null;
+
+    if (rel.length) {
+      const [parent]: any = await conn.query(
+        `SELECT phone_number, first_name 
+     FROM users 
+     WHERE id = ? 
+     LIMIT 1`,
+        [rel[0].parent_id]
+      );
+
+      parentPhone = parent[0]?.phone_number;
+      parentName = parent[0]?.first_name;
+    }
+
     // ── 11. Crear y enviar notificación ──────────────────────────────────────
     await createAndSendNotification({
       conn,
-      type:        "entry",
-      studentId:   student.id,
+      type: "entry",
+      studentId: student.id,
       studentName: `${student.first_name} ${student.last_name}`,
-      courseName:  student.course_name,
-      courseId:    student.course_id,
+      courseName: student.course_name,
+      courseId: student.course_id,
       professorId: student.professor_id ?? null,
-      parentId:    rel[0]?.parent_id ?? null,
-      time:        currentTime,
+      parentId: rel[0]?.parent_id ?? null,
+      time: currentTime,
+    });
+
+    setImmediate(async () => {
+      try {
+        if (parentPhone) {
+          const normalizedPhone = normalizePhone(parentPhone);
+
+          const result = await sendWhatsAppMessage(
+            normalizedPhone,
+            `📢 Registro de asistencia\n\n` +
+            `Hola ${parentName ?? "padre/madre"} 👋\n\n` +
+            `Tu hijo ${student.first_name} ${student.last_name} ingresó a clases.\n\n` +
+            `🕒 Hora: ${currentTime}\n` +
+            `📚 Curso: ${student.course_name}\n` +
+            `📌 Estado: ${status}`
+          );
+
+          if (!result.success) {
+            console.error("Error enviando WhatsApp:", result.error);
+          }
+        }
+      } catch (err) {
+        console.error("WhatsApp error:", err);
+      }
     });
 
     await conn.commit();
@@ -372,12 +435,12 @@ export async function POST(req: NextRequest) {
       success: true,
       message: `Entrada registrada: ${status}`,
       data: {
-        record_id:  result.insertId,
-        student:    `${student.first_name} ${student.last_name}`,
+        record_id: insertResult.insertId,
+        student: `${student.first_name} ${student.last_name}`,
         entry_time: currentTime,
         status,
         // Informamos al cliente si se usó un horario especial
-        schedule_type:   schedule.is_special ? "special" : "base",
+        schedule_type: schedule.is_special ? "special" : "base",
         schedule_reason: schedule.is_special ? schedule.special_reason : null,
       },
     });
